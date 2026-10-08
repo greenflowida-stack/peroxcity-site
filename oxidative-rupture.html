@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Oxidative Rupture</title>
+<style>
+  :root{
+    --bg-0:#020606;
+    --bg-1:#12141c;
+    --cell-core:#131c08;
+    --cell-mid:#425219;
+    --cell-edge:#8a9a2e;
+    --spike:#aebb3f;
+    --spike-dark:#2a330a;
+    --o-atom:#1d4ed8;
+    --o-atom-hi:#8fc7ff;
+    --h-atom:#d9f6ff;
+    --crack:#5df1e0;
+    --crack-core:#f4fffb;
+    --label:#8fb9ad;
+  }
+  html,body{
+    margin:0; padding:0; height:100%;
+    background:var(--bg-0);
+    overflow:hidden;
+    font-family: 'Courier New', monospace;
+  }
+  #stage{
+    position:relative;
+    width:100vw; height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 42%, var(--bg-1) 0%, var(--bg-0) 70%);
+  }
+  canvas{
+    display:block;
+    max-width:100%;
+    max-height:100%;
+  }
+  #hud{
+    position:absolute;
+    left:0; right:0; bottom:22px;
+    display:flex; flex-direction:column; align-items:center;
+    gap:6px;
+    pointer-events:none;
+    color:var(--label);
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    font-size:11px;
+    opacity:0.85;
+    text-align:center;
+  }
+  #phase{
+    font-size:10px;
+    color:var(--crack);
+    text-shadow:0 0 8px rgba(93,241,224,0.6);
+  }
+  #reaction{
+    font-size:13px;
+    letter-spacing:0.08em;
+    color:rgba(220,245,240,0.9);
+    text-transform:none;
+    height:16px;
+  }
+  #bar{
+    width:200px; height:2px; background:rgba(255,255,255,0.12);
+    position:relative; overflow:hidden; border-radius:2px;
+  }
+  #bar-fill{
+    position:absolute; left:0; top:0; bottom:0;
+    width:0%; background:var(--crack);
+    box-shadow:0 0 6px var(--crack);
+  }
+  #title{
+    position:absolute; top:26px; left:0; right:0;
+    text-align:center;
+    color:rgba(220,245,240,0.55);
+    font-size:11px;
+    letter-spacing:0.4em;
+    text-transform:uppercase;
+    pointer-events:none;
+  }
+  #title b{ color:rgba(93,241,224,0.9); font-weight:600; }
+</style>
+</head>
+<body>
+<div id="stage">
+      <div id="title">PERO<b>X</b>CITY &nbsp;·&nbsp; H<sub></sub>2O<sub></sub>2 oxidative rupture</div>
+    <canvas id="c"></canvas>
+    <div id="hud">
+      <div id="reaction"></div>
+      <div id="phase">APPROACH</div>
+      <div id="bar"><div id="bar-fill"></div></div>
+    </div>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const phaseLabel = document.getElementById('phase');
+  const reactionLabel = document.getElementById('reaction');
+  const barFill = document.getElementById('bar-fill');
+
+  // ---- sizing (portrait, responsive) ----
+  let W, H, DPR;
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const targetAspect = 4/5;
+    let cw = window.innerWidth, ch = window.innerHeight;
+    if (cw/ch > targetAspect){ cw = ch*targetAspect; } else { ch = cw/targetAspect; }
+    W = Math.floor(cw); H = Math.floor(ch);
+    canvas.width = W*DPR; canvas.height = H*DPR;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const cx = () => W/2;
+  const cy = () => H*0.46;
+
+  // ---------------- RNG (seeded, deterministic per load) ----------------
+  let seed = 1337;
+  function rand(){
+    seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5;
+    return ((seed >>> 0) / 4294967295);
+  }
+  function rr(a,b){ return a + rand()*(b-a); }
+
+  function hexToRgb(hex){
+    const h = hex.replace('#','');
+    return [parseInt(h.substring(0,2),16), parseInt(h.substring(2,4),16), parseInt(h.substring(4,6),16)];
+  }
+  function lerpHex(a,b,t){
+    const ca=hexToRgb(a), cb=hexToRgb(b);
+    const r = Math.round(ca[0]+(cb[0]-ca[0])*t);
+    const g = Math.round(ca[1]+(cb[1]-ca[1])*t);
+    const bch = Math.round(ca[2]+(cb[2]-ca[2])*t);
+    return `rgb(${r},${g},${bch})`;
+  }
+  // three-stop lerp: healthy -> mid-damage -> fully charred, driven by damageP 0..1
+  function lerpHex3(a,b,c,t){
+    if (t<=0.5) return lerpHex(a,b,t*2);
+    return lerpHex(b,c,(t-0.5)*2);
+  }
+
+  // ---------------- cycle timing ----------------
+  const CYCLE = 13500; // ms
+  const T_APPROACH_END = 1200;
+  const T_ATTACK_END   = 6600;
+  const T_RUPTURE_END  = 8200;
+  const T_HERO_START   = 9600;   // water + oxygen zoom in and hold
+  const T_HERO_ZOOM    = 1000;
+  const T_HERO_HOLD_END = CYCLE - 600;
+
+  // ---------------- virus body geometry ----------------
+  const BASE_R = 118;
+  const N_PTS = 48;
+  const blobNoise = [];
+  for (let i=0;i<N_PTS;i++){
+    blobNoise.push(rr(-1,1));
+  }
+  function blobRadius(i, t){
+    const a = (i/N_PTS) * Math.PI*2;
+    // gentle undulation plus a touch of fine ripple for a believable membrane, not a smooth ball
+    const wob = Math.sin(a*3 + t*0.00015)*9 + Math.sin(a*9 + t*0.0001)*3 + blobNoise[i]*5;
+    return BASE_R + wob;
+  }
+  function blobPoint(i, t, rotOffset, scale, jitter){
+    const a = (i/N_PTS) * Math.PI*2 + rotOffset;
+    const r = (blobRadius(i,t) + (jitter||0)) * (scale===undefined?1:scale);
+    return [Math.cos(a)*r, Math.sin(a)*r];
+  }
+
+  // spikes: coronavirus-style club spikes -- dense, with bulbous trimeric crowns
+  const N_SPIKES = 36;
+  const spikeAngles = [], spikeLens = [], spikeHue = [], spikeWidth = [], spikeTilt = [];
+  for (let i=0;i<N_SPIKES;i++){
+    spikeAngles.push((i/N_SPIKES)*Math.PI*2 + rr(-0.05,0.05));
+    spikeLens.push(rr(28,40));
+    spikeHue.push(rr(-10,14));
+    spikeWidth.push(rr(4.8,6.6));
+    spikeTilt.push(rr(-0.12,0.12));
+  }
+
+  // secondary small stud proteins scattered between the main spikes (M/E-protein detail)
+  const N_STUDS = 46;
+  const studs = [];
+  for (let i=0;i<N_STUDS;i++){
+    studs.push({
+      a: rr(0,Math.PI*2),
+      len: rr(8,13),
+      r: rr(2.6,4.2)
+    });
+  }
+
+  // a handful of flat accent dots -- minimal texture, icon-style not noisy
+  const N_BLOTCH = 9;
+  const blotches = [];
+  for (let i=0;i<N_BLOTCH;i++){
+    blotches.push({
+      a: rr(0,Math.PI*2),
+      rFrac: rr(0.2,0.72),
+      size: rr(7,13)
+    });
+  }
+
+  // 3D spore bumps covering the whole organic material, not just a central cluster
+  const N_SPORES = 60;
+  const spores = [];
+  for (let i=0;i<N_SPORES;i++){
+    const ang = rr(0,Math.PI*2);
+    const dist = Math.sqrt(rr(0,1)) * 100; // even area coverage out toward the rim
+    spores.push({
+      dx: Math.cos(ang)*dist,
+      dy: Math.sin(ang)*dist,
+      r: rr(3,8),
+      phase: rr(0,1000)
+    });
+  }
+
+  // ---------------- H2O2 molecules ----------------
+  function makeMolecule(id){
+    const orbitR = rr(220, 340);
+    const orbitA = rr(0, Math.PI*2);
+    return {
+      id,
+      orbitR, orbitA,
+      orbitSpeed: rr(0.00006,0.00014) * (rand()<0.5?1:-1),
+      wob: rr(0,1000),
+      state: 'drift', // drift -> seek -> attached -> reacted (spawns products) | burst (fallback)
+      target: null,
+      seekStart: 0,
+      reactAt: null,
+      scale: rr(0.85,1.25),
+      rot: rr(0,Math.PI*2),
+      driftSeed: rr(0,1000),
+      labeled: rand()<0.7,
+      spinDir: rand()<0.5?1:-1,
+      spins: rr(2.5,4.5)
+    };
+  }
+  const MOLS = [];
+  const N_MOL = 24;
+  for (let i=0;i<N_MOL;i++) MOLS.push(makeMolecule(i));
+
+  function moleculePos(m, t, localT){
+    if (m.state === 'drift' || m.state === 'seek'){
+      const a = m.orbitA + t*m.orbitSpeed;
+      const rjit = Math.sin(t*0.0003 + m.wob)*14;
+      let x = cx() + Math.cos(a)*(m.orbitR+rjit);
+      let y = cy() + Math.sin(a)*(m.orbitR+rjit)*0.72;
+      if (m.state === 'seek' && m.target){
+        const p = Math.min(1, (localT - m.seekStart) / 900);
+        const ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p;
+        x = x + (m.target[0]-x)*ease;
+        y = y + (m.target[1]-y)*ease;
+      }
+      return [x,y];
+    }
+    if (m.state === 'attached'){
+      return m.target;
+    }
+    return m.target || [cx(),cy()];
+  }
+
+  // molecule visibly swells only once it actually grips the membrane (not while approaching)
+  const ENLARGE_FACTOR = 2.1;
+  const ENLARGE_DURATION = 260; // ms, snaps up right on contact
+  function moleculeScale(m, localT){
+    if (m.state === 'attached'){
+      const age = localT - (m.attachStartLocalT===undefined?localT:m.attachStartLocalT);
+      const p = Math.min(1, age/ENLARGE_DURATION);
+      const ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p;
+      const grown = m.scale + (m.scale*ENLARGE_FACTOR - m.scale)*ease;
+      const pulse = p>=1 ? 1 + Math.sin(localT*0.012)*0.05 : 1;
+      return grown*pulse;
+    }
+    return m.scale;
+  }
+
+  function atomGradient(type){
+    if (type==='O'){
+      const g = ctx.createRadialGradient(-4,-4,1,0,0,12);
+      g.addColorStop(0, '#bfe0ff');
+      g.addColorStop(0.35, '#4d8dfb');
+      g.addColorStop(1, '#123a9c');
+      return g;
+    }
+    const g = ctx.createRadialGradient(-3,-3,0.5,0,0,7);
+    g.addColorStop(0, '#ffffff');
+    g.addColorStop(0.5, '#cdeffb');
+    g.addColorStop(1, '#79b8c9');
+    return g;
+  }
+
+  function drawAtomAt(ax,ay,r,type,glow,alpha){
+    ctx.save();
+    ctx.translate(ax,ay);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    if (glow){
+      ctx.shadowColor = type==='O' ? 'rgba(80,150,255,0.9)' : 'rgba(220,250,255,0.9)';
+      ctx.shadowBlur = 14;
+    }
+    const g = ctx.createRadialGradient(-r*0.35,-r*0.35,r*0.1, 0,0,r);
+    if (type==='O'){
+      g.addColorStop(0, '#bfe0ff');
+      g.addColorStop(0.35, '#4d8dfb');
+      g.addColorStop(1, '#123a9c');
+    } else {
+      g.addColorStop(0, '#ffffff');
+      g.addColorStop(0.5, '#cdeffb');
+      g.addColorStop(1, '#79b8c9');
+    }
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0,0,r,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBrandLabel(x,y,scale,alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    ctx.font = '700 12px "Courier New", monospace';
+    const labelY = y - 26*scale;
+
+    // split "Pero" / "X" / "city" so the X can be picked out in royal blue
+    const partA = 'Pero', partX = 'X', partB = 'city';
+    const wA = ctx.measureText(partA).width;
+    const wX = ctx.measureText(partX).width;
+    const wB = ctx.measureText(partB).width;
+    const total = wA + wX + wB;
+    ctx.textAlign = 'left';
+    let cx0 = x - total/2;
+
+    ctx.fillStyle = '#eafffb';
+    ctx.shadowColor = 'rgba(93,241,224,0.85)';
+    ctx.shadowBlur = 7;
+    ctx.fillText(partA, cx0, labelY);
+    cx0 += wA;
+
+    ctx.fillStyle = '#2547ff';
+    ctx.shadowColor = 'rgba(60,100,255,0.95)';
+    ctx.shadowBlur = 9;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.4;
+    ctx.strokeText(partX, cx0, labelY);
+    ctx.fillText(partX, cx0, labelY);
+    cx0 += wX;
+
+    ctx.fillStyle = '#eafffb';
+    ctx.shadowColor = 'rgba(93,241,224,0.85)';
+    ctx.shadowBlur = 7;
+    ctx.fillText(partB, cx0, labelY);
+
+    ctx.restore();
+  }
+
+  // PeroXcity-labeled molecules spin dramatically as they close in on the membrane,
+  // decelerating to a stop right as they make contact
+  function moleculeExtraSpin(m, localT){
+    if (m.labeled && m.state==='seek' && m.target){
+      const p = Math.min(1, (localT - m.seekStart) / 900);
+      const ease = p<0.5 ? 2*p*p : -1+(4-2*p)*p;
+      return (1-ease) * Math.PI*2 * m.spins * m.spinDir;
+    }
+    return 0;
+  }
+
+  function drawH2O2(x,y,scale,rot,glow,alpha){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    drawAtomAt(-24,4, 7, 'H', glow);
+    drawAtomAt(-14,-3, 11.5, 'O', glow);
+    drawAtomAt(6,7, 11.5, 'O', glow);
+    drawAtomAt(18,-2, 7, 'H', glow);
+    ctx.restore();
+  }
+
+  function drawWater(x,y,scale,rot,alpha,glow){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    // bent H2O: O center, two H at ~104.5deg
+    drawAtomAt(0,0,11,'O',glow);
+    drawAtomAt(-14,-11,6.4,'H',glow);
+    drawAtomAt(14,-11,6.4,'H',glow);
+    ctx.restore();
+    // "H2O" label drawn in its own unrotated pass so it stays upright and readable
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 9px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 2;
+    ctx.fillText('H2O', 0, 3);
+    ctx.restore();
+  }
+
+  function drawO2(x,y,scale,rot,alpha,glow){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    if (glow){
+      ctx.shadowColor='rgba(120,255,235,0.85)';
+      ctx.shadowBlur=16;
+    }
+    ctx.strokeStyle = 'rgba(160,235,255,0.65)';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath(); ctx.moveTo(-11,-3); ctx.lineTo(11,-3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-11,3); ctx.lineTo(11,3); ctx.stroke();
+    drawAtomAt(-11,0,10.5,'O',glow);
+    drawAtomAt(11,0,10.5,'O',glow);
+    ctx.restore();
+    // "O" printed on each atom, drawn unrotated so the letters stay upright
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 10px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 2;
+    ctx.fillText('O', -11, 1);
+    ctx.fillText('O', 11, 1);
+    ctx.restore();
+  }
+
+  // finale hero oxygen: a single clearly-labeled sphere, not the two-atom O2 diagram,
+  // so it reads at a glance as "one molecule of oxygen"
+  function drawHeroOxygen(x,y,scale,rot,alpha,glow){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    if (glow){
+      ctx.shadowColor = 'rgba(120,255,235,0.9)';
+      ctx.shadowBlur = 18;
+    }
+    const r = 15;
+    const g = ctx.createRadialGradient(-r*0.35,-r*0.35,r*0.1,0,0,r);
+    g.addColorStop(0,'#bfe0ff');
+    g.addColorStop(0.35,'#4d8dfb');
+    g.addColorStop(1,'#123a9c');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // letter drawn in its own unrotated pass so it stays upright and legible
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(scale,scale);
+    ctx.globalAlpha = alpha===undefined?1:alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 17px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('O', 0, 1);
+    ctx.restore();
+  }
+
+  function drawHeroLabel(text,x,y,alpha,color,glowColor){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = '700 22px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = color;
+    ctx.shadowColor = glowColor;
+    ctx.shadowBlur = 14;
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+
+  // small colorful fish swimming in the finale water pool
+  function drawFish(x,y,dir,scale,alpha,color,wiggleSeed){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.scale(dir*scale, scale);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.ellipse(0,0,10,5.5,0,0,Math.PI*2); ctx.fill();
+    // wiggling tail: a curved fin that swishes side to side as the fish swims
+    const w = Math.sin((wiggleSeed||0)*0.012) * 6;
+    ctx.beginPath();
+    ctx.moveTo(-9,0);
+    ctx.quadraticCurveTo(-13, w*0.4, -18, -6+w);
+    ctx.lineTo(-13, 0);
+    ctx.lineTo(-18, 6+w);
+    ctx.quadraticCurveTo(-13, w*0.4, -9, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath(); ctx.ellipse(2,1.6,5,2,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#111';
+    ctx.beginPath(); ctx.arc(5,-1,1.1,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  // simple gull-shape birds flying in the finale sky
+  function drawBird(x,y,dir,alpha,tSeed,scale){
+    ctx.save();
+    ctx.translate(x,y);
+    const s = scale||1;
+    ctx.scale(dir*s,s);
+    ctx.globalAlpha = alpha;
+    const flap = Math.sin(tSeed*0.012)*9;
+    // soft dark outline pass first for contrast against the sky, then a crisp body stroke
+    ctx.strokeStyle = 'rgba(10,12,18,0.35)';
+    ctx.lineWidth = 6.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-15,0);
+    ctx.quadraticCurveTo(-7,-11-flap*0.6, 0,-1);
+    ctx.quadraticCurveTo(7,-11+flap*0.6, 15,0);
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(18,20,26,0.95)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-15,0);
+    ctx.quadraticCurveTo(-7,-11-flap*0.6, 0,-1);
+    ctx.quadraticCurveTo(7,-11+flap*0.6, 15,0);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawHeroMolecules(t, localT){
+    const zp = Math.min(1, Math.max(0,(localT - T_HERO_START)/T_HERO_ZOOM));
+    const ease = zp<0.5 ? 2*zp*zp : -1+(4-2*zp)*zp;
+
+    // water falls and splashes down; oxygen rises up -- matching how each behaves in reality
+    const waterStart = [cx()+22, cy()-15];
+    const waterFinal = [cx()-18, H*0.84];
+    const oxyStart   = [cx()-22, cy()+15];
+    const oxyFinal   = [cx()+18, H*0.16];
+
+    const dropEase = zp<0.5 ? 2*zp*zp : -1+(4-2*zp)*zp;
+    const wx = waterStart[0] + (waterFinal[0]-waterStart[0])*dropEase;
+    const wy = waterStart[1] + (waterFinal[1]-waterStart[1])*dropEase;
+    let ox = oxyStart[0]   + (oxyFinal[0]-oxyStart[0])*ease;
+    let oy = oxyStart[1]   + (oxyFinal[1]-oxyStart[1])*ease;
+
+    const scale = 0.5 + ease*3.1;
+
+    let alpha = Math.min(1, (localT - T_HERO_START)/220);
+    if (localT > T_HERO_HOLD_END){
+      alpha *= Math.max(0, 1 - (localT - T_HERO_HOLD_END)/(CYCLE - T_HERO_HOLD_END));
+    }
+    if (alpha<=0) return;
+
+    // splash the instant water lands
+    if (zp>0.93 && !heroSplashTriggered){
+      heroSplashTriggered = true;
+      spawnSplash(waterFinal[0], waterFinal[1], t);
+    }
+
+    // environment fill: real water rises up from the bottom, a blue oxygen "sky" fills in from the top
+    const fillLocalP = Math.min(1, Math.max(0, (localT - T_HERO_START) / 3200));
+    const fillEase = fillLocalP<0.5 ? 2*fillLocalP*fillLocalP : -1+(4-2*fillLocalP)*fillLocalP;
+    const waterLevel = H*0.28*fillEase;
+    const skyLevel = H*0.24*fillEase;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    if (waterLevel>0){
+      const wy0 = H - waterLevel;
+      const waterGrad = ctx.createLinearGradient(0, wy0, 0, H);
+      waterGrad.addColorStop(0,   'rgba(120,195,255,0.05)');
+      waterGrad.addColorStop(0.15,'rgba(80,165,240,0.4)');
+      waterGrad.addColorStop(1,   'rgba(18,64,130,0.62)');
+      ctx.fillStyle = waterGrad;
+      ctx.fillRect(0, wy0, W, waterLevel);
+      ctx.strokeStyle = 'rgba(205,236,255,0.55)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let x=0; x<=W; x+=12){
+        const wave = Math.sin(x*0.05 + t*0.0025)*3;
+        if (x===0) ctx.moveTo(x, wy0+wave); else ctx.lineTo(x, wy0+wave);
+      }
+      ctx.stroke();
+    }
+    if (skyLevel>0){
+      const skyGrad = ctx.createLinearGradient(0,0,0,skyLevel);
+      skyGrad.addColorStop(0,'rgba(90,175,255,0.7)');
+      skyGrad.addColorStop(1,'rgba(50,130,235,0.45)');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0,0,W,skyLevel);
+    }
+    ctx.restore();
+
+    // colorful fish swimming in the water, birds crossing the sky
+    if (fillEase>0.25){
+      const critterAlpha = alpha * Math.min(1,(fillEase-0.25)/0.25);
+      const waterTop = H - waterLevel;
+      if (waterLevel>10){
+        const f1x = ((t*0.045 + 60)  % (W+100)) - 50;
+        const f2x = (W+50) - ((t*0.037 + 160) % (W+100));
+        const f3x = ((t*0.052 + 340) % (W+100)) - 50;
+        const f4x = (W+50) - ((t*0.041 + 20)  % (W+100));
+        const f5x = ((t*0.033 + 500) % (W+100)) - 50;
+        drawFish(f1x, waterTop + waterLevel*0.42 + Math.sin(t*0.003)*7,      1,  1.35, critterAlpha, '#ff8a3d', t+0);
+        drawFish(f2x, waterTop + waterLevel*0.68 + Math.sin(t*0.0035+2)*6,  -1,  0.7,  critterAlpha, '#3dd6ff', t*1.15+300);
+        drawFish(f3x, waterTop + waterLevel*0.85 + Math.sin(t*0.0032+4)*5,  1,  0.5,  critterAlpha, '#ffd23d', t*0.9+600);
+        drawFish(f4x, waterTop + waterLevel*0.3  + Math.sin(t*0.0038+1)*6, -1,  1.05, critterAlpha, '#ff5d8f', t*1.3+900);
+        drawFish(f5x, waterTop + waterLevel*0.58 + Math.sin(t*0.0029+3)*7,  1,  0.4,  critterAlpha, '#6cff9e', t*1.05+150);
+      }
+      if (skyLevel>10){
+        const b1x = ((t*0.09  + 220) % (W+140)) - 70;
+        const b2x = (W+70) - ((t*0.075 + 40)  % (W+140));
+        const b3x = ((t*0.11  + 380) % (W+140)) - 70;
+        const b4x = (W+70) - ((t*0.065 + 260) % (W+140));
+        drawBird(b1x, skyLevel*0.3  + Math.sin(t*0.0025)*8,   1, critterAlpha, t,          1.3);
+        drawBird(b2x, skyLevel*0.58 + Math.sin(t*0.003+1)*7,  -1, critterAlpha, t*1.25+50,  1.1);
+        drawBird(b3x, skyLevel*0.75 + Math.sin(t*0.0022+2)*6,  1, critterAlpha, t*0.9+120,  0.9);
+        drawBird(b4x, skyLevel*0.44 + Math.sin(t*0.0027+3)*7, -1, critterAlpha, t*1.1+200,  1.2);
+      }
+    }
+
+    // oxygen keeps drifting gently upward like a rising bubble once it arrives
+    let settleWater = 1;
+    if (zp>=1){
+      const holdAge = localT - (T_HERO_START + T_HERO_ZOOM);
+      oy += -Math.min(46, Math.max(0,holdAge)*0.012) + Math.sin(t*0.0022)*4;
+      ox += Math.sin(t*0.0017)*5;
+      settleWater = 1 + Math.max(0, 1-Math.max(0,holdAge)/260) * Math.sin(Math.max(0,holdAge)*0.05) * 0.08;
+    }
+
+    const spinEase = 1 - Math.pow(1-ease, 2); // faster spin-down near the end
+    const waterSpin = (1-spinEase) * Math.PI*2*2.75;      // ~2.75 turns, clockwise
+    const oxySpin   = -(1-spinEase) * Math.PI*2*3.25;     // ~3.25 turns, counter-clockwise
+    const waterRot = waterSpin + (zp>=1 ? Math.sin(t*0.0004)*0.05 : 0);
+    const oxyRot   = oxySpin   + (zp>=1 ? Math.sin(t*0.00045+1)*0.05 : 0);
+
+    drawWater(wx,wy,scale*settleWater, waterRot, alpha, true);
+    drawSplash(t, alpha);
+
+    // small trailing bubbles under the rising oxygen molecule
+    if (zp>=1){
+      ctx.save();
+      ctx.globalAlpha = alpha*0.4;
+      for (let i=0;i<3;i++){
+        const bx = ox + Math.sin(t*0.002+i*2)*10;
+        const by = oy + 28 + i*16 + Math.sin(t*0.003+i)*3;
+        ctx.fillStyle = 'rgba(160,235,255,0.6)';
+        ctx.beginPath(); ctx.arc(bx,by,3.2-i*0.6,0,Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+    }
+    drawHeroOxygen(ox,oy,scale, oxyRot, alpha, true);
+
+    const labelAlpha = alpha * Math.min(1, Math.max(0,(zp-0.55)/0.35));
+    if (labelAlpha>0){
+      const labelOffset = 34 + scale*20;
+      drawHeroLabel('WATER',  wx, wy - labelOffset, labelAlpha, '#dff6ff', 'rgba(120,180,255,0.9)');
+      drawHeroLabel('OXYGEN', ox, oy + labelOffset, labelAlpha, '#a8fff0', 'rgba(120,255,220,0.9)');
+    }
+  }
+
+  // ---------------- reaction product particles ----------------
+  let products = []; // {type:'H2O'|'O2', x,y, vx,vy, rot, vr, born, life}
+  let heroSplashTriggered = false;
+  let splashParticles = [];
+  function spawnSplash(x,y,t){
+    for (let i=0;i<12;i++){
+      const a = rr(-Math.PI*0.85, -Math.PI*0.15); // upward-ish spray
+      const speed = rr(1.2,3.4);
+      splashParticles.push({
+        x, y,
+        vx: Math.cos(a)*speed, vy: Math.sin(a)*speed,
+        r: rr(1.6,3.4),
+        born: t, life: rr(600,900)
+      });
+    }
+    splashParticles.push({ring:true, x, y, born:t, life:520});
+  }
+  function drawSplash(t, baseAlpha){
+    for (const p of splashParticles){
+      const age = t - p.born;
+      if (age<0 || age>p.life) continue;
+      const lp = age/p.life;
+      const alpha = (1-lp)*(baseAlpha===undefined?1:baseAlpha);
+      if (p.ring){
+        const rx = 6 + lp*46, ry = rx*0.32;
+        ctx.save();
+        ctx.globalAlpha = alpha*0.6;
+        ctx.strokeStyle = 'rgba(190,225,255,0.85)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(p.x,p.y,rx,ry,0,0,Math.PI*2);
+        ctx.stroke();
+        ctx.restore();
+        continue;
+      }
+      const gravity = 0.0025;
+      const x = p.x + p.vx*age*0.06;
+      const y = p.y + p.vy*age*0.06 + gravity*age*age*0.02;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#bfe0ff';
+      ctx.shadowColor = 'rgba(140,200,255,0.8)';
+      ctx.shadowBlur = 5;
+      ctx.beginPath(); ctx.arc(x,y,p.r,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  function spawnReactionProducts(x,y,t){
+    const a1 = rr(0,Math.PI*2);
+    const a2 = a1 + Math.PI + rr(-0.6,0.6);
+    products.push({
+      type:'H2O', x, y,
+      vx: Math.cos(a1)*rr(0.5,1.1), vy: Math.sin(a1)*rr(0.5,1.1)-0.3,
+      rot: rr(0,6.28), vr: rr(-0.02,0.02),
+      born:t, life: 3200, scale: rr(0.8,1.05)
+    });
+    products.push({
+      type:'O2', x, y,
+      vx: Math.cos(a2)*rr(0.6,1.3), vy: Math.sin(a2)*rr(0.6,1.3)-0.55,
+      rot: rr(0,6.28), vr: rr(-0.015,0.015),
+      born:t, life: 3200, scale: rr(0.85,1.1)
+    });
+    // tiny reaction spark
+    products.push({
+      type:'spark', x, y, vx:0, vy:0, rot:0, vr:0, born:t, life:420, scale:1
+    });
+  }
+
+  // extra shower of labeled Water/Oxygen molecules at the finale, so the
+  // takeaway ("byproduct is water and oxygen") reads clearly on screen
+  function spawnFinaleShower(t){
+    const n = 18;
+    for (let i=0;i<n;i++){
+      const a = rr(0,Math.PI*2);
+      const dist = rr(20,95);
+      const x = cx()+Math.cos(a)*dist;
+      const y = cy()+Math.sin(a)*dist*0.8;
+      const outA = a + rr(-0.35,0.35);
+      const speed = rr(0.6,1.5);
+      const life = rr(4400,5600);
+      const type = i%2===0 ? 'H2O' : 'O2';
+      products.push({
+        type, x, y,
+        vx: Math.cos(outA)*speed, vy: Math.sin(outA)*speed - rr(0.2,0.6),
+        rot: rr(0,6.28), vr: rr(-0.02,0.02),
+        born: t + i*70, life, scale: rr(1.05,1.4)
+      });
+    }
+  }
+
+  function drawProducts(t){
+    for (const p of products){
+      const age = t-p.born;
+      if (age<0 || age>p.life) continue;
+      const lp = age/p.life;
+      const x = p.x + p.vx*age*0.05;
+      const y = p.y + p.vy*age*0.05;
+      if (p.type==='spark'){
+        const r = 4 + lp*26;
+        ctx.save();
+        ctx.globalAlpha = (1-lp)*0.9;
+        ctx.strokeStyle = '#eafffb';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = '#8ff7ea'; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.stroke();
+        ctx.restore();
+        continue;
+      }
+      const fadeIn = Math.min(1, age/220);
+      const fadeOut = lp>0.72 ? Math.max(0,1-(lp-0.72)/0.28) : 1;
+      const alpha = fadeIn*fadeOut;
+      const glow = lp<0.35;
+      const rot = p.rot + p.vr*age;
+      if (p.type==='H2O') drawWater(x,y,p.scale,rot,alpha,glow);
+      else drawO2(x,y,p.scale,rot,alpha,glow);
+
+      // floating label (plain-language, single word)
+      if (lp>0.06 && lp<0.55){
+        ctx.save();
+        const labAlpha = Math.min(1,(lp-0.06)/0.15) * (1-Math.max(0,(lp-0.4)/0.15));
+        ctx.globalAlpha = Math.max(0,labAlpha)*0.9;
+        ctx.font = '600 13px "Courier New", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = p.type==='H2O' ? '#dff6ff' : '#a8fff0';
+        ctx.shadowColor = p.type==='H2O' ? 'rgba(120,180,255,0.8)' : 'rgba(120,255,220,0.8)';
+        ctx.shadowBlur = 6;
+        ctx.fillText(p.type==='H2O' ? 'Water' : 'Oxygen', x, y-26-lp*10);
+        ctx.restore();
+      }
+    }
+  }
+
+  // ---------------- electrify: molecules spark/arc as they react, instead of membrane cracks ----------------
+  function hash(n){ const s = Math.sin(n)*43758.5453; return s - Math.floor(s); }
+
+  function drawImpactGlow(x,y,intensity){
+    if (intensity<=0) return;
+    ctx.save();
+    const r = 24 + intensity*12;
+    const g = ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,   `rgba(225,246,255,${0.6*intensity})`);
+    g.addColorStop(0.4, `rgba(150,215,255,${0.38*intensity})`);
+    g.addColorStop(1,   'rgba(150,215,255,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawElectricArcs(x,y,scale,intensity,t){
+    if (intensity<=0) return;
+    const nArcs = 5;
+    const seed = Math.floor(t/45); // re-jitters roughly every 45ms for a flickery, electric feel
+    ctx.save();
+    ctx.globalAlpha = intensity;
+    ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.shadowColor = 'rgba(140,230,255,0.95)';
+    ctx.shadowBlur = 12;
+    for (let i=0;i<nArcs;i++){
+      const baseAngle = (i/nArcs)*Math.PI*2 + hash(seed*0.13+i)*Math.PI*2;
+      let px=x, py=y, ang=baseAngle;
+      ctx.beginPath();
+      ctx.moveTo(px,py);
+      const segs = 3;
+      for (let s=0;s<segs;s++){
+        ang += (hash(seed+i*13.7+s*7.3)-0.5)*1.7;
+        const len = (7+s*6)*scale*(0.8+intensity*0.6);
+        px += Math.cos(ang)*len;
+        py += Math.sin(ang)*len;
+        ctx.lineTo(px,py);
+      }
+      ctx.strokeStyle = `rgba(210,250,255,${0.9*intensity})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.strokeStyle = `rgba(140,225,255,${0.4*intensity})`;
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // ---------------- debris particles for final rupture ----------------
+  let debris = [];
+  function spawnDebrisBurst(t){
+    for (let i=0;i<170;i++){
+      const a = rr(0,Math.PI*2);
+      const speed = rr(1.2,6.5);
+      debris.push({
+        x: cx()+rr(-20,20), y: cy()+rr(-20,20),
+        vx: Math.cos(a)*speed, vy: Math.sin(a)*speed*0.8 - rr(0,1.5),
+        r: rr(1.5,6),
+        born: t,
+        hue: rand()<0.55 ? 'crack' : 'cell',
+        rot: rr(0,6.28), vr: rr(-0.08,0.08),
+        life: 2600
+      });
+    }
+  }
+  // small chips flaking off the membrane at each attack site, before the full rupture
+  function spawnFlake(x,y,t){
+    const n = 3 + Math.floor(rr(0,3));
+    for (let i=0;i<n;i++){
+      const a = Math.atan2(y-cy(), x-cx()) + rr(-0.8,0.8);
+      const speed = rr(0.5,1.6);
+      debris.push({
+        x: x+rr(-4,4), y: y+rr(-4,4),
+        vx: Math.cos(a)*speed, vy: Math.sin(a)*speed*0.7 - rr(0,0.6),
+        r: rr(2,4.5),
+        born: t,
+        hue: 'flake',
+        rot: rr(0,6.28), vr: rr(-0.05,0.05),
+        life: rr(1800,2600)
+      });
+    }
+  }
+  function drawDebris(t){
+    for (const d of debris){
+      const age = t - d.born;
+      if (age<0) continue;
+      const life = d.life || 2600;
+      const p = age/life;
+      if (p>1) continue;
+      const x = d.x + d.vx*age*0.06;
+      const y = d.y + d.vy*age*0.06 + 0.0009*age*age*0.02;
+      const alpha = 1-p;
+      ctx.save();
+      ctx.translate(x,y);
+      ctx.rotate(d.rot + d.vr*age*0.05);
+      ctx.globalAlpha = alpha;
+      if (d.hue==='crack'){
+        ctx.fillStyle = '#8ff7ea';
+        ctx.shadowColor = '#5df1e0'; ctx.shadowBlur = 8;
+      } else if (d.hue==='flake'){
+        ctx.fillStyle = '#8a7a3e';
+        ctx.shadowColor = 'transparent';
+      } else {
+        ctx.fillStyle = '#7c8f2a';
+        ctx.shadowColor = 'transparent';
+      }
+      ctx.beginPath();
+      ctx.arc(0,0,d.r,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ---------------- realistic virus rendering ----------------
+  function drawOrganicLabel(localT, ruptureP){
+    const fadeIn = Math.min(1, localT/900);
+    const fadeOut = Math.max(0, 1 - ruptureP*3);
+    const alpha = Math.min(fadeIn, fadeOut);
+    if (alpha<=0) return;
+    const bob = Math.sin(localT*0.0016)*3;
+    const drawLine = (text, y) => {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.font = '900 20px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      // thick dark outline so it reads instantly against any part of the body
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(4,6,2,0.95)';
+      ctx.lineWidth = 5;
+      ctx.strokeText(text, cx(), y);
+      // bright glow behind the fill for extra pop
+      ctx.shadowColor = 'rgba(220,255,140,0.95)';
+      ctx.shadowBlur = 16;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(text, cx(), y);
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#f5ffe6';
+      ctx.fillText(text, cx(), y);
+      ctx.restore();
+    };
+    drawLine('ORGANIC', cy() - 10 + bob);
+    drawLine('MATERIAL', cy() + 16 + bob);
+  }
+
+  const N_FRAGMENTS = 26;
+  const fragBoundaries = [0];
+  { let acc=0; const weights=[];
+    for (let i=0;i<N_FRAGMENTS;i++){ const w = rr(0.6,1.5); weights.push(w); acc+=w; }
+    let running=0;
+    for (let i=0;i<N_FRAGMENTS;i++){ running+=weights[i]; fragBoundaries.push(running/acc); }
+  }
+  const fragPush = [], fragRotDir = [], fragRotSpeed = [], fragOutAngleJitter = [], fragTumble = [];
+  for (let i=0;i<N_FRAGMENTS;i++){
+    fragPush.push(rr(170,290));
+    fragRotDir.push(rand()<0.5?1:-1);
+    fragRotSpeed.push(rr(1.3,3.4));
+    fragOutAngleJitter.push(rr(-0.4,0.4));
+    fragTumble.push(rr(0.7,1.9));
+  }
+
+  function drawVirus(t, localT, ruptureP){
+    const rot = t*0.00004;
+    const split = ruptureP>0;
+    const groups = N_FRAGMENTS;
+    // continuous damage progress: 0 = healthy green, 1 = fully charred + shrunk
+    const damageP = Math.min(1, Math.max(0, (localT - T_APPROACH_END) / (T_RUPTURE_END - T_APPROACH_END)));
+    const baseShrink = 1 - damageP*0.4;
+
+    // sharp final compression right before it bursts -- a quick "wind up" shrink
+    const preExplodeWindow = 500;
+    const preExplodeP = (!split && localT > T_ATTACK_END - preExplodeWindow)
+      ? Math.min(1, (localT - (T_ATTACK_END - preExplodeWindow)) / preExplodeWindow)
+      : 0;
+    const compress = 1 - preExplodeP*preExplodeP*0.3;
+
+    // pulse: a gentle constant breathing, plus a sharp decaying "flinch" on every new attachment
+    const hitAge = t - lastHitT;
+    const hitPulse = hitAge>=0 ? Math.exp(-hitAge/150) * Math.sin(hitAge*0.05) * 0.09 : 0;
+    const breathe = split ? 0 : Math.sin(t*0.0035)*0.018;
+    const pulse = 1 + breathe + hitPulse;
+
+    for (let g=0; g<groups; g++){
+      ctx.save();
+      let fragShrink = baseShrink * pulse * compress;
+      if (split){
+        const gAcenter = ((fragBoundaries[g]+fragBoundaries[g+1])/2)*Math.PI*2 + rot;
+        const gA = gAcenter + fragOutAngleJitter[g];
+        const push = ruptureP*ruptureP*fragPush[g];
+        // graceful dissolve: fragments shrink further and fade smoothly into the backdrop
+        // rather than cutting off abruptly
+        const fade = Math.pow(Math.max(0, 1-ruptureP), 1.6);
+        fragShrink = baseShrink * (1 - ruptureP*0.6);
+        ctx.translate(Math.cos(gA)*push, Math.sin(gA)*push*0.8);
+        ctx.globalAlpha = fade;
+        ctx.rotate(ruptureP*fragTumble[g]*fragRotDir[g]*fragRotSpeed[g]);
+      }
+      ctx.translate(cx(), cy());
+      ctx.scale(fragShrink, fragShrink);
+
+      const fracStart = fragBoundaries[g], fracEnd = fragBoundaries[g+1];
+      const start = Math.floor(fracStart*N_PTS);
+      const end = Math.max(start+1, Math.ceil(fracEnd*N_PTS));
+
+      // --- glossy 3D membrane fill: strong offset highlight -> mid -> dark rim ---
+      // colors shift from healthy green to oxidized brown as damageP rises
+      ctx.beginPath();
+      for (let i=start;i<=end;i++){
+        const [x,y] = blobPoint(i%N_PTS, t, rot, 1, 0);
+        if (i===start) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+      ctx.lineTo(0,0);
+      ctx.closePath();
+      const bodyG = ctx.createRadialGradient(
+        -BASE_R*0.4,-BASE_R*0.45, BASE_R*0.08,
+        -BASE_R*0.1,-BASE_R*0.1, BASE_R*1.35
+      );
+      bodyG.addColorStop(0,   lerpHex3('#e4f6a8','#f0dcae','#8a8a90',damageP));
+      bodyG.addColorStop(0.22,lerpHex3('#b3d158','#c99a5a','#5a5a60',damageP));
+      bodyG.addColorStop(0.5, lerpHex3('#7c9a2c','#8a5a2a','#333338',damageP));
+      bodyG.addColorStop(0.78,lerpHex3('#4a5c16','#5a3517','#1a1a1d',damageP));
+      bodyG.addColorStop(1,   lerpHex3('#232c0a','#241207','#08080a',damageP));
+      ctx.fillStyle = bodyG;
+      ctx.fill();
+      // thin dark contour keeps the silhouette crisp without flattening the shading
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(12,4,3,0.55)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // --- glossy specular highlight + grounding contact shadow, clipped to the shape ---
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-atop';
+      const spec = ctx.createRadialGradient(
+        -BASE_R*0.46,-BASE_R*0.52, 0.5,
+        -BASE_R*0.46,-BASE_R*0.52, BASE_R*0.42
+      );
+      spec.addColorStop(0,'rgba(255,255,240,0.55)');
+      spec.addColorStop(0.6,'rgba(255,255,240,0.15)');
+      spec.addColorStop(1,'rgba(255,255,240,0)');
+      ctx.fillStyle = spec;
+      ctx.fillRect(-BASE_R*2,-BASE_R*2,BASE_R*4,BASE_R*4);
+
+      const ao = ctx.createRadialGradient(
+        BASE_R*0.5,BASE_R*0.55, BASE_R*0.1,
+        BASE_R*0.5,BASE_R*0.55, BASE_R*1.1
+      );
+      ao.addColorStop(0,'rgba(4,2,2,0.18)');
+      ao.addColorStop(1,'rgba(4,2,2,0)');
+      ctx.fillStyle = ao;
+      ctx.fillRect(-BASE_R*2,-BASE_R*2,BASE_R*4,BASE_R*4);
+
+      // a few soft accent blotches for organic surface variation (not flat/noisy)
+      for (const bl of blotches){
+        const frac = bl.a/(Math.PI*2);
+        if (frac < fracStart || frac >= fracEnd) continue;
+        const rad = bl.rFrac*(BASE_R*0.85);
+        const bx2 = Math.cos(bl.a+rot)*rad;
+        const by2 = Math.sin(bl.a+rot)*rad;
+        const bg = ctx.createRadialGradient(bx2,by2,0.5,bx2,by2,bl.size);
+        bg.addColorStop(0,'rgba(10,16,3,0.28)');
+        bg.addColorStop(1,'rgba(10,16,3,0)');
+        ctx.fillStyle = bg;
+        ctx.beginPath(); ctx.arc(bx2,by2,bl.size,0,Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+
+      // --- spike proteins: glossy 3D trimeric crowns (the defining "corona" silhouette) ---
+      for (let s=0;s<N_SPIKES;s++){
+        const frac = s/N_SPIKES;
+        if (frac < fracStart || frac >= fracEnd) continue;
+        const a = spikeAngles[s] + rot;
+        const baseR = BASE_R*0.93;
+        const len = spikeLens[s];
+        const w = spikeWidth[s];
+        const bx = Math.cos(a)*baseR, by = Math.sin(a)*baseR;
+        const tiltA = a + spikeTilt[s];
+        const nx = Math.cos(tiltA), ny = Math.sin(tiltA);
+        const perpx = -ny, perpy = nx;
+        const neckX = bx+nx*len*0.8, neckY = by+ny*len*0.8;
+        const tipX = bx+nx*len, tipY = by+ny*len;
+
+        // tapered stalk: narrow at the base, flaring wider toward the funnel tip
+        ctx.beginPath();
+        ctx.moveTo(bx+perpx*w*0.42, by+perpy*w*0.42);
+        ctx.lineTo(neckX+perpx*w*0.62, neckY+perpy*w*0.62);
+        ctx.lineTo(neckX-perpx*w*0.62, neckY-perpy*w*0.62);
+        ctx.lineTo(bx-perpx*w*0.42, by-perpy*w*0.42);
+        ctx.closePath();
+        const stalkG = ctx.createLinearGradient(bx-perpx*w,by-perpy*w, bx+perpx*w,by+perpy*w);
+        stalkG.addColorStop(0,   lerpHex3('#1c230a','#241207','#08080a',damageP));
+        stalkG.addColorStop(0.42,lerpHex3('#71862e','#8a5a2a','#4a4a50',damageP));
+        stalkG.addColorStop(0.58,lerpHex3('#889f37','#a06f34','#5a5a60',damageP));
+        stalkG.addColorStop(1,   lerpHex3('#171d08','#1c0f06','#060608',damageP));
+        ctx.fillStyle = stalkG;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(10,4,3,0.5)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // funnel/vent tip: a flared hollow opening, like the reference's trumpet-shaped spikes
+        const rimRx = 8.5 + spikeHue[s]*0.05;
+        const rimRy = rimRx * 0.62;
+        const rimAngle = tiltA;
+        ctx.save();
+        ctx.translate(tipX, tipY);
+        ctx.rotate(rimAngle);
+        // outer flared rim, glossy
+        const rimG = ctx.createRadialGradient(-rimRx*0.3,-rimRy*0.35, rimRx*0.1, 0,0, rimRx);
+        rimG.addColorStop(0,   lerpHex3('#f3ffc2','#f0dcae','#b8b8be',damageP));
+        rimG.addColorStop(0.45,lerpHex3('#c7de6f','#c99a5a','#6a6a70',damageP));
+        rimG.addColorStop(0.8, lerpHex3('#7f9a2f','#8a5a2a','#333338',damageP));
+        rimG.addColorStop(1,   lerpHex3('#333f0f','#3a2010','#101012',damageP));
+        ctx.beginPath();
+        ctx.ellipse(0,0, rimRx, rimRy, 0, 0, Math.PI*2);
+        ctx.fillStyle = rimG;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(10,4,3,0.55)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        // dark hollow interior, offset slightly for a sense of depth into the tube
+        ctx.beginPath();
+        ctx.ellipse(rimRx*0.12, rimRy*0.1, rimRx*0.55, rimRy*0.55, 0, 0, Math.PI*2);
+        ctx.fillStyle = lerpHex3('#180a06','#180a06','#040405', damageP);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // --- secondary stud proteins scattered between spikes for surface detail ---
+      for (const stud of studs){
+        const frac = stud.a/(Math.PI*2);
+        if (frac < fracStart || frac >= fracEnd) continue;
+        const a = stud.a + rot;
+        const baseR = BASE_R*0.94;
+        const nx = Math.cos(a), ny = Math.sin(a);
+        const bx = nx*baseR, by = ny*baseR;
+        const tipX = bx+nx*stud.len, tipY = by+ny*stud.len;
+        ctx.strokeStyle = lerpHex3('#3c4a13','#7a3a24','#3a3a3e',damageP);
+        ctx.lineWidth = 2.2;
+        ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(tipX,tipY); ctx.stroke();
+        const studG = ctx.createRadialGradient(
+          tipX-stud.r*0.4, tipY-stud.r*0.4, stud.r*0.05,
+          tipX, tipY, stud.r
+        );
+        studG.addColorStop(0,lerpHex3('#e6f3a8','#e8cf9a','#c0c0c4',damageP));
+        studG.addColorStop(0.6,lerpHex3('#93ac3e','#9a6a34','#6a6a70',damageP));
+        studG.addColorStop(1,lerpHex3('#2c3610','#301a0c','#141416',damageP));
+        ctx.beginPath();
+        ctx.arc(tipX,tipY,stud.r,0,Math.PI*2);
+        ctx.fillStyle = studG;
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // --- 3D spore bumps clustered at the center of the organic material ---
+    if (!split){
+      ctx.save();
+      ctx.translate(cx(), cy());
+      ctx.scale(baseShrink*pulse*compress, baseShrink*pulse*compress);
+      for (const sp of spores){
+        const bob = Math.sin(t*0.0018 + sp.phase)*1.4;
+        const sx = sp.dx, sy = sp.dy + bob;
+        const sporeG = ctx.createRadialGradient(
+          sx-sp.r*0.4, sy-sp.r*0.4, sp.r*0.06,
+          sx, sy, sp.r
+        );
+        sporeG.addColorStop(0,   lerpHex3('#f3ffc2','#f0dcae','#b0b0b6',damageP));
+        sporeG.addColorStop(0.45,lerpHex3('#c7de6f','#c99a5a','#6a6a70',damageP));
+        sporeG.addColorStop(0.8, lerpHex3('#7f9a2f','#8a5a2a','#333338',damageP));
+        sporeG.addColorStop(1,   lerpHex3('#333f0f','#3a2010','#0c0c0e',damageP));
+        ctx.beginPath();
+        ctx.arc(sx,sy,sp.r,0,Math.PI*2);
+        ctx.fillStyle = sporeG;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(8,6,3,0.5)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  // ---------------- state machine per cycle ----------------
+  let lastCrackSpawn = 0;
+  let ruptureTriggered = false;
+  let cycleStartWallTime = null;
+  let lastCycleIndex = 0;
+  let lastHitT = -99999; // timestamp of most recent membrane attachment, drives the impact pulse
+
+  function resetCycleState(){
+    debris = [];
+    products = [];
+    splashParticles = [];
+    heroSplashTriggered = false;
+    ruptureTriggered = false;
+    lastHitT = -99999;
+    for (const m of MOLS){
+      Object.assign(m, makeMolecule(m.id));
+    }
+  }
+
+  function frame(now){
+    if (cycleStartWallTime===null) cycleStartWallTime = now;
+    const elapsed = now - cycleStartWallTime;
+    const cycleIndex = Math.floor(elapsed / CYCLE);
+    let localT = elapsed % CYCLE;
+    // reset exactly once per cycle boundary crossed, regardless of frame timing jitter
+    // (checking a narrow "localT < 16ms" window could get skipped on a slow/delayed frame,
+    // leaving molecules stuck in their already-reacted state for the whole next loop)
+    if (cycleIndex > lastCycleIndex){
+      lastCycleIndex = cycleIndex;
+      resetCycleState();
+    }
+    const t = now;
+
+    ctx.clearRect(0,0,W,H);
+
+    const bgPulse = 0.5+0.5*Math.sin(t*0.0006);
+    ctx.save();
+    const vg = ctx.createRadialGradient(cx(),cy(),20,cx(),cy(),Math.max(W,H)*0.75);
+    vg.addColorStop(0, `rgba(24,22,32,${0.55+0.08*bgPulse})`);
+    vg.addColorStop(1, 'rgba(3,3,6,1)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
+
+    ctx.save();
+    for (let i=0;i<40;i++){
+      const dx = (i*97 % W);
+      const dy = ((i*53 + t*0.01) % H);
+      ctx.globalAlpha = 0.06 + 0.04*Math.sin(i+t*0.001);
+      ctx.fillStyle = '#bfe9df';
+      ctx.beginPath(); ctx.arc(dx,dy,1.1,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+
+    let phaseName, ruptureP=0, reactionText='';
+    if (localT < T_APPROACH_END){
+      phaseName = 'APPROACH';
+    } else if (localT < T_ATTACK_END){
+      phaseName = 'OXIDATIVE ATTACK';
+      reactionText = 'Hydrogen peroxide breaks down into Water + Oxygen';
+      if (t - lastCrackSpawn > 170){
+        lastCrackSpawn = t;
+        const idle = MOLS.filter(m=>m.state==='drift');
+        if (idle.length){
+          const m = idle[Math.floor(rand()*idle.length)];
+          const si = Math.floor(rand()*N_SPIKES);
+          const a = spikeAngles[si];
+          const r = BASE_R*0.98;
+          const tx = cx() + Math.cos(a)*r;
+          const ty = cy() + Math.sin(a)*r*1;
+          m.state = 'seek';
+          m.target = [tx,ty];
+          m.seekStart = localT;
+          m._attachAt = localT + 900;
+        }
+      }
+      for (const m of MOLS){
+        if (m.state==='seek' && localT >= m._attachAt){
+          m.state = 'attached';
+          m.attachStartLocalT = localT;
+          spawnFlake(m.target[0], m.target[1], t);
+          m.reactAt = localT + rr(650,1150);
+          lastHitT = t;
+        }
+        if (m.state==='attached' && m.reactAt!==null && localT >= m.reactAt){
+          m.state = 'reacted';
+          spawnReactionProducts(m.target[0], m.target[1], t);
+        }
+      }
+    } else if (localT < T_RUPTURE_END){
+      phaseName = 'MEMBRANE RUPTURE';
+      if (!ruptureTriggered){
+        ruptureTriggered = true;
+        spawnDebrisBurst(t);
+        spawnFinaleShower(t);
+        for (const m of MOLS){
+          if (m.state==='attached'){
+            spawnReactionProducts(m.target[0], m.target[1], t);
+            m.state='reacted';
+          }
+        }
+      }
+      ruptureP = Math.min(1, (localT - T_ATTACK_END)/(T_RUPTURE_END-T_ATTACK_END));
+    } else {
+      phaseName = 'DISPERSION';
+      reactionText = 'Byproducts released: Water + Oxygen';
+      ruptureP = 1;
+    }
+    if (localT >= T_HERO_START){
+      phaseName = 'RESULT';
+      reactionText = 'The byproduct: Water + Oxygen';
+    }
+    phaseLabel.textContent = phaseName;
+    reactionLabel.textContent = reactionText;
+    const barP = Math.min(1, localT/CYCLE);
+    barFill.style.width = (barP*100).toFixed(1)+'%';
+
+    if (ruptureP < 1){
+      // soft grounding contact shadow beneath the organism for extra 3D depth
+      ctx.save();
+      const shadowY = cy() + BASE_R*0.86;
+      const shadowScale = Math.max(0.3, 1 - Math.min(1,(localT-T_APPROACH_END)/(T_RUPTURE_END-T_APPROACH_END))*0.4);
+      const dropSh = ctx.createRadialGradient(cx(),shadowY,4,cx(),shadowY,BASE_R*0.85*shadowScale);
+      dropSh.addColorStop(0,'rgba(0,0,0,0.38)');
+      dropSh.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle = dropSh;
+      ctx.beginPath();
+      ctx.ellipse(cx(), shadowY, BASE_R*0.85*shadowScale, BASE_R*0.22*shadowScale, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+
+      drawVirus(t, localT, ruptureP);
+      drawOrganicLabel(localT, ruptureP);
+      for (const m of MOLS){
+        if (m.state==='attached' && m.reactAt!==null){
+          const remain = m.reactAt - localT;
+          const electrify = remain < 380 ? 1 - Math.max(0,remain)/380 : 0;
+          if (electrify>0) drawImpactGlow(m.target[0], m.target[1], electrify);
+        }
+      }
+    } else {
+      drawVirus(t, localT, 1);
+    }
+
+    for (const m of MOLS){
+      if (m.state==='reacted') continue;
+      const [x,y] = moleculePos(m, t, localT);
+      const glow = m.state==='attached' || m.state==='seek';
+      const sc = moleculeScale(m, localT);
+      drawH2O2(x,y,sc, m.rot + t*0.0006 + moleculeExtraSpin(m, localT), glow);
+      if (m.labeled) drawBrandLabel(x,y,sc,0.92);
+      // molecule electrifies as it reacts with the membrane, ramping up right before it splits
+      if (m.state==='attached' && m.reactAt!==null){
+        const remain = m.reactAt - localT;
+        const electrify = remain < 380 ? 1 - Math.max(0,remain)/380 : 0;
+        drawElectricArcs(x, y, sc, electrify, t);
+      }
+    }
+
+    drawProducts(t);
+    drawDebris(t);
+
+    if (localT >= T_HERO_START){
+      drawHeroMolecules(t, localT);
+    }
+
+    const flashAge = localT - T_ATTACK_END;
+    if (flashAge>=0 && flashAge<260){
+      ctx.save();
+      ctx.globalAlpha = 0.5*(1-flashAge/260);
+      ctx.fillStyle = '#eafffb';
+      ctx.fillRect(0,0,W,H);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

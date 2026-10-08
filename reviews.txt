@@ -1,0 +1,11 @@
+# PeroXcity reviews — one per line. Format:  quote | name | where it came from | short version for the floating background (optional)
+# Lines starting with # are ignored. Save the file, redeploy, and the site updates. Keep quotes word-for-word; initials for private individuals.
+These guys are the best. Not only do they have great products, they have amazing customer service, and they always go the extra mile to help you and make sure that you have everything you need. | Frank L. | Google review | These guys are the best.
+The owner really knows his stuff. Has quality products and has gotten me out of a bind multiple times. He has been great offering advice when needed. | John S. | Google review | The owner really knows his stuff.
+We are beyond satisfied with these results that Superior Quality Coatings provided for us! They go out of their way to promote customer satisfaction and do so in a positive timeline around your schedule. | Tom B. | Port Charlotte, FL | Beyond satisfied with the results.
+I needed product ASAP and the rep got it to me that day! Thank you Superior Quality Coatings. | Devin R. | Google review | Got it to me that day!
+Best products on the market. | David D. | Google review | Best products on the market.
+The best product for the best applicators! | Paver Mgmt Group | Google review | The best product for the best applicators!
+Awesome people. We are excited to do many demonstrations with their product. | Hydromax Exteriors | Google review | Awesome people.
+Superior Quality Coatings — great!!! Product great. Service!!! Can't say enough. | Steve S. | Facebook | Can't say enough.
+The product works and it's cost effective. I know Greg personally and he is as genuine as they come. | Patric L. | Facebook | The product works and it's cost effective.

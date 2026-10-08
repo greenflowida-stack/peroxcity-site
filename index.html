@@ -396,6 +396,12 @@
     position:relative; transition:transform .2s ease, border-color .2s ease;
   }
   .how-card:hover{transform:translateY(-4px); border-color:var(--line-bright); box-shadow:0 0 30px rgba(47,198,255,0.1);}
+  .how-art{position:relative; aspect-ratio:5/3; border-radius:8px; overflow:hidden; background:radial-gradient(ellipse at 50% 30%, rgba(47,198,255,0.08), transparent 70%), var(--panel2); border:1px solid var(--line); margin:-10px -4px 18px;}
+  .how-art .how-svg{width:100%; height:100%; display:block;}
+  .how-art .how-photo{display:none; position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .how-art .how-photo.loaded{display:block;}
+  .how-art .how-photo.loaded + .how-svg{display:none;}
+  @media (prefers-reduced-motion: reduce){ .how-svg *{animation:none!important;} }
   .how-card .step-index{font-family:'Big Shoulders Display'; font-weight:800; font-size:50px; color:rgba(47,198,255,0.22); line-height:1;}
   .how-card h4{font-family:'Big Shoulders Display'; font-weight:800; font-size:22px; text-transform:uppercase; margin:14px 0 10px; color:var(--white);}
   .how-card p{font-size:14px; color:var(--dim);}
@@ -927,24 +933,147 @@
 
     <div class="how-steps">
       <div class="how-card">
+        <div class="how-art"><img class="how-photo" data-src="how/mix.jpg" alt=""><svg class="how-svg" viewBox="0 0 200 120" aria-hidden="true">
+  <defs><clipPath id="hm-clip"><path d="M72 46 L128 46 L122 106 L78 106 Z"/></clipPath></defs>
+  <!-- bucket -->
+  <path d="M72 46 L128 46 L122 106 L78 106 Z" fill="#0D1530" stroke="#2FC6FF" stroke-width="2" stroke-linejoin="round"/>
+  <g clip-path="url(#hm-clip)">
+    <rect x="70" y="106" width="60" height="70" fill="#2FC6FF" opacity="0.55">
+      <animate attributeName="y" values="106;106;96;96;74;74;70;70;106" keyTimes="0;.08;.25;.3;.58;.62;.8;.95;1" dur="9s" repeatCount="indefinite"/>
+    </rect>
+    <!-- stir swirl -->
+    <path d="M80 84 q20 -10 40 0 q-20 10 -40 0" fill="none" stroke="#F3F6FF" stroke-width="1.5" opacity="0">
+      <animate attributeName="opacity" values="0;0;0;0.8;0;0" keyTimes="0;.8;.84;.9;.96;1" dur="9s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <!-- 1: Part A jug pouring -->
+  <g transform="rotate(-38 40 38)">
+    <rect x="28" y="22" width="24" height="32" rx="3" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+    <rect x="34" y="16" width="12" height="7" rx="1.5" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+    <text x="40" y="43" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="13" fill="#2FC6FF">A</text>
+  </g>
+  <path d="M58 30 C70 34 82 42 90 52" fill="none" stroke="#2FC6FF" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 5" opacity="0">
+    <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.03;.22;.26;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-dashoffset" from="22" to="0" dur="0.5s" repeatCount="indefinite"/>
+  </path>
+  <!-- 2: water from tap -->
+  <path d="M126 14 h18 v8 h-6" fill="none" stroke="#8D9AC4" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="138" y1="22" x2="112" y2="50" stroke="#F3F6FF" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 5" opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.28;.31;.55;.58;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-dashoffset" from="20" to="0" dur="0.45s" repeatCount="indefinite"/>
+  </line>
+  <!-- 3: Part B dropper -->
+  <g>
+    <rect x="152" y="40" width="14" height="22" rx="3" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+    <rect x="156" y="35" width="6" height="6" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+    <text x="159" y="56" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="700" font-size="11" fill="#2FC6FF">B</text>
+  </g>
+  <circle cx="159" cy="66" r="2.5" fill="#2FC6FF" opacity="0">
+    <animate attributeName="cy" values="66;66;66;96;66" keyTimes="0;.62;.64;.74;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="cx" values="159;159;159;118;159" keyTimes="0;.62;.64;.74;1" dur="9s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.62;.64;.73;.75;1" dur="9s" repeatCount="indefinite"/>
+  </circle>
+  <!-- order labels -->
+  <g font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="0.08em" text-anchor="middle">
+    <text x="36" y="114" fill="#2FC6FF"><animate attributeName="opacity" values="1;1;.35;.35;1" keyTimes="0;.26;.3;.95;1" dur="9s" repeatCount="indefinite"/>1 PART A</text>
+    <text x="100" y="114" fill="#2FC6FF" opacity=".35"><animate attributeName="opacity" values=".35;.35;1;1;.35;.35" keyTimes="0;.28;.31;.58;.62;1" dur="9s" repeatCount="indefinite"/>2 WATER</text>
+    <text x="164" y="114" fill="#2FC6FF" opacity=".35"><animate attributeName="opacity" values=".35;.35;1;1;.35" keyTimes="0;.62;.65;.95;1" dur="9s" repeatCount="indefinite"/>3 PART B</text>
+  </g>
+</svg></div>
         <div class="step-index">01</div>
         <h4>Mix</h4>
         <p><strong style="color:var(--white);">Order matters.</strong> Add Part A to a clean plastic container and <strong style="color:var(--white);">dilute it with clean water first</strong> to your target ratio &mdash; 1:4, 1:3, or 1:2 depending on the job. <strong style="color:var(--white);">Only then</strong> add Part B Accelerator per the chart and stir or agitate for about a minute. Never add Part B to undiluted concentrate. Avoid well water.</p>
         <span class="time">See mix ratio guide</span>
       </div>
       <div class="how-card">
+        <div class="how-art"><img class="how-photo" data-src="how/spray.jpg" alt=""><svg class="how-svg" viewBox="0 0 200 120" aria-hidden="true">
+  <!-- surface -->
+  <rect x="0" y="92" width="200" height="28" fill="#1c2648"/>
+  <path d="M0 92 H200" stroke="#8D9AC4" stroke-width="1" opacity=".6"/>
+  <!-- tank sprayer -->
+  <rect x="16" y="56" width="26" height="40" rx="5" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+  <rect x="24" y="44" width="10" height="12" rx="2" fill="#0D1530" stroke="#2FC6FF" stroke-width="2"/>
+  <line x1="29" y1="44" x2="29" y2="34" stroke="#2FC6FF" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="21" y1="34" x2="37" y2="34" stroke="#2FC6FF" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="29" y="108" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#8D9AC4" letter-spacing="0.08em">PLASTIC ONLY</text>
+  <!-- hose + wand -->
+  <path d="M42 70 C56 70 58 58 66 58" fill="none" stroke="#2FC6FF" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="66" y1="58" x2="96" y2="52" stroke="#2FC6FF" stroke-width="4" stroke-linecap="round"/>
+  <line x1="72" y1="57" x2="74" y2="66" stroke="#2FC6FF" stroke-width="3" stroke-linecap="round"/>
+  <!-- mist -->
+  <circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="171" dur="1.08s" begin="0.0s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="52" dur="1.08s" begin="0.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.08s" begin="0.0s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="171" dur="1.05s" begin="0.11s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="68" dur="1.05s" begin="0.11s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.05s" begin="0.11s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.8" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="178" dur="1.02s" begin="0.22s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="58" dur="1.02s" begin="0.22s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.02s" begin="0.22s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.4" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="187" dur="1.28s" begin="0.33s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="50" dur="1.28s" begin="0.33s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.28s" begin="0.33s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="182" dur="1.11s" begin="0.44s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="46" dur="1.11s" begin="0.44s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.11s" begin="0.44s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.4" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="190" dur="1.29s" begin="0.55s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="44" dur="1.29s" begin="0.55s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.29s" begin="0.55s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.8" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="178" dur="1.43s" begin="0.66s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="43" dur="1.43s" begin="0.66s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.43s" begin="0.66s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="186" dur="1.29s" begin="0.77s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="59" dur="1.29s" begin="0.77s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.29s" begin="0.77s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="174" dur="1.29s" begin="0.88s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="48" dur="1.29s" begin="0.88s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.29s" begin="0.88s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="2.2" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="171" dur="1.36s" begin="0.99s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="45" dur="1.36s" begin="0.99s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.36s" begin="0.99s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.8" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="186" dur="1.34s" begin="1.1s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="49" dur="1.34s" begin="1.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.34s" begin="1.1s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.8" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="176" dur="1.46s" begin="1.21s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="57" dur="1.46s" begin="1.21s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.46s" begin="1.21s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.4" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="172" dur="1.35s" begin="1.32s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="67" dur="1.35s" begin="1.32s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.35s" begin="1.32s" repeatCount="indefinite"/></circle><circle cx="98" cy="52" r="1.8" fill="#2FC6FF" opacity="0"><animate attributeName="cx" from="98" to="185" dur="1.25s" begin="1.43s" repeatCount="indefinite"/><animate attributeName="cy" from="52" to="52" dur="1.25s" begin="1.43s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" keyTimes="0;.1;.6;1" dur="1.25s" begin="1.43s" repeatCount="indefinite"/></circle>
+  <!-- foam forming on surface -->
+  <circle cx="120" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="0.5s" repeatCount="indefinite"/></circle><circle cx="135" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="0.87s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="0.87s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="0.87s" repeatCount="indefinite"/></circle><circle cx="150" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="1.24s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="1.24s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="1.24s" repeatCount="indefinite"/></circle><circle cx="165" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="1.61s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="1.61s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="1.61s" repeatCount="indefinite"/></circle><circle cx="180" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="1.98s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="1.98s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="1.98s" repeatCount="indefinite"/></circle><circle cx="128" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="2.35s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="2.35s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="2.35s" repeatCount="indefinite"/></circle><circle cx="158" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="2.72s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="2.72s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="2.72s" repeatCount="indefinite"/></circle><circle cx="172" cy="92" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;4;5.5" dur="2.6s" begin="3.09s" repeatCount="indefinite"/><animate attributeName="cy" values="92;82;76" dur="2.6s" begin="3.09s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="2.6s" begin="3.09s" repeatCount="indefinite"/></circle>
+</svg></div>
         <div class="step-index">02</div>
         <h4>Spray</h4>
         <p>Apply generously and evenly to a dry surface using a <strong>plastic</strong> sprayer &mdash; never metal. Start with a 10&prime;&times;10&prime; test area. Oxygen creates foam as it reacts with contamination.</p>
         <span class="time">Plastic sprayer only</span>
       </div>
       <div class="how-card">
+        <div class="how-art"><img class="how-photo" data-src="how/wait.jpg" alt=""><svg class="how-svg" viewBox="0 0 200 120" aria-hidden="true">
+  <rect x="0" y="90" width="200" height="30" fill="#1c2648"/>
+  <path d="M0 90 H200" stroke="#8D9AC4" stroke-width="1" opacity=".6"/>
+  <!-- grime that fades as foam works -->
+  <g fill="#3a4466">
+    <ellipse cx="40" cy="92" rx="22" ry="4"><animate attributeName="opacity" values="1;1;.15;.15;1" keyTimes="0;.15;.75;.9;1" dur="8s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="95" cy="93" rx="30" ry="4.5"><animate attributeName="opacity" values="1;1;.15;.15;1" keyTimes="0;.2;.8;.9;1" dur="8s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="150" cy="92" rx="18" ry="3.5"><animate attributeName="opacity" values="1;1;.15;.15;1" keyTimes="0;.1;.7;.9;1" dur="8s" repeatCount="indefinite"/></ellipse>
+  </g>
+  <!-- rising oxygen foam -->
+  <circle cx="22" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="0.0s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="0.0s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="0.0s" repeatCount="indefinite"/></circle><circle cx="38" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="0.37s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="0.37s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="0.37s" repeatCount="indefinite"/></circle><circle cx="55" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="0.74s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="0.74s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="0.74s" repeatCount="indefinite"/></circle><circle cx="70" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="1.11s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="1.11s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="1.11s" repeatCount="indefinite"/></circle><circle cx="86" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="1.48s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="1.48s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="1.48s" repeatCount="indefinite"/></circle><circle cx="102" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="1.85s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="1.85s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="1.85s" repeatCount="indefinite"/></circle><circle cx="118" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="2.22s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="2.22s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="2.22s" repeatCount="indefinite"/></circle><circle cx="134" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="2.59s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="2.59s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="2.59s" repeatCount="indefinite"/></circle><circle cx="150" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="2.96s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="2.96s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="2.96s" repeatCount="indefinite"/></circle><circle cx="166" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="3.33s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="3.33s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="3.33s" repeatCount="indefinite"/></circle><circle cx="30" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="3.7s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="3.7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="3.7s" repeatCount="indefinite"/></circle><circle cx="62" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="4.07s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="4.07s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="4.07s" repeatCount="indefinite"/></circle><circle cx="95" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="4.44s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="4.44s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="4.44s" repeatCount="indefinite"/></circle><circle cx="126" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="4.81s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="4.81s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="4.81s" repeatCount="indefinite"/></circle><circle cx="158" cy="90" r="0" fill="none" stroke="#F3F6FF" stroke-width="1.2" opacity="0"><animate attributeName="r" values="0;5;6.5" dur="3.2s" begin="5.18s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;74" dur="3.2s" begin="5.18s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.85;0" dur="3.2s" begin="5.18s" repeatCount="indefinite"/></circle>
+  <!-- dwell timer -->
+  <g transform="translate(160 36)">
+    <circle r="22" fill="#0D1530" stroke="#1c2648" stroke-width="4"/>
+    <circle r="22" fill="none" stroke="#2FC6FF" stroke-width="4" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90)">
+      <animate attributeName="stroke-dashoffset" values="138.2;0;0" keyTimes="0;.85;1" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <text y="-1" text-anchor="middle" font-family="Big Shoulders Display, sans-serif" font-weight="800" font-size="17" fill="#F3F6FF">15</text>
+    <text y="10" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" letter-spacing="0.1em" fill="#8D9AC4">MIN</text>
+  </g>
+  <text x="18" y="30" font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="0.08em" fill="#2FC6FF">OXYGEN WORKING</text>
+  <text x="18" y="42" font-family="IBM Plex Sans, sans-serif" font-size="8.5" fill="#8D9AC4">No scrubbing &#8212; keep it wet</text>
+</svg></div>
         <div class="step-index">03</div>
         <h4>Wait</h4>
         <p>Allow about 15 minutes of contact time. A stiff brush or broom ensures uniform contact on stubborn spots if needed &mdash; harsh scrubbing isn't required. Keep the surface wet with foam and avoid direct sunlight where possible.</p>
         <span class="time">~15 min dwell</span>
       </div>
       <div class="how-card">
+        <div class="how-art"><img class="how-photo" data-src="how/rinse.jpg" alt=""><svg class="how-svg" viewBox="0 0 200 120" aria-hidden="true">
+  <defs><clipPath id="hr-clip"><rect x="0" y="86" width="200" height="34"/></clipPath></defs>
+  <!-- dirty surface -->
+  <rect x="0" y="92" width="200" height="28" fill="#2a3150"/>
+  <g fill="#3a4466"><ellipse cx="60" cy="93" rx="30" ry="4"/><ellipse cx="130" cy="93" rx="26" ry="4"/><ellipse cx="178" cy="93" rx="16" ry="3.5"/></g>
+  <!-- clean surface sweeping in from the left -->
+  <g clip-path="url(#hr-clip)">
+    <rect x="0" y="92" width="0" height="28" fill="#1c2648">
+      <animate attributeName="width" values="0;0;200;200;0" keyTimes="0;.08;.78;.92;1" dur="7s" repeatCount="indefinite"/>
+    </rect>
+    <path d="M0 92 H200" stroke="#2FC6FF" stroke-width="1.2" opacity=".7" stroke-dasharray="200" stroke-dashoffset="200">
+      <animate attributeName="stroke-dashoffset" values="200;200;0;0;200" keyTimes="0;.08;.78;.92;1" dur="7s" repeatCount="indefinite"/>
+    </path>
+    <!-- water sheet sliding along -->
+    <rect x="-30" y="86" width="30" height="34" fill="#2FC6FF" opacity=".35">
+      <animate attributeName="x" values="-30;-30;200;200;-30" keyTimes="0;.08;.78;.92;1" dur="7s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  <!-- hose nozzle moving with the water -->
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0;0 0;180 0;180 0;0 0" keyTimes="0;.08;.78;.92;1" dur="7s" repeatCount="indefinite"/>
+    <path d="M-20 10 C-6 10 0 14 10 22" fill="none" stroke="#8D9AC4" stroke-width="3" stroke-linecap="round"/>
+    <rect x="8" y="18" width="14" height="9" rx="2" fill="#0D1530" stroke="#2FC6FF" stroke-width="2" transform="rotate(38 15 22)"/>
+    <g stroke="#2FC6FF" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="4 4">
+      <line x1="20" y1="30" x2="10" y2="88"><animate attributeName="stroke-dashoffset" from="16" to="0" dur=".4s" repeatCount="indefinite"/></line>
+      <line x1="20" y1="30" x2="20" y2="90"><animate attributeName="stroke-dashoffset" from="16" to="0" dur=".35s" repeatCount="indefinite"/></line>
+      <line x1="20" y1="30" x2="30" y2="88"><animate attributeName="stroke-dashoffset" from="16" to="0" dur=".45s" repeatCount="indefinite"/></line>
+    </g>
+    <circle cx="4" cy="86" r="1.6" fill="#F3F6FF"><animate attributeName="cy" values="86;72;86" dur=".9s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur=".9s" repeatCount="indefinite"/></circle>
+    <circle cx="36" cy="86" r="1.6" fill="#F3F6FF"><animate attributeName="cy" values="86;74;86" dur=".8s" begin=".3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0" dur=".8s" begin=".3s" repeatCount="indefinite"/></circle>
+  </g>
+  <text x="182" y="30" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="0.08em" fill="#2FC6FF">GARDEN HOSE</text>
+  <text x="182" y="42" text-anchor="end" font-family="IBM Plex Sans, sans-serif" font-size="8.5" fill="#8D9AC4">No pressure washer needed</text>
+</svg></div>
         <div class="step-index">04</div>
         <h4>Rinse</h4>
         <p>Rinse the area with a hose. Repeat in small sections until the entire surface is clean &mdash; PeroXcity keeps working in the pores of the surface even after you've moved on.</p>
@@ -1661,7 +1790,7 @@
 
 /* ===== APPLICATION THUMBNAILS: show uses/<slug>.jpg when the file exists ===== */
 (function(){
-  document.querySelectorAll('.cluster-list .thumb[data-src]').forEach(function(img){
+  document.querySelectorAll('.cluster-list .thumb[data-src], .how-art .how-photo[data-src]').forEach(function(img){
     img.addEventListener('load', function(){ img.classList.add('loaded'); });
     img.src = img.getAttribute('data-src');
   });

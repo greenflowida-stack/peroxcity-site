@@ -186,51 +186,51 @@
   /* Faint surface textures behind the header. One surface shows at a time and slowly fades to the next;
      homeowners and pros each get their own set. Gray haze on the right fading clean toward the logo. Pure CSS. */
   .hdr-surface{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;
-    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5)); mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5));}
+    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,0.750), rgba(0,0,0,0.675)); mask-image:linear-gradient(180deg, rgba(0,0,0,0.750), rgba(0,0,0,0.675));}
   .hdr-surface .sf{position:absolute; inset:0; opacity:0; transition:opacity 1.6s ease;}
-  .hdr-surface .sf.on{opacity:.85;}
-  .hdr-surface::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(47,198,255,0.04) 0%, rgba(47,198,255,0.015) 35%, rgba(150,158,175,0.09) 70%, rgba(150,158,175,0.18) 100%);}
+  .hdr-surface .sf.on{opacity:1;}
+  .hdr-surface::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(47,198,255,0.04) 0%, rgba(47,198,255,0.015) 35%, rgba(150,158,175,0.121) 70%, rgba(150,158,175,0.243) 100%);}
   /* wood deck: boards right-to-left with grain */
   .sf-deck{background:
-    repeating-linear-gradient(180deg, transparent 0 37px, rgba(0,0,0,0.5) 37px 40px, rgba(255,255,255,0.05) 40px 41px),
-    repeating-linear-gradient(180deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 6px, rgba(0,0,0,0.12) 6px 7px, transparent 7px 13px, rgba(255,255,255,0.02) 13px 14px, transparent 14px 23px),
-    repeating-linear-gradient(90deg, transparent 0 160px, rgba(255,255,255,0.025) 160px 161px, transparent 161px 420px, rgba(0,0,0,0.10) 420px 422px, transparent 422px 700px);}
+    repeating-linear-gradient(180deg, transparent 0 37px, rgba(0,0,0,0.675) 37px 40px, rgba(255,255,255,0.068) 40px 41px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.047) 0 1px, transparent 1px 6px, rgba(0,0,0,0.162) 6px 7px, transparent 7px 13px, rgba(255,255,255,0.027) 13px 14px, transparent 14px 23px),
+    repeating-linear-gradient(90deg, transparent 0 160px, rgba(255,255,255,0.034) 160px 161px, transparent 161px 420px, rgba(0,0,0,0.135) 420px 422px, transparent 422px 700px);}
   /* composite (Trex) deck: uniform boards, fine even embossed grooves, no knots */
   .sf-trex{background:
-    repeating-linear-gradient(180deg, transparent 0 33px, rgba(0,0,0,0.5) 33px 36px),
-    repeating-linear-gradient(180deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 3px),
-    repeating-linear-gradient(90deg, transparent 0 240px, rgba(0,0,0,0.14) 240px 242px, transparent 242px 480px);}
+    repeating-linear-gradient(180deg, transparent 0 33px, rgba(0,0,0,0.675) 33px 36px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.038) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, transparent 0 240px, rgba(0,0,0,0.189) 240px 242px, transparent 242px 480px);}
   /* lap siding on a house */
   .sf-siding{background:
-    repeating-linear-gradient(180deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 22px, rgba(0,0,0,0.22) 22px 25px, rgba(0,0,0,0.5) 25px 28px),
-    repeating-linear-gradient(90deg, transparent 0 300px, rgba(0,0,0,0.08) 300px 301px, transparent 301px 640px);}
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.061) 0 1px, transparent 1px 22px, rgba(0,0,0,0.297) 22px 25px, rgba(0,0,0,0.675) 25px 28px),
+    repeating-linear-gradient(90deg, transparent 0 300px, rgba(0,0,0,0.108) 300px 301px, transparent 301px 640px);}
   /* broom-finish concrete with control joints */
   .sf-concrete{background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 3px),
-    radial-gradient(rgba(255,255,255,0.05) 0.6px, transparent 0.8px),
-    repeating-linear-gradient(90deg, transparent 0 318px, rgba(0,0,0,0.5) 318px 321px),
-    repeating-linear-gradient(180deg, transparent 0 158px, rgba(0,0,0,0.5) 158px 161px);
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.027) 0 1px, transparent 1px 3px),
+    radial-gradient(rgba(255,255,255,0.068) 0.6px, transparent 0.8px),
+    repeating-linear-gradient(90deg, transparent 0 318px, rgba(0,0,0,0.675) 318px 321px),
+    repeating-linear-gradient(180deg, transparent 0 158px, rgba(0,0,0,0.675) 158px 161px);
     background-size:auto, 9px 9px, auto, auto;}
   /* running-bond pavers */
   .sf-pavers{background:
-    repeating-linear-gradient(180deg, transparent 0 32px, rgba(0,0,0,0.5) 32px 34px),
-    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
-    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 9px);
+    repeating-linear-gradient(180deg, transparent 0 32px, rgba(0,0,0,0.675) 32px 34px),
+    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.675) 0 25%, transparent 0),
+    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.675) 0 25%, transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.027) 0 1px, transparent 1px 9px);
     background-size:auto, 68px 68px, 68px 68px, auto; background-position:0 0, 0 0, 34px 34px, 0 0;}
   /* asphalt shingle roof: staggered tabs, shadow under each course */
   .sf-roof{background:
-    repeating-linear-gradient(180deg, transparent 0 21px, rgba(0,0,0,0.3) 21px 23px, rgba(0,0,0,0.5) 23px 26px),
-    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.35) 0 25%, transparent 0),
-    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.35) 0 25%, transparent 0),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.022) 0 2px, transparent 2px 5px);
+    repeating-linear-gradient(180deg, transparent 0 21px, rgba(0,0,0,0.405) 21px 23px, rgba(0,0,0,0.675) 23px 26px),
+    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.472) 0 25%, transparent 0),
+    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.472) 0 25%, transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.030) 0 2px, transparent 2px 5px);
     background-size:auto, 56px 52px, 56px 52px, auto; background-position:0 0, 0 0, 28px 26px, 0 0;}
   /* commercial kitchen: quarry tile grid with grout, grease haze on the right */
   .sf-kitchen{background:
-    linear-gradient(90deg, rgba(0,0,0,0.5) 0 3px, transparent 3px),
-    linear-gradient(180deg, rgba(0,0,0,0.5) 0 3px, transparent 3px),
-    radial-gradient(ellipse at 85% 60%, rgba(120,110,80,0.12), transparent 60%),
-    radial-gradient(rgba(255,255,255,0.03) 0.6px, transparent 0.9px);
+    linear-gradient(90deg, rgba(0,0,0,0.675) 0 3px, transparent 3px),
+    linear-gradient(180deg, rgba(0,0,0,0.675) 0 3px, transparent 3px),
+    radial-gradient(ellipse at 85% 60%, rgba(120,110,80,0.162), transparent 60%),
+    radial-gradient(rgba(255,255,255,0.041) 0.6px, transparent 0.9px);
     background-size:46px 46px, 46px 46px, auto, 7px 7px;}
   header > *{position:relative; z-index:1;}
   .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1440px; margin:0 auto; gap:24px;}

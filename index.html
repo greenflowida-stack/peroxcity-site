@@ -183,37 +183,55 @@
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
-  /* Faint surface texture behind the header. Boards (homeowners) and pavers (pros) are two layers that cross-fade
-     with the audience switch. Gray haze on the right fading to clean on the left. Pure CSS, nothing to download. */
-  header::before, header::after{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5));
-            mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5));
-    transition:opacity .8s ease;
-  }
-  /* deck boards running right-to-left */
-  header::before{
-    background:
-      repeating-linear-gradient(180deg, transparent 0 37px, rgba(0,0,0,0.55) 37px 40px, rgba(255,255,255,0.05) 40px 41px),
-      repeating-linear-gradient(180deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 6px, rgba(0,0,0,0.12) 6px 7px, transparent 7px 13px, rgba(255,255,255,0.02) 13px 14px, transparent 14px 23px),
-      repeating-linear-gradient(90deg, transparent 0 160px, rgba(255,255,255,0.025) 160px 161px, transparent 161px 420px, rgba(0,0,0,0.10) 420px 422px, transparent 422px 700px),
-      linear-gradient(90deg, rgba(47,198,255,0.04) 0%, rgba(47,198,255,0.015) 35%, rgba(150,158,175,0.09) 70%, rgba(150,158,175,0.18) 100%);
-    opacity:.9;
-  }
+  /* Faint surface textures behind the header. One surface shows at a time and slowly fades to the next;
+     homeowners and pros each get their own set. Gray haze on the right fading clean toward the logo. Pure CSS. */
+  .hdr-surface{position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0;
+    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5)); mask-image:linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.5));}
+  .hdr-surface .sf{position:absolute; inset:0; opacity:0; transition:opacity 1.6s ease;}
+  .hdr-surface .sf.on{opacity:.85;}
+  .hdr-surface::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(47,198,255,0.04) 0%, rgba(47,198,255,0.015) 35%, rgba(150,158,175,0.09) 70%, rgba(150,158,175,0.18) 100%);}
+  /* wood deck: boards right-to-left with grain */
+  .sf-deck{background:
+    repeating-linear-gradient(180deg, transparent 0 37px, rgba(0,0,0,0.5) 37px 40px, rgba(255,255,255,0.05) 40px 41px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 6px, rgba(0,0,0,0.12) 6px 7px, transparent 7px 13px, rgba(255,255,255,0.02) 13px 14px, transparent 14px 23px),
+    repeating-linear-gradient(90deg, transparent 0 160px, rgba(255,255,255,0.025) 160px 161px, transparent 161px 420px, rgba(0,0,0,0.10) 420px 422px, transparent 422px 700px);}
+  /* composite (Trex) deck: uniform boards, fine even embossed grooves, no knots */
+  .sf-trex{background:
+    repeating-linear-gradient(180deg, transparent 0 33px, rgba(0,0,0,0.5) 33px 36px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, transparent 0 240px, rgba(0,0,0,0.14) 240px 242px, transparent 242px 480px);}
+  /* lap siding on a house */
+  .sf-siding{background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 22px, rgba(0,0,0,0.22) 22px 25px, rgba(0,0,0,0.5) 25px 28px),
+    repeating-linear-gradient(90deg, transparent 0 300px, rgba(0,0,0,0.08) 300px 301px, transparent 301px 640px);}
+  /* broom-finish concrete with control joints */
+  .sf-concrete{background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 3px),
+    radial-gradient(rgba(255,255,255,0.05) 0.6px, transparent 0.8px),
+    repeating-linear-gradient(90deg, transparent 0 318px, rgba(0,0,0,0.5) 318px 321px),
+    repeating-linear-gradient(180deg, transparent 0 158px, rgba(0,0,0,0.5) 158px 161px);
+    background-size:auto, 9px 9px, auto, auto;}
   /* running-bond pavers */
-  header::after{
-    background:
-      repeating-linear-gradient(180deg, transparent 0 32px, rgba(0,0,0,0.5) 32px 34px),
-      conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
-      conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
-      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 9px),
-      linear-gradient(90deg, rgba(47,198,255,0.04) 0%, rgba(47,198,255,0.015) 35%, rgba(150,158,175,0.09) 70%, rgba(150,158,175,0.18) 100%);
-    background-size:auto, 68px 68px, 68px 68px, auto, auto;
-    background-position:0 0, 0 0, 34px 34px, 0 0, 0 0;
-    opacity:0;
-  }
-  html[data-aud="pro"] header::before{opacity:0;}
-  html[data-aud="pro"] header::after{opacity:.7;}
+  .sf-pavers{background:
+    repeating-linear-gradient(180deg, transparent 0 32px, rgba(0,0,0,0.5) 32px 34px),
+    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
+    conic-gradient(from 270deg at 2px 34px, rgba(0,0,0,0.5) 0 25%, transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 9px);
+    background-size:auto, 68px 68px, 68px 68px, auto; background-position:0 0, 0 0, 34px 34px, 0 0;}
+  /* asphalt shingle roof: staggered tabs, shadow under each course */
+  .sf-roof{background:
+    repeating-linear-gradient(180deg, transparent 0 21px, rgba(0,0,0,0.3) 21px 23px, rgba(0,0,0,0.5) 23px 26px),
+    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.35) 0 25%, transparent 0),
+    conic-gradient(from 270deg at 1px 26px, rgba(0,0,0,0.35) 0 25%, transparent 0),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.022) 0 2px, transparent 2px 5px);
+    background-size:auto, 56px 52px, 56px 52px, auto; background-position:0 0, 0 0, 28px 26px, 0 0;}
+  /* commercial kitchen: quarry tile grid with grout, grease haze on the right */
+  .sf-kitchen{background:
+    linear-gradient(90deg, rgba(0,0,0,0.5) 0 3px, transparent 3px),
+    linear-gradient(180deg, rgba(0,0,0,0.5) 0 3px, transparent 3px),
+    radial-gradient(ellipse at 85% 60%, rgba(120,110,80,0.12), transparent 60%),
+    radial-gradient(rgba(255,255,255,0.03) 0.6px, transparent 0.9px);
+    background-size:46px 46px, 46px 46px, auto, 7px 7px;}
   header > *{position:relative; z-index:1;}
   .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1440px; margin:0 auto; gap:24px;}
   .logo{display:flex; align-items:center; text-decoration:none; flex-shrink:0;}
@@ -855,6 +873,7 @@
 </svg>
 
 <header>
+  <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-kitchen"></div></div>
   <div class="nav">
     <a href="#top" class="logo"><img class="logo-img logo-badge" src="logo-badge-header.png" alt="PeroXcity — Super Boosted Hydrogen Peroxide Cleaner" width="690" height="420"><img class="logo-img logo-word" src="logo-header.png" alt="PeroXcity" width="1000" height="167"></a>
     <nav>
@@ -1880,8 +1899,18 @@
 /* ===== AUDIENCE SWITCH (Pro / Homeowner) ===== */
 (function(){
   var root = document.documentElement;
+  /* header surface cycle: one faint texture at a time, per audience */
+  var SURF = { home:['deck','trex','siding','concrete'], pro:['pavers','roof','concrete','kitchen'] };
+  var surfTimer = null, surfIdx = 0, surfAud = 'pro';
+  function showSurf(name){ document.querySelectorAll('.hdr-surface .sf').forEach(function(el){ el.classList.toggle('on', el.classList.contains('sf-'+name)); }); }
+  function startSurf(a){
+    surfAud = a; surfIdx = 0; if(surfTimer){ clearInterval(surfTimer); }
+    showSurf(SURF[a][0]);
+    surfTimer = setInterval(function(){ surfIdx = (surfIdx+1) % SURF[surfAud].length; showSurf(SURF[surfAud][surfIdx]); }, 14000);
+  }
   function setAud(a, fromUser){
     root.setAttribute('data-aud', a);
+    if(a !== surfAud || !surfTimer){ startSurf(a); }
     document.querySelectorAll('.aud-switch button, .aud-doors .door, .nav-aud a').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-aud-pick')===a); b.setAttribute('aria-selected', b.getAttribute('data-aud-pick')===a); });
     if(fromUser){ try{ localStorage.setItem('px_aud', a); }catch(e){} }
     if(window.PEROXCITY_showClip){ window.PEROXCITY_showClip(a==='home' ? 'cart' : 'foam'); }

@@ -269,7 +269,9 @@
   .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1440px; margin:0 auto; gap:24px;}
   .logo{display:flex; align-items:center; text-decoration:none; flex-shrink:0;}
   .logo-img{display:block; width:auto; filter:drop-shadow(0 0 22px rgba(47,198,255,0.4));}
-  .logo-badge{height:clamp(140px, 12.5vw, 190px);}
+  .logo-badge{height:clamp(140px, 12.5vw, 190px); width:auto; object-fit:cover; background:transparent;
+    -webkit-mask-image:radial-gradient(ellipse 49.4% 48.6% at 50% 50.2%, #000 97%, transparent 100%);
+            mask-image:radial-gradient(ellipse 49.4% 48.6% at 50% 50.2%, #000 97%, transparent 100%);}
   .logo-word{height:auto; width:clamp(220px, 22vw, 320px); display:none; filter:drop-shadow(0 0 14px rgba(47,198,255,0.25));}
   header.shrunk .logo-badge{display:none;}
   header.shrunk .logo-word{display:block;}
@@ -944,7 +946,7 @@
 <header>
   <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-barrel"></div><div class="sf sf-kitchen"></div><div class="hdr-drops"></div><div class="hdr-bubbles"></div></div>
   <div class="nav">
-    <a href="#top" class="logo"><img class="logo-img logo-badge" src="logo-badge-header.png" alt="PeroXcity — Super Boosted Hydrogen Peroxide Cleaner" width="690" height="420"><img class="logo-img logo-word" src="logo-header.png" alt="PeroXcity" width="1000" height="167"></a>
+    <a href="#top" class="logo"><video class="logo-img logo-badge" src="logo-badge-loop.mp4" poster="logo-badge-day.jpg" autoplay muted loop playsinline width="690" height="384" aria-label="PeroXcity — Super Boosted Hydrogen Peroxide Cleaner"></video><img class="logo-img logo-word" src="logo-header.png" alt="PeroXcity" width="1000" height="167"></a>
     <nav>
       <ul>
         <li><a href="#how">How It Works</a></li>
@@ -1926,6 +1928,17 @@
     img.addEventListener('load', function(){ img.classList.add('loaded'); });
     img.src = img.getAttribute('data-src');
   });
+})();
+
+/* ===== LOGO LOOP: pause when hidden or when the visitor prefers reduced motion ===== */
+(function(){
+  var v = document.querySelector('video.logo-badge'); if(!v) return;
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(rm){ v.removeAttribute('autoplay'); v.pause(); return; }
+  var hdr = document.querySelector('header');
+  var obs = new MutationObserver(function(){ if(hdr.classList.contains('shrunk')){ v.pause(); } else { v.play().catch(function(){}); } });
+  obs.observe(hdr, { attributes:true, attributeFilter:['class'] });
+  document.addEventListener('visibilitychange', function(){ if(document.hidden){ v.pause(); } else if(!hdr.classList.contains('shrunk')){ v.play().catch(function(){}); } });
 })();
 
 /* ===== HEADER SHRINK ON SCROLL ===== */

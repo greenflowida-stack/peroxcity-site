@@ -233,7 +233,11 @@
     radial-gradient(rgba(255,255,255,0.041) 0.6px, transparent 0.9px);
     background-size:46px 46px, 46px 46px, auto, 7px 7px;}
   /* faint water droplets drifting down the header glass */
-  .hdr-drops{position:absolute; inset:0; pointer-events:none; opacity:.5;
+  /* rain on the roof, tiny oxygen bubbles on the flat surfaces — both faint, cross-fading with the surface */
+  .hdr-drops, .hdr-bubbles{position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 1.6s ease;}
+  .hdr-surface.mode-rain .hdr-drops{opacity:.5;}
+  .hdr-surface.mode-bubbles .hdr-bubbles{opacity:.45;}
+  .hdr-drops{
     background-image:
       radial-gradient(ellipse 5px 7px at 50% 50%, rgba(255,255,255,.18) 0, rgba(255,255,255,.45) 18%, rgba(47,198,255,.28) 45%, rgba(47,198,255,.08) 70%, transparent 80%),
       radial-gradient(ellipse 3.5px 5px at 50% 50%, rgba(255,255,255,.4) 0, rgba(47,198,255,.25) 50%, transparent 78%),
@@ -244,7 +248,19 @@
     animation:hdrDrops 28s linear infinite;
     -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.95)); mask-image:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.95));}
   @keyframes hdrDrops{ to{ background-position:0 286px, 45px 418px, 120px 703px, 20px 263px; } }
-  @media (prefers-reduced-motion: reduce){ .hdr-drops{animation:none;} }
+  /* bubbles: thin bright rings with a glint, rising slowly */
+  .hdr-bubbles{
+    background-image:
+      radial-gradient(circle 4px at 50% 50%, transparent 0, transparent 2.6px, rgba(255,255,255,.55) 3px, rgba(47,198,255,.35) 3.6px, transparent 4.2px),
+      radial-gradient(circle 2.5px at 50% 50%, transparent 0, transparent 1.4px, rgba(255,255,255,.5) 1.8px, rgba(47,198,255,.3) 2.3px, transparent 2.8px),
+      radial-gradient(circle 6px at 50% 50%, transparent 0, transparent 4.4px, rgba(255,255,255,.5) 4.9px, rgba(47,198,255,.3) 5.6px, transparent 6.3px),
+      radial-gradient(circle 1.6px at 50% 50%, rgba(255,255,255,.55) 0, rgba(47,198,255,.25) 60%, transparent 100%);
+    background-size:163px 131px, 101px 83px, 241px 197px, 67px 59px;
+    background-position:0 0, 40px 20px, 110px 60px, 15px 35px;
+    animation:hdrBubbles 34s linear infinite;
+    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.3)); mask-image:linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.3));}
+  @keyframes hdrBubbles{ to{ background-position:0 -262px, 40px -395px, 110px -591px, 15px -295px; } }
+  @media (prefers-reduced-motion: reduce){ .hdr-drops, .hdr-bubbles{animation:none;} }
   header > *{position:relative; z-index:1;}
   .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1440px; margin:0 auto; gap:24px;}
   .logo{display:flex; align-items:center; text-decoration:none; flex-shrink:0;}
@@ -922,7 +938,7 @@
 </svg>
 
 <header>
-  <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-kitchen"></div><div class="hdr-drops"></div></div>
+  <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-kitchen"></div><div class="hdr-drops"></div><div class="hdr-bubbles"></div></div>
   <div class="nav">
     <a href="#top" class="logo"><img class="logo-img logo-badge" src="logo-badge-header.png" alt="PeroXcity — Super Boosted Hydrogen Peroxide Cleaner" width="690" height="420"><img class="logo-img logo-word" src="logo-header.png" alt="PeroXcity" width="1000" height="167"></a>
     <nav>
@@ -1964,7 +1980,7 @@
   /* header surface cycle: one faint texture at a time, per audience */
   var SURF = { home:['deck','trex','siding','concrete'], pro:['pavers','roof','concrete','kitchen'] };
   var surfTimer = null, surfIdx = 0, surfAud = 'pro';
-  function showSurf(name){ document.querySelectorAll('.hdr-surface .sf').forEach(function(el){ el.classList.toggle('on', el.classList.contains('sf-'+name)); }); }
+  function showSurf(name){ document.querySelectorAll('.hdr-surface .sf').forEach(function(el){ el.classList.toggle('on', el.classList.contains('sf-'+name)); }); var hs=document.querySelector('.hdr-surface'); if(hs){ hs.classList.toggle('mode-rain', name==='roof'); hs.classList.toggle('mode-bubbles', name!=='roof'); } }
   function startSurf(a){
     surfAud = a; surfIdx = 0; if(surfTimer){ clearInterval(surfTimer); }
     showSurf(SURF[a][0]);

@@ -232,6 +232,19 @@
     radial-gradient(ellipse at 85% 60%, rgba(120,110,80,0.162), transparent 60%),
     radial-gradient(rgba(255,255,255,0.041) 0.6px, transparent 0.9px);
     background-size:46px 46px, 46px 46px, auto, 7px 7px;}
+  /* faint water droplets drifting down the header glass */
+  .hdr-drops{position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:
+      radial-gradient(ellipse 5px 7px at 50% 50%, rgba(255,255,255,.18) 0, rgba(255,255,255,.45) 18%, rgba(47,198,255,.28) 45%, rgba(47,198,255,.08) 70%, transparent 80%),
+      radial-gradient(ellipse 3.5px 5px at 50% 50%, rgba(255,255,255,.4) 0, rgba(47,198,255,.25) 50%, transparent 78%),
+      radial-gradient(ellipse 7px 10px at 50% 50%, rgba(255,255,255,.15) 0, rgba(255,255,255,.4) 16%, rgba(47,198,255,.26) 45%, rgba(47,198,255,.07) 72%, transparent 82%),
+      radial-gradient(ellipse 2.5px 3.5px at 50% 50%, rgba(255,255,255,.45) 0, rgba(47,198,255,.2) 55%, transparent 80%);
+    background-size:171px 143px, 113px 97px, 257px 211px, 89px 71px;
+    background-position:0 0, 45px 30px, 120px 70px, 20px 50px;
+    animation:hdrDrops 28s linear infinite;
+    -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.95)); mask-image:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.95));}
+  @keyframes hdrDrops{ to{ background-position:0 286px, 45px 418px, 120px 703px, 20px 263px; } }
+  @media (prefers-reduced-motion: reduce){ .hdr-drops{animation:none;} }
   header > *{position:relative; z-index:1;}
   .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 28px; max-width:1440px; margin:0 auto; gap:24px;}
   .logo{display:flex; align-items:center; text-decoration:none; flex-shrink:0;}
@@ -909,7 +922,7 @@
 </svg>
 
 <header>
-  <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-kitchen"></div></div>
+  <div class="hdr-surface" aria-hidden="true"><div class="sf sf-deck"></div><div class="sf sf-trex"></div><div class="sf sf-siding"></div><div class="sf sf-concrete"></div><div class="sf sf-pavers"></div><div class="sf sf-roof"></div><div class="sf sf-kitchen"></div><div class="hdr-drops"></div></div>
   <div class="nav">
     <a href="#top" class="logo"><img class="logo-img logo-badge" src="logo-badge-header.png" alt="PeroXcity — Super Boosted Hydrogen Peroxide Cleaner" width="690" height="420"><img class="logo-img logo-word" src="logo-header.png" alt="PeroXcity" width="1000" height="167"></a>
     <nav>

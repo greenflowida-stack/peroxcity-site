@@ -521,6 +521,23 @@
   .footage-cap{padding:12px 16px; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.04em; color:var(--dim); background:var(--panel); border-top:1px solid var(--line);}
   @media(max-width:980px){ .lineup-intro{grid-template-columns:1fr;} .footage-grid{grid-template-columns:1fr;} }
 
+
+  /* ===== LAST-CHANCE CART OFFER ===== */
+  .lc-wrap{position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(3,6,18,0.72); backdrop-filter:blur(6px);}
+  .lc-wrap[hidden]{display:none;}
+  .lc-card{position:relative; width:min(460px,100%); background:var(--panel); border:1px solid var(--cyan); border-radius:14px; padding:30px 28px 24px; box-shadow:0 0 0 1px rgba(47,198,255,0.25), 0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(47,198,255,0.18); animation:lcIn .35s cubic-bezier(.2,.9,.3,1.2);}
+  @keyframes lcIn{from{transform:translateY(16px) scale(.97); opacity:0} to{transform:none; opacity:1}}
+  .lc-x{position:absolute; top:10px; right:12px; background:none; border:none; color:var(--dim); font-size:26px; line-height:1; cursor:pointer;}
+  .lc-x:hover{color:var(--white);}
+  .lc-k{font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.14em; color:var(--cyan); margin-bottom:8px;}
+  .lc-card h3{font-family:'Big Shoulders Display'; font-weight:800; font-size:30px; line-height:1.05; text-transform:uppercase; color:var(--white); margin:0 0 10px;}
+  .lc-p{font-size:14px; color:var(--dim); margin:0 0 16px;}
+  .lc-p strong{color:var(--white); font-family:'IBM Plex Mono', monospace;}
+  .lc-code{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel2); border:1px dashed rgba(47,198,255,0.6); border-radius:6px; padding:10px 12px 10px 16px; margin-bottom:14px;}
+  .lc-code span{font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:18px; letter-spacing:0.12em; color:var(--white);}
+  .lc-code button{background:transparent; color:var(--cyan); border:1px solid rgba(47,198,255,0.5); border-radius:3px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;}
+  .lc-go{display:block; text-align:center; width:100%;}
+  .lc-note{margin-top:12px; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.05em; color:var(--dim);}
   /* ===== PRODUCT LINEUP ===== */
   .lineup-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px; margin-top:48px;}
   /* ===== SHOP / CART ===== */
@@ -2049,6 +2066,7 @@ window.PEROXCITY_SHOP = {
   sc.onload = function(){
     var client = ShopifyBuy.buildClient({ domain: cfg.domain, storefrontAccessToken: cfg.storefrontAccessToken });
     ShopifyBuy.UI.onReady(client).then(function(ui){
+      window.PEROXCITY_UI = ui;
       var dark = { "background-color": "#0D1530", "color": "#F3F6FF", "font-family": "IBM Plex Sans, sans-serif" };
       var btn = { "background-color": "#2FC6FF", "color": "#04202E", "font-weight": "700", "text-transform": "uppercase", "letter-spacing": "0.05em", "border-radius": "3px", ":hover": { "background-color": "#5ad3ff" }, ":focus": { "background-color": "#5ad3ff" } };
       var cartOpts = {
@@ -2076,6 +2094,60 @@ window.PEROXCITY_SHOP = {
     });
   };
   document.head.appendChild(sc);
+})();
+</script>
+
+
+<!-- ===== LAST-CHANCE CART OFFER ===== -->
+<div class="lc-wrap" id="lcWrap" role="dialog" aria-modal="true" aria-labelledby="lcTitle" hidden>
+  <div class="lc-card">
+    <button class="lc-x" id="lcClose" aria-label="Close">&times;</button>
+    <div class="lc-k">BEFORE YOU GO</div>
+    <h3 id="lcTitle">Take 10% off the order in your cart.</h3>
+    <p class="lc-p">Your PeroXcity is still in the cart. Use this code at checkout and we'll knock 10% off &mdash; it's good for the next <strong id="lcTimer">15:00</strong>.</p>
+    <div class="lc-code"><span id="lcCode">LASTCHANCE10</span><button type="button" id="lcCopy">Copy</button></div>
+    <a class="btn-primary lc-go" id="lcGo" href="#">Apply &amp; Checkout &rarr;</a>
+    <div class="lc-note">Secure checkout by Shopify &middot; Ships UPS Ground from Florida</div>
+  </div>
+</div>
+
+<script>
+/* ===== LAST-CHANCE CART OFFER =====
+   Shows once per 24h, only when the Shopify cart has items, when the visitor:
+   (a) moves the mouse out the top of the window (about to close/leave),
+   (b) comes back to the site with a cart still waiting, or
+   (c) sits idle for 60s with items in the cart.
+   "Apply & Checkout" opens Shopify checkout with the code already applied. */
+(function(){
+  var CODE = 'LASTCHANCE10', KEY = 'px_lc_shown', TTL = 24*3600*1000, MINUTES = 15;
+  var wrap = document.getElementById('lcWrap'); if(!wrap) return;
+  var timerEl = document.getElementById('lcTimer'), go = document.getElementById('lcGo'), tick = null, deadline = 0;
+  function cart(){ var ui = window.PEROXCITY_UI; return ui && ui.components && ui.components.cart && ui.components.cart[0]; }
+  function hasItems(){ var c = cart(); return !!(c && c.model && c.model.lineItems && c.model.lineItems.length); }
+  function checkoutUrl(){ var c = cart(); var u = c && c.model && c.model.webUrl; if(!u) return null; return u + (u.indexOf('?')>-1 ? '&' : '?') + 'discount=' + CODE; }
+  function shownRecently(){ try{ var t = +localStorage.getItem(KEY)||0; return (Date.now()-t) < TTL; }catch(e){ return false; } }
+  function markShown(){ try{ localStorage.setItem(KEY, String(Date.now())); }catch(e){} }
+  function fmt(ms){ var s=Math.max(0,Math.round(ms/1000)); return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2); }
+  function open(){
+    if(shownRecently() || !hasItems() || !wrap.hidden) return;
+    var url = checkoutUrl(); if(!url) return;
+    go.href = url; wrap.hidden = false; markShown();
+    deadline = Date.now() + MINUTES*60000;
+    tick = setInterval(function(){ var left = deadline-Date.now(); timerEl.textContent = fmt(left); if(left<=0){ close(); } }, 500);
+  }
+  function close(){ wrap.hidden = true; if(tick){ clearInterval(tick); tick=null; } }
+  document.getElementById('lcClose').addEventListener('click', close);
+  wrap.addEventListener('click', function(e){ if(e.target===wrap) close(); });
+  document.getElementById('lcCopy').addEventListener('click', function(){ var b=this; try{ navigator.clipboard.writeText(CODE).then(function(){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy'; },1500); }); }catch(e){} });
+  /* (a) exit intent — desktop */
+  document.addEventListener('mouseout', function(e){ if(!e.relatedTarget && e.clientY <= 0){ open(); } });
+  /* (b) returning visitor with a cart waiting */
+  var returning = false; try{ returning = sessionStorage.getItem('px_visit')!=='1'; sessionStorage.setItem('px_visit','1'); }catch(e){}
+  if(returning){ var tries=0; var w=setInterval(function(){ tries++; if(hasItems()){ clearInterval(w); setTimeout(open, 2500); } else if(tries>20){ clearInterval(w); } }, 500); }
+  /* (c) idle with items */
+  var idle=null; function resetIdle(){ if(idle) clearTimeout(idle); idle=setTimeout(function(){ open(); }, 60000); }
+  ['mousemove','keydown','scroll','touchstart'].forEach(function(ev){ document.addEventListener(ev, resetIdle, {passive:true}); }); resetIdle();
+  window.PEROXCITY_lastChance = open;
 })();
 </script>
 

@@ -538,6 +538,13 @@
   .lc-code button{background:transparent; color:var(--cyan); border:1px solid rgba(47,198,255,0.5); border-radius:3px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;}
   .lc-go{display:block; text-align:center; width:100%;}
   .lc-note{margin-top:12px; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.05em; color:var(--dim);}
+  .ship-banner{display:flex; align-items:center; gap:14px; margin:18px 0 6px; padding:12px 16px; border:1px solid rgba(47,198,255,0.45); border-radius:8px; background:linear-gradient(90deg, rgba(47,198,255,0.12), rgba(47,198,255,0.03));}
+  .ship-ico{font-size:22px; color:var(--cyan); line-height:1;}
+  .ship-banner div{display:flex; flex-direction:column; gap:2px;}
+  .ship-banner strong{color:var(--white); font-size:15px;}
+  .ship-banner span:not(.ship-ico){font-size:13px; color:var(--dim);}
+  .ship-note{margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.04em; color:var(--dim); text-align:center;}
+  .ship-note strong{color:var(--cyan); font-weight:600;}
   /* ===== PRODUCT LINEUP ===== */
   .lineup-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px; margin-top:48px;}
   /* ===== SHOP / CART ===== */
@@ -1262,6 +1269,7 @@
   <div class="wrap">
     <div class="kicker">The Lineup</div>
     <h2 class="section-head">Concentrate for pros. Ready-to-use for everyone.</h2>
+    <div class="ship-banner"><span class="ship-ico">&#9951;</span><div><strong>Free UPS Ground shipping on orders $150+</strong><span>Two concentrate kits ($178) or a 5-gal pail + a gallon ($158) ship free to the lower 48. Applied automatically at checkout.</span></div></div>
     <div class="lineup-intro">
       <p class="section-lede">Pros get the concentrate kit &mdash; less freight, more cleaning per dollar, and you set the strength. Prefer to skip the mixing? The 7% Ready-To-Use comes pre-mixed in 1- and 5-gallon sizes &mdash; pour and go. Bulk drums and totes ship at 7% H₂O₂ with accelerator packed separately.</p>
       <div class="kit-video">
@@ -1297,7 +1305,7 @@
         <div class="lineup-tag">$99 &middot; 2 for $89 ea &middot; 3 for $79 ea (full box)</div>
         <p class="lineup-desc">The standard way to buy PeroXcity. One 1-gallon kit of Part A plus Part B Accelerator makes up to 5 gallons of finished product at 1:4 &mdash; or mix stronger at 1:3 or 1:2 for heavy organic and super-strength jobs. Once mixed it stays active for months. Our box holds up to 3 kits: buy 2 or 3 and save on the kit and on shipping.</p>
         <span class="lineup-badge pro">Makes 5 Gallons</span>
-        <div class="buy-slot" data-product-key="kit"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div>
+        <div class="buy-slot" data-product-key="kit"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note"><strong>2 or 3 kits ship free</strong> &middot; orders $150+</div>
       </div>
 
       <div class="lineup-card">
@@ -1319,7 +1327,7 @@
         <div class="lineup-tag">$29 Gallon &middot; $129 5-Gal Pail &middot; No Mixing</div>
         <p class="lineup-desc">The same oxygen-powered clean with zero mixing. Already activated at 7% hydrogen peroxide &mdash; pour it into a plastic sprayer and go. Ideal for homeowners, RVs, boats, patios, and anyone who wants the easy button. 1-gallon jug or 5-gallon pail. Coming to Amazon.</p>
         <span class="lineup-badge">Pour &amp; Go</span>
-        <div class="buy-slot" data-product-key="rtu"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div>
+        <div class="buy-slot" data-product-key="rtu"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note"><strong>Free shipping on orders $150+</strong> &middot; pail + gallon qualifies</div>
         <div class="addon" id="addonAcc">
           <div class="addon-head"><span class="addon-k">ADD-ON</span><strong>Need a sprayer?</strong><span class="addon-d">Plastic pump sprayer, nitrile gloves &amp; goggles &mdash; the full kit or just the piece you're missing.</span></div>
           <div class="buy-slot addon-slot" data-product-key="acc"></div>
@@ -2107,7 +2115,7 @@ window.PEROXCITY_SHOP = {
     <p class="lc-p">Your PeroXcity is still in the cart. Use this code at checkout and we'll knock 10% off &mdash; it's good for the next <strong id="lcTimer">15:00</strong>.</p>
     <div class="lc-code"><span id="lcCode">LASTCHANCE10</span><button type="button" id="lcCopy">Copy</button></div>
     <a class="btn-primary lc-go" id="lcGo" href="#">Apply &amp; Checkout &rarr;</a>
-    <div class="lc-note">Secure checkout by Shopify &middot; Ships UPS Ground from Florida</div>
+    <div class="lc-note">Secure checkout by Shopify &middot; Free shipping on orders $150+</div>
   </div>
 </div>
 

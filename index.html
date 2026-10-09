@@ -565,6 +565,18 @@
   .buy-slot .shopify-buy__btn-wrapper{margin-top:4px;}
   .buy-slot .shopify-buy__quantity-container{display:flex; margin-bottom:10px;}
   .buy-slot .shopify-buy__quantity{background:var(--panel2); color:var(--white); border:1px solid var(--line);}
+  .addon{display:none; margin-top:16px; padding:14px; border:1px dashed rgba(47,198,255,0.35); border-radius:8px; background:rgba(47,198,255,0.04);}
+  .addon.ready{display:block;}
+  .addon-head{display:flex; flex-direction:column; gap:3px; margin-bottom:10px;}
+  .addon-k{font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:0.12em; color:var(--cyan);}
+  .addon-head strong{color:var(--white); font-size:15px;}
+  .addon-d{font-size:12.5px; color:var(--dim);}
+  .addon-slot{margin-top:0; min-height:0;}
+  .addon-slot .shopify-buy__product{grid-template-columns:1fr;}
+  .addon-slot .shopify-buy__product-img-wrapper{display:none;}
+  .addon-slot .shopify-buy__product__price{grid-column:1; font-size:22px;}
+  .addon-slot .shopify-buy__btn{padding:10px 14px; font-size:12px; background:transparent; color:var(--cyan); border:1px solid rgba(47,198,255,0.6); box-shadow:none;}
+  .addon-slot .shopify-buy__btn:hover{background:rgba(47,198,255,0.12);}
   .lineup-card{
     background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:32px 26px; text-align:left;
     transition:transform .2s ease, border-color .2s ease;
@@ -1291,6 +1303,10 @@
         <p class="lineup-desc">The same oxygen-powered clean with zero mixing. Already activated at 7% hydrogen peroxide &mdash; pour it into a plastic sprayer and go. Ideal for homeowners, RVs, boats, patios, and anyone who wants the easy button. 1-gallon jug or 5-gallon pail. Coming to Amazon.</p>
         <span class="lineup-badge">Pour &amp; Go</span>
         <div class="buy-slot" data-product-key="rtu"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div>
+        <div class="addon" id="addonAcc">
+          <div class="addon-head"><span class="addon-k">ADD-ON</span><strong>Need a sprayer?</strong><span class="addon-d">Plastic pump sprayer, nitrile gloves &amp; goggles &mdash; the full kit or just the piece you're missing.</span></div>
+          <div class="buy-slot addon-slot" data-product-key="acc"></div>
+        </div>
       </div>
 
       <div class="lineup-card">
@@ -2020,7 +2036,7 @@
 window.PEROXCITY_SHOP = {
   domain: "u28x17-sz.myshopify.com",
   storefrontAccessToken: "9033797fe17aee26b9c27bd033627823",
-  products: { kit: "8880527868041", rtu: "8880527933577" }
+  products: { kit: "8880527868041", rtu: "8880527933577", acc: "8902989054089" }
 };
 </script>
 <script>
@@ -2051,7 +2067,7 @@ window.PEROXCITY_SHOP = {
           id: id, node: mount, moneyFormat: '${{amount}}',
           options: {
             product: { iframe: false, contents: { img: true, title: false, price: true, options: true, quantity: false, button: true }, text: { button: "Add to Cart" },
-              events: { afterRender: function(c){ if(fallback && c && c.model && c.model.availableForSale !== false){ fallback.style.display = 'none'; } } } },
+              events: { afterRender: function(c){ if(fallback && c && c.model && c.model.availableForSale !== false){ fallback.style.display = 'none'; } var ad = slot.closest('.addon'); if(ad && c && c.model && c.model.availableForSale !== false){ ad.classList.add('ready'); } } } },
             cart: cartOpts, toggle: toggleOpts, lineItem: lineItemOpts,
             modalProduct: { contents: { img: true, title: true, price: true, options: true, button: true } }
           }

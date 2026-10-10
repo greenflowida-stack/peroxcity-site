@@ -580,6 +580,30 @@
   .ship-banner span:not(.ship-ico){font-size:13px; color:var(--dim);}
   .ship-note{margin-top:10px; font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:0.04em; color:var(--dim); text-align:center;}
   .ship-note strong{color:var(--cyan); font-weight:600;}
+  /* ===== MOBILE APP ===== */
+  .nav-app{display:inline-flex; align-items:center; gap:6px; color:var(--cyan); text-decoration:none; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; border:1px solid rgba(47,198,255,0.5); border-radius:3px; padding:9px 12px; transition:background .2s;}
+  .nav-app:hover{background:rgba(47,198,255,0.12);}
+  @media(max-width:640px){ .nav-app span{display:none;} .nav-app{padding:9px 10px;} }
+  .app-wrap{display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;}
+  .app-btns{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px;}
+  .app-btn{display:flex; flex-direction:column; gap:2px; min-width:200px; padding:12px 18px; border-radius:6px; background:var(--cyan); color:#04202E; text-decoration:none; box-shadow:0 0 20px rgba(47,198,255,0.25); transition:transform .15s;}
+  .app-btn:hover{transform:translateY(-2px);}
+  .app-btn.soon{background:var(--panel2); color:var(--dim); border:1px dashed var(--line-bright); box-shadow:none; cursor:default;}
+  .app-btn.soon:hover{transform:none;}
+  .app-k{font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:0.14em;}
+  .app-t{font-size:16px; font-weight:700;}
+  .app-stores{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .app-store{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.05em; color:var(--cyan); border:1px solid rgba(47,198,255,0.4); border-radius:3px; padding:6px 10px; text-decoration:none;}
+  .app-store.soon{color:var(--dim); border-style:dashed;}
+  .app-note{margin-top:12px; font-size:12.5px; color:var(--dim);}
+  .app-art{display:flex; justify-content:center;}
+  .phone{width:230px; aspect-ratio:9/18.5; border-radius:32px; background:#060A1C; border:2px solid var(--line-bright); box-shadow:0 30px 70px rgba(0,0,0,0.55), 0 0 50px rgba(47,198,255,0.15); padding:14px; position:relative;}
+  .phone::before{content:""; position:absolute; top:10px; left:50%; width:70px; height:6px; margin-left:-35px; border-radius:3px; background:var(--line);}
+  .phone-screen{height:100%; border-radius:22px; background:radial-gradient(ellipse at 50% 30%, rgba(47,198,255,0.14), transparent 65%), var(--panel); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; padding:20px 14px;}
+  .phone-screen img{width:88%; height:auto; filter:drop-shadow(0 0 16px rgba(47,198,255,0.35));}
+  .phone-row{display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
+  .phone-row span{font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:0.06em; color:var(--cyan); background:rgba(47,198,255,0.1); border:1px solid rgba(47,198,255,0.35); border-radius:3px; padding:5px 8px;}
+  @media(max-width:900px){ .app-wrap{grid-template-columns:1fr;} .app-art{order:-1;} .phone{width:180px;} }
   /* ===== PRODUCT LINEUP ===== */
   .lineup-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px; margin-top:48px;}
   /* ===== SHOP / CART ===== */
@@ -964,6 +988,7 @@
         <a href="#lineup" role="tab" data-aud-pick="pro"><span class="nav-aud-k">PROS</span><span class="nav-aud-t">Concentrate</span></a>
         <a href="#lineup" role="tab" data-aud-pick="home"><span class="nav-aud-k">HOMEOWNERS</span><span class="nav-aud-t">Ready-To-Use</span></a>
       </div>
+      <a href="#app" class="nav-app" title="PeroXcity mobile app"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18.5" x2="14" y2="18.5"/></svg><span>App</span></a>
       <a href="#lineup" class="nav-cta">Order Now</a>
     </div>
   </div>
@@ -1304,7 +1329,7 @@
   <div class="wrap">
     <div class="kicker">The Lineup</div>
     <h2 class="section-head">Concentrate for pros. Ready-to-use for everyone.</h2>
-    <div class="ship-banner"><span class="ship-ico">&#9951;</span><div><strong>Free UPS Ground shipping on orders $150+</strong><span>Two concentrate kits ($178) or a 5-gal pail + a gallon ($158) ship free to the lower 48. Applied automatically at checkout.</span></div></div>
+    <div class="ship-banner"><span class="ship-ico">&#9951;</span><div><strong>Free shipping on orders $1,000+</strong><span>Contractor and fleet orders over $1,000 ship free to the lower 48 &mdash; applied automatically at checkout. Everything else ships UPS Ground at real zone rates, and 3 kits per box keeps the per-kit cost down.</span></div></div>
     <div class="lineup-intro">
       <p class="section-lede">Pros get the concentrate kit &mdash; less freight, more cleaning per dollar, and you set the strength. Prefer to skip the mixing? The 7% Ready-To-Use comes pre-mixed in 1- and 5-gallon sizes &mdash; pour and go. Bulk drums and totes ship at 7% H₂O₂ with accelerator packed separately.</p>
       <div class="kit-video">
@@ -1340,7 +1365,7 @@
         <div class="lineup-tag">$99 &middot; 2 for $89 ea &middot; 3 for $79 ea (full box)</div>
         <p class="lineup-desc">The standard way to buy PeroXcity. One 1-gallon kit of Part A plus Part B Accelerator makes up to 5 gallons of finished product at 1:4 &mdash; or mix stronger at 1:3 or 1:2 for heavy organic and super-strength jobs. Once mixed it stays active for months. Our box holds up to 3 kits: buy 2 or 3 and save on the kit and on shipping.</p>
         <span class="lineup-badge pro">Makes 5 Gallons</span>
-        <div class="buy-slot" data-product-key="kit"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note"><strong>2 or 3 kits ship free</strong> &middot; orders $150+</div>
+        <div class="buy-slot" data-product-key="kit"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note"><strong>3 kits per box</strong> &middot; lowest shipping per kit</div>
       </div>
 
       <div class="lineup-card">
@@ -1362,7 +1387,7 @@
         <div class="lineup-tag">$29 Gallon &middot; $129 5-Gal Pail &middot; No Mixing</div>
         <p class="lineup-desc">The same oxygen-powered clean with zero mixing. Already activated at 7% hydrogen peroxide &mdash; pour it into a plastic sprayer and go. Ideal for homeowners, RVs, boats, patios, and anyone who wants the easy button. 1-gallon jug or 5-gallon pail. Coming to Amazon.</p>
         <span class="lineup-badge">Pour &amp; Go</span>
-        <div class="buy-slot" data-product-key="rtu"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note"><strong>Free shipping on orders $150+</strong> &middot; pail + gallon qualifies</div>
+        <div class="buy-slot" data-product-key="rtu"><div class="buy-fallback"><a class="btn-buy" href="tel:18882536962">Call to Order</a><span class="buy-note">Secure checkout by Shopify</span></div></div><div class="ship-note">Ships UPS Ground from Fort Myers, FL</div>
         <div class="addon" id="addonAcc">
           <div class="addon-head"><span class="addon-k">ADD-ON</span><strong>Need a sprayer?</strong><span class="addon-d">Plastic pump sprayer, nitrile gloves &amp; goggles &mdash; the full kit or just the piece you're missing.</span></div>
           <div class="buy-slot addon-slot" data-product-key="acc"></div>
@@ -1648,7 +1673,7 @@
   <div class="wrap">
     <div class="kicker">In The Field</div>
     <h2 class="section-head">From the team behind PeroXcity.</h2>
-    <p class="section-lede">PeroXcity is made and shipped by Superior Quality Coatings in Fort Myers, Florida. These are real reviews of the company from Google and Facebook, quoted as written (spelling tidied).</p>
+    <p class="section-lede">PeroXcity is made and shipped by Sealer Life in Fort Myers, Florida. These are real Google and Facebook reviews of our team&rsquo;s work under our previous company name, Superior Quality Coatings, quoted as written (spelling tidied).</p>
     <div class="quote-grid" id="quoteGrid"></div>
   </div>
 </section>
@@ -1733,6 +1758,28 @@
   </div>
 </section>
 
+<section id="app" style="position:relative; overflow:hidden;">
+  <div class="wrap app-wrap">
+    <div class="app-copy">
+      <div class="kicker">Mobile App</div>
+      <h2 class="section-head">PeroXcity in your pocket.</h2>
+      <p class="section-lede">Mix calculator, dwell timer, surface guide, and reorder in a couple of taps &mdash; built for the truck and the job site. The app is finished and heading to the App Store and Google Play; until it lands there, grab it straight from us.</p>
+      <div class="app-btns">
+        <a class="app-btn" id="appAndroid" href="#" rel="noopener"><span class="app-k">ANDROID</span><span class="app-t">Download the app</span></a>
+        <a class="app-btn" id="appIos" href="#" rel="noopener"><span class="app-k">IPHONE &amp; IPAD</span><span class="app-t">Get the app</span></a>
+      </div>
+      <div class="app-stores">
+        <span class="app-store soon">App Store &middot; coming soon</span>
+        <span class="app-store soon">Google Play &middot; coming soon</span>
+      </div>
+      <p class="app-note">Store links switch on automatically the day the app is approved.</p>
+    </div>
+    <div class="app-art" aria-hidden="true">
+      <div class="phone"><div class="phone-screen"><img src="logo-badge.png" alt=""><div class="phone-row"><span>Mix 1:4</span><span>Dwell 15&ndash;45</span><span>Reorder</span></div></div></div>
+    </div>
+  </div>
+</section>
+
 <section class="cta" id="order" style="position:relative; overflow:hidden;">
   <div class="bg-molecule" style="top:6%; right:1%; width:136px; height:76px; opacity:0.18; animation-duration:17s; animation-delay:3.5s;"><svg class="reactive-molecule" viewBox="0 0 180 100" style="transform:rotate(-9deg);" tabindex="0" role="button" aria-label="Split the H2O2 molecule"><line class="bond bond-orig" x1="20" y1="62" x2="60" y2="30" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-orig" x1="60" y1="30" x2="118" y2="50" stroke="url(#sym-bond)" stroke-width="7" stroke-linecap="round"/><line class="bond bond-orig" x1="118" y1="50" x2="160" y2="80" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="22" y1="68" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="85" y1="20" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><g class="atom atom-o1"><circle cx="60" cy="30" r="25" fill="url(#sym-o)"/><ellipse cx="50" cy="20" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 50 20)"/><polyline class="crackle" points="52,18 58,24 50,28 60,34 54,26"/><polyline class="crackle c2" points="66,22 62,30 70,32 64,38 72,36"/><polyline class="crackle c3" points="56,38 48,42 58,46 50,50 60,52"/><text class="atom-label" x="60" y="30" font-size="20">O</text></g><g class="atom atom-o2"><circle cx="118" cy="50" r="25" fill="url(#sym-o)"/><ellipse cx="108" cy="40" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 108 40)"/><polyline class="crackle" points="110,38 116,44 108,48 118,54 112,46"/><polyline class="crackle c2" points="124,42 120,50 128,52 122,58 130,56"/><polyline class="crackle c3" points="114,58 106,60 116,64 108,68 118,70"/><text class="atom-label" x="118" y="50" font-size="20">O</text></g><g class="atom atom-h1"><circle cx="20" cy="62" r="12" fill="url(#sym-h)"/><ellipse cx="16" cy="57" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 16 57)"/><polyline class="crackle crackle-sm" points="17,58 21,62 16,65 22,68"/><text class="atom-label" x="20" y="62" font-size="12">H</text></g><g class="atom atom-h2"><circle cx="160" cy="80" r="12" fill="url(#sym-h)"/><ellipse cx="156" cy="75" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 156 75)"/><polyline class="crackle crackle-sm" points="157,76 161,80 156,83 162,86"/><text class="atom-label" x="160" y="80" font-size="12">H</text></g><text class="mol-label" x="36" y="82">H₂O<tspan x="36" dy="13" class="mol-label-sub">Water</tspan></text><text class="mol-label" x="152" y="18">O<tspan x="152" dy="13" class="mol-label-sub">Oxygen</tspan></text></svg></div><div class="bg-molecule depth-near" style="bottom:10%; left:4%; width:150px; height:83px; opacity:0.20; animation-duration:16s; animation-delay:1s;"><svg class="reactive-molecule" viewBox="0 0 180 100" style="transform:rotate(-5deg);" tabindex="0" role="button" aria-label="Split the H2O2 molecule"><line class="bond bond-orig" x1="20" y1="62" x2="60" y2="30" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-orig" x1="60" y1="30" x2="118" y2="50" stroke="url(#sym-bond)" stroke-width="7" stroke-linecap="round"/><line class="bond bond-orig" x1="118" y1="50" x2="160" y2="80" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="22" y1="68" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="85" y1="20" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><g class="atom atom-o1"><circle cx="60" cy="30" r="25" fill="url(#sym-o)"/><ellipse cx="50" cy="20" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 50 20)"/><polyline class="crackle" points="52,18 58,24 50,28 60,34 54,26"/><polyline class="crackle c2" points="66,22 62,30 70,32 64,38 72,36"/><polyline class="crackle c3" points="56,38 48,42 58,46 50,50 60,52"/><text class="atom-label" x="60" y="30" font-size="20">O</text></g><g class="atom atom-o2"><circle cx="118" cy="50" r="25" fill="url(#sym-o)"/><ellipse cx="108" cy="40" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 108 40)"/><polyline class="crackle" points="110,38 116,44 108,48 118,54 112,46"/><polyline class="crackle c2" points="124,42 120,50 128,52 122,58 130,56"/><polyline class="crackle c3" points="114,58 106,60 116,64 108,68 118,70"/><text class="atom-label" x="118" y="50" font-size="20">O</text></g><g class="atom atom-h1"><circle cx="20" cy="62" r="12" fill="url(#sym-h)"/><ellipse cx="16" cy="57" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 16 57)"/><polyline class="crackle crackle-sm" points="17,58 21,62 16,65 22,68"/><text class="atom-label" x="20" y="62" font-size="12">H</text></g><g class="atom atom-h2"><circle cx="160" cy="80" r="12" fill="url(#sym-h)"/><ellipse cx="156" cy="75" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 156 75)"/><polyline class="crackle crackle-sm" points="157,76 161,80 156,83 162,86"/><text class="atom-label" x="160" y="80" font-size="12">H</text></g><text class="mol-label" x="36" y="82">H₂O<tspan x="36" dy="13" class="mol-label-sub">Water</tspan></text><text class="mol-label" x="152" y="18">O<tspan x="152" dy="13" class="mol-label-sub">Oxygen</tspan></text></svg></div>
   <div class="wrap cta-inner">
@@ -1774,7 +1821,8 @@
     <div>
       <h6>Company</h6>
       <ul>
-        <li><a href="#">About</a></li>
+        <li><a href="#reviews">About Sealer Life</a></li>
+        <li><a href="#app">Mobile App</a></li>
         <li><a href="#">Retailers</a></li>
         <li><a href="tel:18882536962">Contact &middot; 1-888-253-6962</a></li>
       </ul>
@@ -1789,7 +1837,7 @@
     </div>
   </div>
   <div class="wrap foot-bottom">
-    <span>&copy; 2026 PeroXcity. All rights reserved.</span>
+    <span>&copy; 2026 Sealer Life &middot; Fort Myers, Florida. PeroXcity is a product of Sealer Life. All rights reserved.</span>
     <span>peroXcity.com</span>
   </div>
 </footer>
@@ -1928,6 +1976,17 @@
     img.addEventListener('load', function(){ img.classList.add('loaded'); });
     img.src = img.getAttribute('data-src');
   });
+})();
+
+/* ===== MOBILE APP LINKS ===== */
+(function(){
+  var a = window.PEROXCITY_APP || {};
+  function wire(id, url, soonText){ var el=document.getElementById(id); if(!el) return; if(url){ el.href=url; el.classList.remove('soon'); } else { el.classList.add('soon'); el.setAttribute('aria-disabled','true'); el.addEventListener('click', function(e){ e.preventDefault(); }); if(soonText){ el.querySelector('.app-t').textContent = soonText; } } }
+  wire('appAndroid', a.android, 'Coming soon');
+  wire('appIos', a.ios, 'Coming soon');
+  var st=document.querySelectorAll('.app-store');
+  if(a.appstore && st[0]){ st[0].outerHTML='<a class="app-store" href="'+a.appstore+'" rel="noopener">App Store</a>'; }
+  if(a.play && st[1]){ st[1].outerHTML='<a class="app-store" href="'+a.play+'" rel="noopener">Google Play</a>'; }
 })();
 
 /* ===== LOGO LOOP: pause when hidden or when the visitor prefers reduced motion ===== */
@@ -2104,6 +2163,8 @@
      token:    Storefront API access token (Buy Button channel)   e.g. "a1b2c3d4..."
      products: numeric product IDs from the admin URL  /admin/products/1234567890 -->
 <script>
+/* Mobile app links — paste the real URLs here when ready (APK / TestFlight now, store pages later). Leave "" to show "coming soon". */
+window.PEROXCITY_APP = { android: "", ios: "", play: "", appstore: "" };
 window.PEROXCITY_SHOP = {
   domain: "u28x17-sz.myshopify.com",
   storefrontAccessToken: "9033797fe17aee26b9c27bd033627823",
@@ -2161,7 +2222,7 @@ window.PEROXCITY_SHOP = {
     <p class="lc-p">Your PeroXcity is still in the cart. Use this code at checkout and we'll knock 10% off &mdash; it's good for the next <strong id="lcTimer">15:00</strong>.</p>
     <div class="lc-code"><span id="lcCode">LASTCHANCE10</span><button type="button" id="lcCopy">Copy</button></div>
     <a class="btn-primary lc-go" id="lcGo" href="#">Apply &amp; Checkout &rarr;</a>
-    <div class="lc-note">Secure checkout by Shopify &middot; Free shipping on orders $150+</div>
+    <div class="lc-note">Secure checkout by Shopify &middot; Ships UPS Ground from Florida</div>
   </div>
 </div>
 

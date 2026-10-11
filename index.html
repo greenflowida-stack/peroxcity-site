@@ -605,6 +605,9 @@
   .phone-row{display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
   .phone-row span{font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:0.06em; color:var(--cyan); background:rgba(47,198,255,0.1); border:1px solid rgba(47,198,255,0.35); border-radius:3px; padding:5px 8px;}
   @media(max-width:900px){ .app-wrap{grid-template-columns:1fr;} .app-art{order:-1;} .phone{width:180px;} }
+  .foot-badge{width:min(340px,100%); height:auto; display:block; filter:drop-shadow(0 0 22px rgba(47,198,255,0.3));
+    -webkit-mask-image:radial-gradient(ellipse 49.4% 48.6% at 50% 50.2%, #000 97%, transparent 100%);
+            mask-image:radial-gradient(ellipse 49.4% 48.6% at 50% 50.2%, #000 97%, transparent 100%);}
   /* ===== PRODUCT LINEUP ===== */
   .lineup-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px; margin-top:48px;}
   /* ===== SHOP / CART ===== */
@@ -1806,7 +1809,7 @@
   <div class="bg-molecule depth-far" style="top:8%; right:3%; width:104px; height:58px; opacity:0.14; animation-duration:20s; animation-delay:1.5s;"><svg class="reactive-molecule" viewBox="0 0 180 100" style="transform:rotate(-7deg);" tabindex="0" role="button" aria-label="Split the H2O2 molecule"><line class="bond bond-orig" x1="20" y1="62" x2="60" y2="30" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-orig" x1="60" y1="30" x2="118" y2="50" stroke="url(#sym-bond)" stroke-width="7" stroke-linecap="round"/><line class="bond bond-orig" x1="118" y1="50" x2="160" y2="80" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="22" y1="68" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><line class="bond bond-new" x1="85" y1="20" x2="50" y2="45" stroke="url(#sym-bond)" stroke-width="6" stroke-linecap="round"/><g class="atom atom-o1"><circle cx="60" cy="30" r="25" fill="url(#sym-o)"/><ellipse cx="50" cy="20" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 50 20)"/><polyline class="crackle" points="52,18 58,24 50,28 60,34 54,26"/><polyline class="crackle c2" points="66,22 62,30 70,32 64,38 72,36"/><polyline class="crackle c3" points="56,38 48,42 58,46 50,50 60,52"/><text class="atom-label" x="60" y="30" font-size="20">O</text></g><g class="atom atom-o2"><circle cx="118" cy="50" r="25" fill="url(#sym-o)"/><ellipse cx="108" cy="40" rx="8" ry="4.5" fill="rgba(255,255,255,0.55)" transform="rotate(-25 108 40)"/><polyline class="crackle" points="110,38 116,44 108,48 118,54 112,46"/><polyline class="crackle c2" points="124,42 120,50 128,52 122,58 130,56"/><polyline class="crackle c3" points="114,58 106,60 116,64 108,68 118,70"/><text class="atom-label" x="118" y="50" font-size="20">O</text></g><g class="atom atom-h1"><circle cx="20" cy="62" r="12" fill="url(#sym-h)"/><ellipse cx="16" cy="57" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 16 57)"/><polyline class="crackle crackle-sm" points="17,58 21,62 16,65 22,68"/><text class="atom-label" x="20" y="62" font-size="12">H</text></g><g class="atom atom-h2"><circle cx="160" cy="80" r="12" fill="url(#sym-h)"/><ellipse cx="156" cy="75" rx="4" ry="2.2" fill="rgba(255,255,255,0.6)" transform="rotate(-25 156 75)"/><polyline class="crackle crackle-sm" points="157,76 161,80 156,83 162,86"/><text class="atom-label" x="160" y="80" font-size="12">H</text></g><text class="mol-label" x="36" y="82">H₂O<tspan x="36" dy="13" class="mol-label-sub">Water</tspan></text><text class="mol-label" x="152" y="18">O<tspan x="152" dy="13" class="mol-label-sub">Oxygen</tspan></text></svg></div>
   <div class="wrap foot-grid">
     <div>
-      <div class="foot-logo"><img src="logo-badge.png" alt="PeroXcity" style="width:min(340px, 100%); height:auto; display:block; filter:drop-shadow(0 0 22px rgba(47,198,255,0.3));"></div>
+      <div class="foot-logo"><video class="foot-badge" src="logo-badge-loop.mp4" poster="logo-badge-day.jpg" muted loop playsinline preload="none" width="690" height="384" aria-label="PeroXcity"></video></div>
       <p class="desc">A two-part hydrogen peroxide concentrate &mdash; Part A at 35% plus Part B Accelerator &mdash; mixed on site for wood, masonry, roofs, kitchens, marine, and more.</p>
       <p class="desc" style="margin-top:12px;">Questions? <a href="tel:18882536962" style="color:var(--cyan); text-decoration:none; font-weight:600;">1-888-253-6962</a></p>
     </div>
@@ -1988,6 +1991,14 @@
   var st=document.querySelectorAll('.app-store');
   if(a.appstore && st[0]){ st[0].outerHTML='<a class="app-store" href="'+a.appstore+'" rel="noopener">App Store</a>'; }
   if(a.play && st[1]){ st[1].outerHTML='<a class="app-store" href="'+a.play+'" rel="noopener">Google Play</a>'; }
+})();
+
+/* ===== FOOTER BADGE: plays only while on screen ===== */
+(function(){
+  var v=document.querySelector('video.foot-badge'); if(!v) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(!('IntersectionObserver' in window)){ v.play().catch(function(){}); return; }
+  new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ v.play().catch(function(){}); } else { v.pause(); } }); },{threshold:0.2}).observe(v);
 })();
 
 /* ===== LOGO LOOP: pause when hidden or when the visitor prefers reduced motion ===== */

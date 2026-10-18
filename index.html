@@ -594,6 +594,7 @@
   .app-k{font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:0.14em;}
   .app-t{font-size:16px; font-weight:700;}
   .app-stores{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .app-stores[hidden]{display:none;}
   .app-store{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.05em; color:var(--cyan); border:1px solid rgba(47,198,255,0.4); border-radius:3px; padding:6px 10px; text-decoration:none;}
   .app-store.soon{color:var(--dim); border-style:dashed;}
   .app-note{margin-top:12px; font-size:12.5px; color:var(--dim);}
@@ -1767,16 +1768,16 @@
     <div class="app-copy">
       <div class="kicker">Mobile App</div>
       <h2 class="section-head">PeroXcity in your pocket.</h2>
-      <p class="section-lede">Mix calculator, dwell timer, surface guide, and reorder in a couple of taps &mdash; built for the truck and the job site. It runs right from the link below on any phone: open it once, add it to your home screen, and it works like an installed app. App Store and Google Play listings are coming.</p>
+      <p class="section-lede">Mix calculator, dwell timer, surface guide, and reorder in a couple of taps &mdash; built for the truck and the job site. It runs right from the link below on any phone: open it once, add it to your home screen, and it works like an installed app.</p>
       <div class="app-btns">
         <a class="app-btn" id="appAndroid" href="#" rel="noopener" target="_blank"><span class="app-k">ANDROID &middot; OPEN, THEN &ldquo;ADD TO HOME SCREEN&rdquo;</span><span class="app-t">Open the PeroXcity app</span></a>
         <a class="app-btn" id="appIos" href="#" rel="noopener" target="_blank"><span class="app-k">IPHONE &middot; OPEN IN SAFARI, SHARE &rarr; &ldquo;ADD TO HOME SCREEN&rdquo;</span><span class="app-t">Open the PeroXcity app</span></a>
       </div>
-      <div class="app-stores">
-        <span class="app-store soon">App Store &middot; coming soon</span>
-        <span class="app-store soon">Google Play &middot; coming soon</span>
+      <div class="app-stores" id="appStores" hidden>
+        <span class="app-store soon">App Store</span>
+        <span class="app-store soon">Google Play</span>
       </div>
-      <p class="app-note">Store badges switch on automatically the day the listings are approved.</p>
+      <p class="app-note"><strong>No app store needed.</strong> It installs straight from the link &mdash; nothing to download, nothing to approve. App Store and Google Play listings will be added later.</p>
     </div>
     <div class="app-art" aria-hidden="true">
       <div class="phone"><div class="phone-screen"><img src="logo-badge.png" alt=""><div class="phone-row"><span>Mix 1:4</span><span>Dwell 15&ndash;45</span><span>Reorder</span></div></div></div>
@@ -1993,6 +1994,7 @@
   var st=document.querySelectorAll('.app-store');
   if(a.appstore && st[0]){ st[0].outerHTML='<a class="app-store" href="'+a.appstore+'" rel="noopener">App Store</a>'; }
   if(a.play && st[1]){ st[1].outerHTML='<a class="app-store" href="'+a.play+'" rel="noopener">Google Play</a>'; }
+  if(a.appstore || a.play){ var box=document.getElementById('appStores'); if(box){ box.hidden=false; } }
 })();
 
 /* ===== FOOTER BADGE: plays only while on screen ===== */

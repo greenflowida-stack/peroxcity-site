@@ -1984,7 +1984,7 @@
 })();
 
 /* ===== MOBILE APP LINKS ===== */
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   var nav=document.querySelector('.nav-app');
   if(nav && !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){ nav.setAttribute('href','#app'); nav.removeAttribute('target'); }
   var a = window.PEROXCITY_APP || {};
@@ -1995,7 +1995,7 @@
   if(a.appstore && st[0]){ st[0].outerHTML='<a class="app-store" href="'+a.appstore+'" rel="noopener">App Store</a>'; }
   if(a.play && st[1]){ st[1].outerHTML='<a class="app-store" href="'+a.play+'" rel="noopener">Google Play</a>'; }
   if(a.appstore || a.play){ var box=document.getElementById('appStores'); if(box){ box.hidden=false; } }
-})();
+});
 
 /* ===== FOOTER BADGE: plays only while on screen ===== */
 (function(){

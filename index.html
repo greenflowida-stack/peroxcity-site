@@ -1061,6 +1061,7 @@
         </video>
         <div class="demo-tabs" role="tablist" aria-label="Choose footage">
           <button class="demo-tab active" role="tab" data-clip="foam">Foam</button>
+          <button class="demo-tab" role="tab" data-clip="onsite">On the Job</button>
           <button class="demo-tab" role="tab" data-clip="cart">Golf Cart</button>
           <button class="demo-tab" role="tab" data-clip="pavers">Pavers</button>
           <button class="demo-tab" role="tab" data-clip="roof">Roofs</button>
@@ -1459,6 +1460,26 @@
     <p class="section-lede">Real stills and footage from the job &mdash; the foam lifting grime on contact, and the kind of buildup it's built to break down.</p>
 
     <div class="gallery-grid">
+      <div class="gallery-item gallery-video span-2">
+        <video controls playsinline preload="none" poster="gallery-floor-demo.jpg" aria-label="Greg cleans a greasy restaurant kitchen floor with PeroXcity, start to finish">
+          <source src="peroxcity-floor-demo.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO &middot; 1:30</span>Greasy kitchen floor &mdash; start to finish, with sound</span>
+      </div>
+      <div class="gallery-item gallery-video">
+        <video controls muted loop playsinline preload="metadata" poster="gallery-curb.jpg" aria-label="PeroXcity foaming on a concrete curb and paver edge next to a garden bed">
+          <source src="peroxcity-curb.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO</span>Curb &amp; edging &mdash; foam doing the work</span>
+      </div>
+      <a class="gallery-item" href="gallery-surface-cleaner.jpg" target="_blank" rel="noopener">
+        <img src="gallery-surface-cleaner.jpg" alt="A gallon of PeroXcity on a surface cleaner, pavers half cleaned" loading="lazy">
+        <span class="gallery-cap">Pavers &mdash; surface cleaner pass after PeroXcity</span>
+      </a>
+      <a class="gallery-item span-2" href="gallery-compare.jpg" target="_blank" rel="noopener">
+        <img src="gallery-compare.jpg" alt="Driveway test: PeroXcity poured on the top patch, a leading competitor on the bottom, same strength, no rinsing" loading="lazy">
+        <span class="gallery-cap">Side by side on a driveway &mdash; same strength, poured on, no rinse</span>
+      </a>
       <div class="gallery-item gallery-video">
         <video controls muted loop playsinline preload="metadata" poster="gallery-pavers.jpg" aria-label="PeroXcity foam cleaning paver edging, with a 5-gallon pail of PeroXcity in the garden bed">
           <source src="peroxcity-pavers.mp4" type="video/mp4">
@@ -2030,9 +2051,10 @@ document.addEventListener('DOMContentLoaded', function(){
     pavers: { src:"peroxcity-pavers.mp4",   poster:"gallery-pavers.jpg",  badge:"PAVERS &amp; EDGING",       cap:"Paver edging foaming up on contact &mdash; no pressure washing" },
     roof:   { src:"peroxcity-roof.mp4",     poster:"gallery-4.jpg",       badge:"ROOFS &amp; SHINGLES",      cap:"Moss and algae on shingles &mdash; the buildup PeroXcity is built for" },
     kit:    { src:"peroxcity-unboxing.mp4", poster:"gallery-unboxing.jpg", badge:"THE CONCENTRATE KIT",      cap:"What arrives: Part A, Part B, and a job's worth of cleaner" },
-    cart:   { src:"peroxcity-golfcart.mp4",  poster:"gallery-golfcart.jpg", badge:"GOLF CART SEATS",          cap:"Mildew-stained vinyl seat: spray, wait, wipe &mdash; no scrubbing" }
+    cart:   { src:"peroxcity-golfcart.mp4",  poster:"gallery-golfcart.jpg", badge:"GOLF CART SEATS",          cap:"Mildew-stained vinyl seat: spray, wait, wipe &mdash; no scrubbing" },
+    onsite: { src:"peroxcity-onsite.mp4",    poster:"gallery-onsite.jpg",   badge:"ON THE JOB",               cap:"Five gallons on the rig, roof and driveway next &mdash; a normal day with PeroXcity" }
   };
-  var order = ["foam","cart","pavers","roof","kit"];
+  var order = ["foam","onsite","cart","pavers","roof","kit"];
   var v = document.getElementById('heroVideo'); if(!v) return;
   var badge = document.getElementById('heroBadge'), cap = document.getElementById('heroCaption');
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.demo-tab'));

@@ -1,0 +1,6 @@
+# Short addresses printed on labels (QR codes). Change the target here, never reprint a label.
+/label        /label.html          200
+/label/kit    /label.html#kit      302
+/label/rtu    /label.html#rtu      302
+/sds          /label.html          302
+/app          https://app.peroxcity.com/  302

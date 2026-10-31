@@ -184,6 +184,52 @@
     .hero p, .hero .lede{color:#E8EDFB;}
   }
 
+  /* ===== OUTDOOR MODE (high-contrast for direct sunlight) ===== */
+  .nav-sun{display:inline-flex; align-items:center; gap:6px; color:var(--white); background:transparent; font-family:'IBM Plex Sans',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; border:1px solid rgba(243,246,255,0.35); border-radius:3px; padding:9px 12px; cursor:pointer; flex-shrink:0;}
+  .nav-sun[aria-pressed="true"]{background:#FFD23F; color:#0A0F1F; border-color:#FFD23F;}
+  @media(max-width:640px){ .nav-sun span{display:none;} .nav-sun{padding:9px 10px;} }
+  .sun-hint{position:fixed; left:12px; right:12px; top:calc(env(safe-area-inset-top) + 8px); z-index:95; background:#FFD23F; color:#0A0F1F; font:600 15px/1.35 'IBM Plex Sans',sans-serif; padding:12px 44px 12px 14px; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,0.35);}
+  .sun-hint button{position:absolute; right:6px; top:6px; width:32px; height:32px; border:none; background:transparent; font-size:22px; line-height:1; cursor:pointer; color:#0A0F1F;}
+  .sun-hint[hidden]{display:none;}
+
+  html.outdoor{
+    --bg:#FFFFFF; --panel:#FFFFFF; --panel2:#F1F4F9; --white:#000000; --dim:#1F2937;
+    --cyan:#004E89; --cyan-dim:#003A66; --leaf:#0F6B2F; --rust:#9B1C1C;
+    --line:rgba(0,0,0,0.35); --line-bright:rgba(0,78,137,0.8); --shadow:none;
+  }
+  html.outdoor body{background:#fff; color:#000; font-size:18px; -webkit-font-smoothing:auto;}
+  html.outdoor body::before, html.outdoor body::after, html.outdoor .molecule-field, html.outdoor .bubble-field, html.outdoor .bg-molecule,
+  html.outdoor .bg-quotes, html.outdoor .hdr-surface, html.outdoor .hdr-drops, html.outdoor .hdr-bubbles{display:none !important;}
+  html.outdoor *{text-shadow:none !important; box-shadow:none !important;}
+  html.outdoor .lt, html.outdoor section, html.outdoor .hero, html.outdoor .cta, html.outdoor footer, html.outdoor .trustbar{background:#fff !important; color:#000;}
+  html.outdoor header{background:#fff; border-bottom:2px solid #000; backdrop-filter:none;}
+  html.outdoor .logo-badge{display:none !important;} html.outdoor .logo-word{display:block !important; filter:brightness(0.35) contrast(1.4);}
+  html.outdoor .hero-copy{background:transparent; padding:0; margin:0;}
+  html.outdoor p, html.outdoor li, html.outdoor .lt p, html.outdoor .lt li{color:#000; font-weight:500;}
+  html.outdoor h1, html.outdoor h2, html.outdoor h3{color:#000;}
+  html.outdoor .kicker, html.outdoor .k, html.outdoor .lbl, html.outdoor .fnum, html.outdoor .trust-item, html.outdoor .cluster-mix, html.outdoor .time, html.outdoor .partb-note,
+  html.outdoor .lineup-tag, html.outdoor .footage-cap, html.outdoor .gallery-cap, html.outdoor .buy-note, html.outdoor .ship-note, html.outdoor .mix-parts, html.outdoor .desc,
+  html.outdoor .demo-caption, html.outdoor .app-note, html.outdoor .door-d, html.outdoor .way-d, html.outdoor cite{color:#000 !important; font-weight:700;}
+  html.outdoor .mix-card, html.outdoor .lineup-card, html.outdoor .quote-card, html.outdoor .faq-item, html.outdoor .how-step, html.outdoor .cluster, html.outdoor .feature,
+  html.outdoor .door, html.outdoor .way, html.outdoor .addon, html.outdoor .gallery-item, html.outdoor .partb{border:2px solid #000 !important; background:#fff !important;}
+  html.outdoor .btn-primary, html.outdoor .btn-buy, html.outdoor .buy-slot .shopify-buy__btn, html.outdoor .nav-cta, html.outdoor .fit-opt.sel, html.outdoor .demo-tab.active,
+  html.outdoor .lineup-badge.pro, html.outdoor .order-step b, html.outdoor .aud-switch button.on, html.outdoor .door.on{background:#000 !important; color:#fff !important; border:2px solid #000 !important;}
+  html.outdoor .btn-ghost, html.outdoor .nav-app, html.outdoor .fit-opt, html.outdoor .demo-tab, html.outdoor .quotes-more, html.outdoor .nav-aud a{color:#000 !important; border:2px solid #000 !important; background:#fff !important;}
+  html.outdoor .nav-aud{background:#fff;} html.outdoor .nav-aud a.on{background:#000 !important; color:#fff !important;}
+  html.outdoor .nav-aud-k, html.outdoor .nav-aud-t{color:inherit !important;}
+  html.outdoor .demo-overlay .badge, html.outdoor .vid-badge{background:#000 !important; color:#fff !important;}
+  html.outdoor .gallery-item .gallery-cap, html.outdoor .gallery-item.gallery-video .gallery-cap, html.outdoor .footage-cap, html.outdoor .kit-video-cap{background:#fff !important; color:#000 !important;}
+  html.outdoor .gallery-item img{filter:none !important;}
+  html.outdoor .how-art{background:#fff !important; border:2px solid #000;}
+  html.outdoor .how-svg{filter:invert(1) hue-rotate(180deg) saturate(2) contrast(1.3);}
+  html.outdoor .partb-table .hl{background:#FFF3B0 !important;}
+  html.outdoor .fit-launch, html.outdoor .fit-panel{background:#fff; color:#000; border:2px solid #000;}
+  html.outdoor .fit-launch .dot{background:#000; box-shadow:none;}
+  html.outdoor .quote-card{animation:none !important;}
+  html.outdoor .step-index, html.outdoor .mix-card b, html.outdoor .fnum{color:#000 !important; -webkit-text-fill-color:#000; opacity:1;}
+  html.outdoor .foot-badge, html.outdoor .app-art{display:none !important;}
+  html.outdoor .hdr-drops, html.outdoor .hdr-bubbles{animation:none !important;}
+
   /* ===== FIT FINDER (popup) ===== */
   .fit-launch{
     position:fixed; right:18px; bottom:18px; z-index:70; display:flex; align-items:center; gap:8px;
@@ -1067,6 +1113,8 @@
         <a href="#lineup" role="tab" data-aud-pick="pro"><span class="nav-aud-k">PROS</span><span class="nav-aud-t">Concentrate</span></a>
         <a href="#lineup" role="tab" data-aud-pick="home"><span class="nav-aud-k">HOMEOWNERS</span><span class="nav-aud-t">Ready-To-Use</span></a>
       </div>
+      <button type="button" class="nav-sun" id="sunToggle" aria-pressed="false" title="Outdoor mode: high contrast for working in the sun"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span>Outdoor</span></button>
+      <div class="sun-hint" id="sunHint" hidden>Working outside? Tap <b>&#9728; Outdoor</b> for a high-contrast view.<button type="button" id="sunHintClose" aria-label="Dismiss">&times;</button></div>
       <a href="https://app.peroxcity.com/" class="nav-app" title="Open the PeroXcity app" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10" y1="18.5" x2="14" y2="18.5"/></svg><span>App</span></a>
       <a href="#lineup" class="nav-cta">Order Now</a>
     </div>
@@ -2209,6 +2257,25 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
   window.PEROXCITY_setAud = function(a){ setAud(a, true); };
+})();
+
+/* ===== OUTDOOR MODE ===== */
+(function(){
+  var KEY='px_outdoor', HINT='px_sun_hint';
+  var html=document.documentElement, btn=document.getElementById('sunToggle'), hint=document.getElementById('sunHint');
+  function get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function apply(on){ html.classList.toggle('outdoor', on); if(btn){ btn.setAttribute('aria-pressed', on?'true':'false'); btn.title = on ? 'Outdoor mode is on — tap to return to the normal view' : 'Outdoor mode: high contrast for working in the sun'; } }
+  apply(get(KEY)==='1');
+  if(btn){ btn.addEventListener('click', function(){ var on=!html.classList.contains('outdoor'); apply(on); set(KEY, on?'1':'0'); if(hint) hint.hidden=true; set(HINT,'1'); }); }
+  /* one-time daytime hint on phones (web pages can't read the light sensor, so we ask) */
+  var isPhone = window.matchMedia && window.matchMedia('(max-width:640px)').matches;
+  var h = new Date().getHours();
+  if(hint && isPhone && h>=8 && h<18 && get(HINT)!=='1' && get(KEY)!=='1'){
+    setTimeout(function(){ hint.hidden=false; }, 2500);
+    setTimeout(function(){ hint.hidden=true; }, 16000);
+    document.getElementById('sunHintClose').addEventListener('click', function(){ hint.hidden=true; set(HINT,'1'); });
+  }
 })();
 
 /* ===== FIT FINDER ===== */

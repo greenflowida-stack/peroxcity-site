@@ -2267,7 +2267,10 @@ document.addEventListener('DOMContentLoaded', function(){
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function apply(on){ html.classList.toggle('outdoor', on); if(btn){ btn.setAttribute('aria-pressed', on?'true':'false'); btn.title = on ? 'Outdoor mode is on — tap to return to the normal view' : 'Outdoor mode: high contrast for working in the sun'; } }
   apply(get(KEY)==='1');
-  if(btn){ btn.addEventListener('click', function(){ var on=!html.classList.contains('outdoor'); apply(on); set(KEY, on?'1':'0'); if(hint) hint.hidden=true; set(HINT,'1'); }); }
+  /* hand the setting to the app: every app link carries ?outdoor=1/0 */
+  function syncAppLinks(){ var on=html.classList.contains('outdoor'); document.querySelectorAll('a[href^="https://app.peroxcity.com"]').forEach(function(a){ var u=new URL(a.getAttribute('href'), location.href); u.searchParams.set('outdoor', on?'1':'0'); a.setAttribute('href', u.toString()); }); }
+  syncAppLinks(); document.addEventListener('DOMContentLoaded', syncAppLinks);
+  if(btn){ btn.addEventListener('click', function(){ var on=!html.classList.contains('outdoor'); apply(on); set(KEY, on?'1':'0'); syncAppLinks(); if(hint) hint.hidden=true; set(HINT,'1'); }); }
   /* one-time daytime hint on phones (web pages can't read the light sensor, so we ask) */
   var isPhone = window.matchMedia && window.matchMedia('(max-width:640px)').matches;
   var h = new Date().getHours();

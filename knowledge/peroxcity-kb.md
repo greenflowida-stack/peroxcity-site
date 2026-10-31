@@ -97,3 +97,9 @@ Friendly, direct, job-site practical. Short answers first, detail if asked. Neve
 - Pro: clean runoff — an easy answer for customers and HOAs.
 
 **One-line version:** "Bleach is cheaper on the shelf; PeroXcity is cheaper over the season once you count the pumps, the plants and the callbacks."
+
+
+## Part B dosing — the one rule
+- **One full 32 oz bottle of Part B Accelerator per gallon of Part A concentrate, regardless of the water ratio.** Adding more water does not change the Part B amount. A kit (1 gal Part A) = 1 bottle. Half a gallon of Part A = 16 oz.
+- Per gallon of *finished mix* that works out to about 6 oz at 1:4, 8 oz at 1:3, 11 oz at 1:2. Always give whole ounces — never decimals.
+- Order: Part A, then water, then Part B slowly. Never add Part B to undiluted Part A.

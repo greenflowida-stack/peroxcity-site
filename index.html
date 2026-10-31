@@ -230,6 +230,27 @@
   html.outdoor .foot-badge, html.outdoor .app-art{display:none !important;}
   html.outdoor .hdr-drops, html.outdoor .hdr-bubbles{animation:none !important;}
 
+  /* ===== BLEACH COMPARISON ===== */
+  .vs-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:28px;}
+  .vs-col{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px 22px 10px;}
+  .vs-col.vs-px{border-color:var(--line-bright); box-shadow:0 0 0 1px var(--line-bright);}
+  .vs-head{margin-bottom:12px;}
+  .vs-tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; padding:5px 9px; border-radius:3px; background:var(--panel2); color:var(--white);}
+  .vs-px .vs-tag{background:var(--cyan); color:#04202E;}
+  .vs-col ul{list-style:none; padding:0; margin:0;}
+  .vs-col li{padding:11px 0 11px 26px; border-top:1px solid var(--line); position:relative; font-size:15px; line-height:1.5; color:var(--dim);}
+  .vs-col li b{color:var(--white);}
+  .vs-col li::before{content:"\2013"; position:absolute; left:4px; top:11px; color:var(--rust); font-weight:700;}
+  .vs-px li::before{content:"\2713"; color:var(--leaf);}
+  .vs-bleach li:first-child::before{content:"\2713"; color:var(--leaf);}
+  .vs-px li:first-child::before{content:"\2013"; color:var(--rust);}
+  .vs-cost{margin-top:22px; background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:22px;}
+  .vs-cost-k{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; color:var(--cyan); margin-bottom:8px;}
+  .vs-cost p{max-width:820px; margin-bottom:14px;}
+  @media(max-width:760px){ .vs-grid{grid-template-columns:1fr;} }
+  html.outdoor .vs-px .vs-tag{background:#000 !important; color:#fff !important;}
+  .lt .vs-col li{color:#263252;} .lt .vs-col li b{color:#0A0F1F;}
+
   /* ===== FIT FINDER (popup) ===== */
   .fit-launch{
     position:fixed; right:18px; bottom:18px; z-index:70; display:flex; align-items:center; gap:8px;
@@ -1105,6 +1126,7 @@
         <li><a href="#lineup">The Lineup</a></li>
         <li><a href="#uses">Where To Use</a></li>
         <li><a href="#features">Features</a></li>
+        <li><a href="#bleach">vs. Bleach</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
     </nav>
@@ -1844,6 +1866,48 @@
         <p style="margin-top:12px;">Wear protective gloves, clothing, and eye/face protection. <strong>If on skin or in eyes:</strong> rinse immediately with plenty of water for several minutes and seek medical attention. <strong>If swallowed:</strong> rinse mouth, do not induce vomiting, and call a Poison Center or doctor. Keep out of reach of children. Plastic sprayer only &mdash; never metal. <strong>Always dilute Part A with water before adding Part B Accelerator; never combine Part B with undiluted concentrate.</strong> Test a small inconspicuous area first. For professional use. Read the label and SDS before use. Some indoor applications may require a HEPA vacuum to remove debris and bubbles from the surface.</p>
         <p style="margin-top:12px;"><strong>Aluminum, galvanized &amp; painted surfaces.</strong> PeroXcity is safe on every common roof type &mdash; shingle, clay or concrete barrel tile, flat tile, TPO, and painted or coated metal &mdash; but avoid galvanized metal and bare aluminum, including inexpensive aluminum gutters (store-bought or budget-installed). These carry very little protective coating, and the oxygen reaction can react with the exposed aluminum underneath. <strong>Always test any painted surface in a small, hidden spot before applying.</strong> A poorly prepped paint job can trap organic matter between coats; when the cleaner reacts with it, the paint can blister. It's not common, but it can happen &mdash; if the test spot bubbles or lifts, don't proceed.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="bleach" style="position:relative; overflow:hidden;">
+  <div class="wrap">
+    <div class="kicker">The Honest Comparison</div>
+    <h2 class="section-head">Bleach (sodium hypochlorite) vs. PeroXcity: the whole bill.</h2>
+    <p class="lede" style="max-width:720px;">Bleach has cleaned a lot of roofs and driveways, and the jug is cheap &mdash; in some parts of the country. But the jug is only the first line on the invoice. Here is the rest of it, side by side. (If a contractor tells you &ldquo;I don't use bleach, I use sodium hypochlorite&rdquo; &mdash; that is bleach. Same chemical, same chlorine.)</p>
+
+    <div class="vs-grid">
+      <div class="vs-col vs-bleach">
+        <div class="vs-head"><span class="vs-tag">BLEACH / SODIUM HYPOCHLORITE</span></div>
+        <ul>
+          <li><b>Pro: low price per jug</b> in pool-heavy markets like Florida. In other states it costs nearly what PeroXcity costs.</li>
+          <li><b>Corrodes metal.</b> Pumps, fittings, hose ends, sprayer wands, trailer frames, gutters, railings, screen enclosures and the customer's AC cage all rust and pit over time. Equipment gets replaced sooner.</li>
+          <li><b>Kills landscaping.</b> Overspray or runoff on a hedge or lawn usually means a dead plant &mdash; and reputable contractors replace what they kill. One bush can erase the savings on a whole job.</li>
+          <li><b>Chlorine fumes.</b> Hard on the applicator, the homeowner, and pets. Not something you want drifting into a lanai or an open window.</li>
+          <li><b>Hard on surfaces.</b> Strips shingle granules, dries and grays wood, fades paint and fabric, and leaves salt residue that attracts moisture and regrowth.</li>
+          <li><b>Masks odors</b> rather than removing the organic source; pet and bathroom smells come back.</li>
+          <li><b>Chemical runoff</b> into storm drains, canals and the Gulf. Many HOAs and municipalities are tightening the rules.</li>
+        </ul>
+      </div>
+      <div class="vs-col vs-px">
+        <div class="vs-head"><span class="vs-tag">PEROXCITY (HYDROGEN PEROXIDE + ACCELERATOR)</span></div>
+        <ul>
+          <li><b>Higher price per jug.</b> That's the honest con. One 1-gallon kit makes up to 5 gallons, and you set the strength per job.</li>
+          <li><b>Safe for stainless and most coated metals.</b> No rust on your rig, your wands, or the customer's gutters and railings. (Test painted or bare aluminum first.)</li>
+          <li><b>Plant-friendly.</b> Breaks down into water and oxygen. Overspray on a hedge is a rinse, not a replacement.</li>
+          <li><b>No chlorine fumes.</b> Low odor; fine to use around a family, pets, and an open door.</li>
+          <li><b>Gentle on surfaces.</b> Doesn't strip granules or wood fiber; keeps working in the pores after you rinse.</li>
+          <li><b>Destroys the source of odors</b> &mdash; organic matter is oxidized, not covered up.</li>
+          <li><b>Clean runoff.</b> Water and oxygen. Easy answer when a customer or an HOA asks what you're spraying.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="vs-cost">
+      <div class="vs-cost-k">THE MATH CONTRACTORS ACTUALLY DO</div>
+      <p>Price the jug, then add what bleach costs you in a year: pump and fitting replacements, early equipment retirement, every plant you've replaced, the callbacks for fading and regrowth, and the jobs you didn't get because the homeowner asked &ldquo;is that bleach?&rdquo; In most markets, that total is where PeroXcity wins &mdash; not on the shelf price, but on the season.</p>
+      <a class="btn-ghost" href="#lineup">See kit pricing &rarr;</a>
     </div>
   </div>
 </section>

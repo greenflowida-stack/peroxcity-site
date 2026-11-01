@@ -1208,6 +1208,7 @@
         <div class="demo-tabs" role="tablist" aria-label="Choose footage">
           <button class="demo-tab active" role="tab" data-clip="foam">Foam</button>
           <button class="demo-tab" role="tab" data-clip="onsite">On the Job</button>
+          <button class="demo-tab" role="tab" data-clip="grill">Grill</button>
           <button class="demo-tab" role="tab" data-clip="cart">Golf Cart</button>
           <button class="demo-tab" role="tab" data-clip="pavers">Pavers</button>
           <button class="demo-tab" role="tab" data-clip="roof">Roofs</button>
@@ -1632,6 +1633,24 @@
         <img src="gallery-jug-jobsite.jpg" alt="A PeroXcity jug on the driveway at a jobsite, truck in the background" loading="lazy">
         <span class="gallery-cap">Off the truck and onto the driveway</span>
       </a>
+      <div class="gallery-item gallery-video span-2">
+        <video controls muted loop playsinline preload="metadata" poster="gallery-grill.jpg" aria-label="PeroXcity lifting baked-on grease inside a gas grill">
+          <source src="peroxcity-grill.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO</span>Gas grill &mdash; baked-on grease letting go at 1:2</span>
+      </div>
+      <div class="gallery-item gallery-video">
+        <video controls muted loop playsinline preload="metadata" poster="gallery-grime.jpg" aria-label="PeroXcity foam lifting dirt and grease off a surface on contact">
+          <source src="peroxcity-grime.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO</span>Dirt and grease lifting on contact</span>
+      </div>
+      <div class="gallery-item gallery-video">
+        <video controls muted loop playsinline preload="metadata" poster="gallery-floor-vac.jpg" aria-label="Squeegee vacuum pulling the dirty PeroXcity mix off a wood floor, clean boards behind it">
+          <source src="peroxcity-floor-vac.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO</span>Wood floor &mdash; one pass with the squeegee vac</span>
+      </div>
       <a class="gallery-item span-2" href="gallery-compare.jpg" target="_blank" rel="noopener">
         <img src="gallery-compare.jpg" alt="Driveway test: PeroXcity poured on the top patch, a leading competitor on the bottom, same strength, no rinsing" loading="lazy">
         <span class="gallery-cap">Side by side on a driveway &mdash; same strength, poured on, no rinse</span>
@@ -1736,7 +1755,7 @@
         </ul>
       </div>
       <div class="cluster-card">
-        <img class="cluster-photo" src="uses/cat-kitchen.jpg" alt="Grease, hoods, floors, grout" loading="lazy">
+        <img class="cluster-photo" src="uses/cat-kitchen.jpg" alt="Commercial kitchen tile floor before and after PeroXcity" loading="lazy">
         <div class="cluster-head">
           <svg class="icon" viewBox="0 0 40 40" fill="none"><path d="M8 8h24v8a12 12 0 01-24 0V8z" stroke="var(--cyan)" stroke-width="2"/><path d="M14 28h12v6H14z" stroke="var(--cyan)" stroke-width="2"/><path d="M20 28v-4" stroke="var(--cyan)" stroke-width="2"/></svg>
           <h5>Commercial Kitchens</h5>
@@ -2120,7 +2139,7 @@
       <button class="fit-opt" data-v="roof" data-clip="roof">Roof</button>
       <button class="fit-opt" data-v="pavers" data-clip="pavers">Pavers / Concrete</button>
       <button class="fit-opt" data-v="wood" data-clip="foam">Wood / Decks / Fences</button>
-      <button class="fit-opt" data-v="kitchen" data-clip="foam">Kitchen Grease / Hoods</button>
+      <button class="fit-opt" data-v="kitchen" data-clip="grill">Kitchen Grease / Hoods</button>
       <button class="fit-opt" data-v="mold" data-clip="foam">Mold / Mildew</button>
       <button class="fit-opt" data-v="pets" data-clip="foam">Pet Odors</button>
       <button class="fit-opt" data-v="boat" data-clip="cart">RV / Boat / Golf Cart</button>
@@ -2278,9 +2297,10 @@ document.addEventListener('DOMContentLoaded', function(){
     roof:   { src:"peroxcity-roof.mp4",     poster:"gallery-4.jpg",       badge:"ROOFS &amp; SHINGLES",      cap:"Moss and algae on shingles &mdash; the buildup PeroXcity is built for" },
     kit:    { src:"peroxcity-unboxing.mp4", poster:"gallery-unboxing.jpg", badge:"THE CONCENTRATE KIT",      cap:"What arrives: Part A, Part B, and a job's worth of cleaner" },
     cart:   { src:"peroxcity-golfcart.mp4",  poster:"gallery-golfcart.jpg", badge:"GOLF CART SEATS",          cap:"Mildew-stained vinyl seat: spray, wait, wipe &mdash; no scrubbing" },
-    onsite: { src:"peroxcity-onsite.mp4",    poster:"gallery-onsite.jpg",   badge:"ON THE JOB",               cap:"Five gallons on the rig, roof and driveway next &mdash; a normal day with PeroXcity" }
+    onsite: { src:"peroxcity-onsite.mp4",    poster:"gallery-onsite.jpg",   badge:"ON THE JOB",               cap:"Five gallons on the rig, roof and driveway next &mdash; a normal day with PeroXcity" },
+    grill:  { src:"peroxcity-grill.mp4",     poster:"gallery-grill.jpg",    badge:"GRILL GREASE",             cap:"Years of baked-on grease on a gas grill &mdash; 1:2 super strength, no wire brush" }
   };
-  var order = ["foam","onsite","cart","pavers","roof","kit"];
+  var order = ["foam","onsite","grill","cart","pavers","roof","kit"];
   var v = document.getElementById('heroVideo'); if(!v) return;
   var badge = document.getElementById('heroBadge'), cap = document.getElementById('heroCaption');
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.demo-tab'));

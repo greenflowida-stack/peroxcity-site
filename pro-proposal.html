@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposal Builder — PeroXcity Pro</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo-badge.png">
+<style>
+  :root{--ink:#0A0F1F;--sub:#2E3A58;--line:rgba(10,15,31,.18);--blue:#0369A1;--navy:#060A1C;--yellow:#FFD23F}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5}
+  /* ===== builder ===== */
+  .top{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  .top img{height:40px}.top a{color:#fff;text-decoration:none;font-size:14px;font-weight:700;border:1px solid rgba(255,255,255,.4);padding:7px 10px;border-radius:6px}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px 40px}
+  .k{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;color:var(--blue);text-transform:uppercase;font-weight:700}
+  h1{font-size:26px;line-height:1.1;margin:4px 0 8px}
+  p.sub{color:var(--sub)}
+  fieldset{border:2px solid var(--ink);border-radius:12px;padding:12px 16px 16px;margin:12px 0}
+  legend{font-weight:800;padding:0 6px}
+  label{display:block;font-size:13px;font-weight:700;color:var(--sub);margin:10px 0 4px}
+  input,textarea,select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  textarea{min-height:90px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chk{display:flex;gap:10px;align-items:center;margin:8px 0;font-size:15px}
+  .chk input{width:auto}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:sticky;bottom:10px}
+  .btns button{flex:1;border:2px solid var(--ink);background:#fff;color:var(--ink);font-weight:800;padding:13px;border-radius:8px;font-size:16px;cursor:pointer}
+  .btns .pri{background:var(--ink);color:#fff}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .thumbs img{width:72px;height:72px;object-fit:cover;border-radius:6px;border:2px solid var(--line)}
+  .hint{font-size:13px;color:var(--sub);margin-top:4px}
+  /* ===== document ===== */
+  #doc{display:none}
+  .page{width:8.5in;min-height:11in;margin:0 auto;padding:.7in .75in;background:#fff;color:#111;font-size:11.5pt;line-height:1.45;position:relative;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+  .cover{background:var(--navy);color:#fff;display:flex;flex-direction:column;justify-content:space-between}
+  .cover .badge{width:3.2in}
+  .cover h1{font-size:34pt;line-height:1.05;margin:0 0 10pt;color:#fff}
+  .cover .for{font-size:14pt;color:#C9D4F0}
+  .cover .co{border-top:1px solid rgba(255,255,255,.3);padding-top:12pt;font-size:12pt}
+  .cover .co b{font-size:16pt;display:block}
+  .ph{font-family:ui-monospace,Menlo,monospace;font-size:8.5pt;letter-spacing:.14em;color:var(--blue);text-transform:uppercase;font-weight:700;margin-bottom:4pt}
+  .page h2{font-size:20pt;line-height:1.1;margin:0 0 10pt}
+  .page h3{font-size:12.5pt;margin:12pt 0 4pt}
+  .page p{margin:0 0 8pt;color:#222}
+  .page ul{margin:0 0 8pt 16pt}.page li{margin:2pt 0}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14pt}
+  .box{border:1.5pt solid #111;border-radius:6pt;padding:10pt 12pt;margin:8pt 0}
+  .box.y{background:#FFF3B0;border-color:#111}
+  table{width:100%;border-collapse:collapse;margin:6pt 0 10pt;font-size:10.5pt}
+  th,td{text-align:left;padding:6pt 6pt;border-bottom:1pt solid #999;vertical-align:top}
+  th{font-size:8.5pt;letter-spacing:.08em;text-transform:uppercase;color:#444}
+  .q{border-left:3pt solid var(--blue);padding:2pt 10pt;margin:8pt 0;font-style:italic;color:#222}
+  .q small{display:block;font-style:normal;color:#555;margin-top:2pt}
+  .pics{display:grid;grid-template-columns:1fr 1fr;gap:8pt}
+  .pics figure{margin:0}.pics img{width:100%;height:2.2in;object-fit:cover;border-radius:5pt;border:1pt solid #999}
+  .pics figcaption{font-size:9pt;color:#444;margin-top:2pt}
+  .sign{display:grid;grid-template-columns:1fr 1fr;gap:24pt;margin-top:24pt}
+  .sign div{border-top:1pt solid #111;padding-top:4pt;font-size:9.5pt;color:#444}
+  .foot{position:absolute;left:.75in;right:.75in;bottom:.4in;font-size:8.5pt;color:#666;display:flex;justify-content:space-between}
+  .src{font-size:8.5pt;color:#555;line-height:1.4}
+  @media print{
+    body{background:#fff} .top,.wrap{display:none!important} #doc{display:block!important}
+    .page{margin:0;box-shadow:none;width:auto;min-height:0;padding:.6in .7in}
+    @page{size:letter;margin:0}
+    .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .box.y{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media screen{ #doc.show{display:block;background:#CFD6E2;padding:20px 0} #doc.show .page{box-shadow:0 10px 30px rgba(0,0,0,.25);margin-bottom:20px} body.preview .wrap{display:none} }
+</style>
+</head>
+<body>
+<div class="top"><img src="logo-badge.png" alt="PeroXcity"><a href="https://app.peroxcity.com/">Back to the app</a></div>
+<div class="wrap">
+  <div class="k">PeroXcity Pro · Proposal builder</div>
+  <h1>A proposal packet with your name on the cover.</h1>
+  <p class="sub">Fill in the customer and the job. The packet adds how PeroXcity works, why it's safe, the documents, testimonials and before/after photos, then a pricing and acceptance page. Preview it, then print or save as PDF.</p>
+
+  <fieldset><legend>Your company</legend>
+    <div class="row"><div><label>Company</label><input id="f_company"></div><div><label>Your name</label><input id="f_name"></div></div>
+    <div class="row"><div><label>Phone</label><input id="f_phone" inputmode="tel"></div><div><label>Email</label><input id="f_email" inputmode="email"></div></div>
+    <div class="row"><div><label>Service area</label><input id="f_area"></div><div><label>License / insurance line</label><input id="f_lic"></div></div>
+    <label>Your logo (optional)</label><input type="file" id="f_logo" accept="image/*"><div class="hint">Saved on this phone with the rest of your details.</div>
+  </fieldset>
+
+  <fieldset><legend>The customer and the job</legend>
+    <div class="row"><div><label>Prepared for (name)</label><input id="c_name" placeholder="Maria Lopez"></div><div><label>Company / community (optional)</label><input id="c_org" placeholder="Harbor View HOA · Nino's Trattoria"></div></div>
+    <label>Property address</label><input id="c_addr" placeholder="1221 Palm Ave, Fort Myers, FL">
+    <div class="row"><div><label>Type of customer</label><select id="c_type"><option value="home">Homeowner</option><option value="hoa">HOA / property manager</option><option value="rest">Restaurant / commercial kitchen</option><option value="comm">Commercial / business</option></select></div><div><label>Proposal date</label><input id="c_date" type="date"></div></div>
+    <label>Scope of work (one item per line)</label><textarea id="c_scope" placeholder="Soft-wash tile roof, approx. 3,200 sq ft&#10;Pavers and pool deck, approx. 1,400 sq ft&#10;Screen enclosure frame and screens"></textarea>
+    <div class="row"><div><label>Price</label><input id="c_price" placeholder="$1,850 · or itemized below"></div><div><label>Valid for</label><input id="c_valid" placeholder="30 days"></div></div>
+    <label>Notes / what's included (optional)</label><textarea id="c_notes" placeholder="Landscaping rinsed before and after. Before/after photos provided. Wash water managed per county rules."></textarea>
+  </fieldset>
+
+  <fieldset><legend>Pages to include</legend>
+    <div class="chk"><input type="checkbox" id="p_how" checked><label for="p_how" style="margin:0">How PeroXcity works &amp; why it's safe</label></div>
+    <div class="chk"><input type="checkbox" id="p_ev" checked><label for="p_ev" style="margin:0">The documents (bleach vs. PeroXcity, with sources)</label></div>
+    <div class="chk"><input type="checkbox" id="p_rev" checked><label for="p_rev" style="margin:0">Testimonials</label></div>
+    <div class="chk"><input type="checkbox" id="p_pics" checked><label for="p_pics" style="margin:0">Before &amp; after photos</label></div>
+    <label>Add your own job photos (up to 6)</label><input type="file" id="f_pics" accept="image/*" multiple><div class="thumbs" id="thumbs"></div>
+    <div class="hint">Your photos go first; PeroXcity's job photos fill the rest.</div>
+  </fieldset>
+
+  <div class="btns"><button class="pri" type="button" onclick="build(true)">Preview packet</button><button type="button" onclick="build(false);window.print()">Print / Save PDF</button></div>
+</div>
+
+<div id="doc"></div>
+
+<script>
+var FIELDS=['company','name','phone','email','area','lic'];
+function g(k){try{return localStorage.getItem('px_pro_'+k)||''}catch(e){return ''}} function s(k,v){try{localStorage.setItem('px_pro_'+k,v)}catch(e){}}
+FIELDS.forEach(function(f){document.getElementById('f_'+f).value=g(f);document.getElementById('f_'+f).addEventListener('input',function(){s(f,this.value.trim())})});
+var logo=g('logo'); document.getElementById('f_logo').addEventListener('change',function(){var fr=new FileReader();fr.onload=function(){logo=fr.result;try{s('logo',logo)}catch(e){}};fr.readAsDataURL(this.files[0])});
+var myPics=[]; document.getElementById('f_pics').addEventListener('change',function(){myPics=[];var files=Array.prototype.slice.call(this.files,0,6);var box=document.getElementById('thumbs');box.innerHTML='';files.forEach(function(f){var fr=new FileReader();fr.onload=function(){resize(fr.result,1200,function(d){myPics.push(d);var im=new Image();im.src=d;box.appendChild(im)})};fr.readAsDataURL(f)})});
+function resize(src,max,cb){var im=new Image();im.onload=function(){var sc=Math.min(1,max/Math.max(im.width,im.height));var c=document.createElement('canvas');c.width=im.width*sc;c.height=im.height*sc;c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82))};im.src=src}
+document.getElementById('c_date').valueAsDate=new Date();
+function esc(t){return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function v(id){return document.getElementById(id).value.trim()}
+var STOCK=[['gallery-compare.jpg','Driveway: PeroXcity (top) vs. a leading competitor (bottom), same strength, no rinse'],['gallery-rv.jpg','RV roof before and after'],['gallery-grill.jpg','Gas grill, baked-on grease'],['gallery-pavers.jpg','Pavers and edging'],['gallery-surface-cleaner.jpg','Pavers, half cleaned'],['gallery-curb.jpg','Curb and paver edge next to a garden bed'],['uses/cat-kitchen.jpg','Commercial kitchen tile floor, before and after'],['gallery-4.jpg','Roof shingles, moss and algae']];
+var REVIEWS=[["These guys are the best. Not only do they have great products, they have amazing customer service, and they always go the extra mile to help you and make sure that you have everything you need.","Frank L.","Google review"],["The owner really knows his stuff. Has quality products and has gotten me out of a bind multiple times. He has been great offering advice when needed.","John S.","Google review"],["Best products on the market.","David D.","Google review"],["The best product for the best applicators!","Paver Mgmt Group","Google review"],["The product works and it’s cost effective.","Patric L.","Facebook"]];
+var INTRO={
+ home:"Most exterior cleaners use bleach (sodium hypochlorite). It works, and it's cheap, but it corrodes gutters, screens and AC cages, it kills the plants it reaches, it leaves a chlorine smell in the house, and it's hard on pets. We clean with PeroXcity instead: a hydrogen peroxide cleaner that lifts mold, mildew and algae with oxygen, then breaks down into water and oxygen.",
+ hoa:"Exterior cleaning across a community is usually done with bleach (sodium hypochlorite). At that scale the drawbacks add up: corroded railings, gutters and screen enclosures; damaged landscaping and the complaints that follow; chlorine odor near residents; and wash water that Lee County and the surrounding cities treat as an illicit discharge when it reaches a storm drain or canal. Our program uses PeroXcity, a hydrogen peroxide cleaner that cleans with oxygen and breaks down into water and oxygen.",
+ rest:"Grease, soot and bio-film in and around a kitchen are usually attacked with bleach or caustic degreasers. Bleach corrodes stainless and fittings over time, leaves a chlorine odor your staff and guests notice, and can't be used near food prep without a full rinse-down. PeroXcity is a hydrogen peroxide cleaner: it oxidizes grease and organic film, breaks down into water and oxygen, and hydrogen peroxide is listed by the FDA for food-contact surface sanitizing (21 CFR 178.1010). We use it at super strength (1:2) on hood pads, dumpster pads, tile and grout, and exterior walkways.",
+ comm:"Most commercial exterior cleaning is done with bleach (sodium hypochlorite). It corrodes metal fixtures, damages landscaping, produces chlorine fumes around staff and customers, and its wash water is a storm-water violation when it reaches a drain. We use PeroXcity, a hydrogen peroxide cleaner that cleans with oxygen and breaks down into water and oxygen."
+};
+function build(preview){
+  var co=g('company')||'[Your company]', nm=g('name'), ph=g('phone'), em=g('email'), ar=g('area'), lic=g('lic');
+  var cn=v('c_name')||'[Customer]', org=v('c_org'), addr=v('c_addr'), type=v('c_type'), date=v('c_date'), price=v('c_price')||'[Price]', valid=v('c_valid')||'30 days', notes=v('c_notes');
+  var scope=v('c_scope').split('\n').map(function(x){return x.trim()}).filter(Boolean);
+  var d=date?new Date(date+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'';
+  var foot='<div class="foot"><span>'+esc(co)+' · '+esc(ph)+'</span><span>Cleaned with PeroXcity · peroxcity.com</span></div>';
+  var H='';
+  H+='<div class="page cover"><div>'+(logo?'<img src="'+logo+'" style="max-height:1.1in;max-width:3.5in;margin-bottom:.4in;display:block">':'')+
+     '<div class="ph" style="color:#7EE3FF">Proposal</div><h1>Bleach-free exterior cleaning</h1><div class="for">Prepared for <b style="color:#fff">'+esc(cn)+'</b>'+(org?' · '+esc(org):'')+(addr?'<br>'+esc(addr):'')+'<br>'+esc(d)+'</div></div>'+
+     '<div><img class="badge" src="logo-badge.png" alt="PeroXcity"><div class="ph" style="color:#7EE3FF;margin-top:6pt">Cleaned with PeroXcity · hydrogen peroxide, not bleach</div>'+
+     '<div class="co"><b>'+esc(co)+'</b>'+esc(nm)+(nm&&ph?' · ':'')+esc(ph)+(em?' · '+esc(em):'')+(ar?'<br>'+esc(ar):'')+(lic?'<br>'+esc(lic):'')+'</div></div></div>';
+  // proposal page
+  H+='<div class="page"><div class="ph">The proposal</div><h2>What we’ll do, and how</h2><p>'+esc(INTRO[type])+'</p>'+
+     (scope.length?'<h3>Scope of work</h3><ul>'+scope.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+
+     '<h3>Our process</h3><ul><li><b>Low pressure, no pressure washing.</b> Roofing manufacturers (ARMA, GAF, Owens Corning) specify low-pressure chemical cleaning and prohibit power washing; we follow that on every roof.</li><li><b>Landscaping rinsed</b> before and after as a precaution.</li><li><b>Dwell and rinse.</b> PeroXcity works 15–45 minutes, then a light rinse. It keeps working in the pores of the surface after we leave.</li><li><b>Wash water managed</b> per local storm-water rules.</li><li><b>Before and after photos</b> provided on completion.</li></ul>'+
+     (notes?'<h3>Included</h3><p>'+esc(notes).replace(/\n/g,'<br>')+'</p>':'')+
+     '<div class="box y"><b>Why it costs a little more than a bleach job.</b> PeroXcity costs us more per gallon than bleach. What you get for it: no chlorine fumes, no corrosion on your gutters, screens, railings or AC cage, no dead plants, and a cleaner that’s easier on pets and people. Most of our customers consider that a bargain.</div>'+foot+'</div>';
+  if(document.getElementById('p_how').checked){
+    H+='<div class="page"><div class="ph">The product</div><h2>How PeroXcity works, and why it’s safe</h2>'+
+       '<div class="two"><div><h3>What it is</h3><p>A super boosted hydrogen peroxide cleaner made by Sealer Life in Fort Myers, Florida. Pros use a concentrate (35% hydrogen peroxide plus an accelerator) diluted with water on site; homeowners can buy a ready-to-use 7% version.</p><h3>How it cleans</h3><p>Hydrogen peroxide releases oxygen that breaks apart organic matter: mold, mildew, algae, grease, pet and food stains. You see it as foam. Then it breaks down into water and oxygen. Nothing is left behind.</p></div>'+
+       '<div><h3>Why it’s safe</h3><ul><li>No chlorine. No chlorine fumes, no chlorinated by-products.</li><li>The working mix is about 7% peroxide, below the 8% line where peroxide stops being a regulated hazardous material. Below that line, standard references call it non-hazardous.</li><li>Breaks down to water and oxygen within days (EPA). The CDC says it does not accumulate in the food chain.</li><li>Hydrogen peroxide is allowed on USDA certified-organic farms and is FDA-listed for sanitizing food-contact surfaces.</li><li>Safe on stainless steel, painted and coated metals, tile, stone, pavers, shingle and tile roofs, wood and composite. We test painted or bare aluminum first.</li></ul></div></div>'+
+       '<div class="box"><b>Bleach, for comparison:</b> labeled "toxic to fish and aquatic organisms"; DANGER, corrosive, irreversible eye damage. The chlorine industry’s own manual says to keep it away from virtually all metals, stainless included. Extension horticulturists warn it harms landscape plants. Roofing manufacturers call bleach cleaning temporary.</div>'+
+       '<p class="src">Sources: EPA-registered sodium hypochlorite label; Chlorine Institute Pamphlet 96; University of Maryland Extension; ARMA, GAF and Owens Corning technical bulletins; EPA peroxy compounds fact sheet; CDC/ATSDR; 7 CFR 205.601; 21 CFR 178.1010; USU/NASA Peroxide Handbook. Full list with links: peroxcity.com/why-not-bleach</p>'+foot+'</div>';
+  }
+  if(document.getElementById('p_ev').checked){
+    H+='<div class="page"><div class="ph">The documents</div><h2>Bleach vs. PeroXcity, side by side</h2>'+
+       '<table><tr><th>Issue</th><th>Bleach (sodium hypochlorite)</th><th>PeroXcity (hydrogen peroxide)</th></tr>'+
+       '<tr><td>Metal: gutters, screens, railings, AC cage, our equipment</td><td>Corrodes "virtually all common metals" (Chlorine Institute)</td><td>Rated compatible with stainless and coated metals</td></tr>'+
+       '<tr><td>Landscaping</td><td>"Can be harmful to landscape plants" (UMD Extension); cover all vegetation (Owens Corning)</td><td>Breaks down to water and oxygen; plants rinsed as a precaution</td></tr>'+
+       '<tr><td>Fumes and health</td><td>Chlorine ceiling 0.5 ppm / 15 min (NIOSH); #2 category of poison-center calls; linked to asthma in cleaners</td><td>No chlorine; working mix under the hazardous-material line</td></tr>'+
+       '<tr><td>Waterways</td><td>"Toxic to fish and aquatic organisms" (EPA label); no discharge to canals, lakes or drains</td><td>Degrades within days; "risks to wildlife considered minimal" (EPA)</td></tr>'+
+       '<tr><td>Local rules</td><td colspan="2">Lee County, Naples, Estero and St. Petersburg treat wash water in storm drains as an illicit discharge (fines up to $10,000/day in St. Pete). We manage wash water on every job, whatever is used.</td></tr>'+
+       '<tr><td>Roofing manufacturers</td><td>Bleach cleaning "only temporary"; no power washing (ARMA, GAF, Owens Corning)</td><td>Same low-pressure method; the roof is not scrubbed or pressure washed</td></tr>'+
+       '<tr><td>Pets</td><td>Bleach on fur is licked off; strong bleach can burn (Pet Poison Helpline, ASPCA)</td><td>Surfaces are pet-safe once dry</td></tr></table>'+
+       '<div class="box y"><b>What we won’t claim:</b> that bleach voids a roof warranty (no manufacturer says so), or that peroxide is harmless to plants or fish (it’s far gentler; we still rinse). Every line above links to its document at <b>peroxcity.com/why-not-bleach</b>.</div>'+foot+'</div>';
+  }
+  if(document.getElementById('p_rev').checked){
+    H+='<div class="page"><div class="ph">What customers say</div><h2>Testimonials</h2><p>Real Google and Facebook reviews from PeroXcity customers, quoted as written.</p>'+REVIEWS.map(function(r){return '<div class="q">“'+esc(r[0])+'”<small>'+esc(r[1])+' · '+esc(r[2])+'</small></div>'}).join('')+
+       '<div class="box" style="margin-top:14pt"><b>'+esc(co)+'</b> — add your own reviews here: '+(em?esc(em):'')+'</div>'+foot+'</div>';
+  }
+  if(document.getElementById('p_pics').checked){
+    var pics=myPics.map(function(d){return [d,esc(co)+' job photo']}).concat(STOCK.map(function(p){return ['https://peroxcity.com/'+p[0],p[1]]})).slice(0,6);
+    H+='<div class="page"><div class="ph">Results</div><h2>Before and after</h2><div class="pics">'+pics.map(function(p){return '<figure><img src="'+p[0]+'"><figcaption>'+p[1]+'</figcaption></figure>'}).join('')+'</div>'+foot+'</div>';
+  }
+  H+='<div class="page"><div class="ph">Pricing and acceptance</div><h2>Your quote</h2>'+
+     '<table><tr><th>Item</th><th>Detail</th></tr>'+(scope.length?scope.map(function(x){return '<tr><td>'+esc(x)+'</td><td></td></tr>'}).join(''):'<tr><td>Cleaning as described</td><td></td></tr>')+'<tr><td><b>Total</b></td><td><b>'+esc(price)+'</b></td></tr></table>'+
+     '<p>Valid for '+esc(valid)+' from '+esc(d)+'. Includes all product, labor, landscaping rinse, wash-water management and before/after photos. Payment on completion unless noted.</p>'+
+     '<div class="box"><b>Our promise.</b> If anything isn’t right, call '+esc(ph||'us')+' and we’ll come back. '+(lic?esc(lic)+'. ':'')+'</div>'+
+     '<div class="sign"><div>Accepted by (customer) · date</div><div>'+esc(co)+' · '+esc(nm)+' · date</div></div>'+
+     '<p style="margin-top:18pt;font-size:9.5pt;color:#555">Questions about the product itself: PeroXcity / Sealer Life, Fort Myers, Florida, 1-888-253-6962, peroxcity.com. Directions and safety: peroxcity.com/label.</p>'+foot+'</div>';
+  var doc=document.getElementById('doc'); doc.innerHTML=H;
+  if(preview){doc.classList.add('show');document.body.classList.add('preview');window.scrollTo(0,0);
+    if(!document.getElementById('backBar')){var bb=document.createElement('div');bb.id='backBar';bb.style.cssText='position:fixed;left:0;right:0;bottom:0;display:flex;gap:8px;padding:10px 12px;background:#060A1C;z-index:9';bb.innerHTML='<button onclick="document.body.classList.remove(\'preview\');document.getElementById(\'doc\').classList.remove(\'show\');this.parentNode.remove()" style="flex:1;padding:12px;border-radius:8px;border:2px solid #fff;background:transparent;color:#fff;font-weight:800;font-size:16px">Edit</button><button onclick="window.print()" style="flex:1;padding:12px;border-radius:8px;border:2px solid #FFD23F;background:#FFD23F;color:#000;font-weight:800;font-size:16px">Print / Save PDF</button>';document.body.appendChild(bb)}
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letters & Scripts — PeroXcity Pro</title>
+<meta name="description" content="Ready-to-send letters, texts and scripts for PeroXcity contractors: HOA proposal, review request, annual reminder, the is-it-bleach answer, door hanger copy. Your details fill in automatically.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo-badge.png">
+<style>
+  :root{--ink:#0A0F1F;--sub:#2E3A58;--bg:#fff;--panel:#F3F6FA;--line:rgba(10,15,31,.18);--blue:#0369A1;--yellow:#FFD23F}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5}
+  .top{background:#060A1C;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  .top img{height:40px}.top a{color:#fff;text-decoration:none;font-size:14px;font-weight:700;border:1px solid rgba(255,255,255,.4);padding:7px 10px;border-radius:6px}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px 60px}
+  .k{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.14em;color:var(--blue);text-transform:uppercase;font-weight:700}
+  h1{font-size:26px;line-height:1.1;margin:4px 0 8px}
+  p{color:var(--sub)}
+  details{border:2px solid var(--ink);border-radius:12px;margin:12px 0;background:#fff}
+  summary{padding:14px 16px;font-weight:800;font-size:17px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  summary::after{content:"+";font-size:22px;color:var(--blue)}
+  details[open] summary::after{content:"–"}
+  .body{padding:0 16px 16px}
+  label{display:block;font-size:13px;font-weight:700;color:var(--sub);margin:10px 0 4px}
+  input,textarea{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  textarea{min-height:220px;line-height:1.45}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btns button,.btns a{flex:1;min-width:90px;text-align:center;border:2px solid var(--ink);background:#fff;color:var(--ink);font-weight:800;padding:11px 8px;border-radius:8px;font-size:15px;cursor:pointer;text-decoration:none}
+  .btns .pri{background:var(--ink);color:#fff}
+  .note{font-size:13px;color:var(--sub);margin-top:6px}
+  .saved{background:var(--yellow);color:var(--ink);font-weight:700;padding:10px 14px;border-radius:8px;margin-top:10px;display:none}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 7px;border-radius:4px;background:#E6EEF5;color:var(--sub);margin-left:8px;vertical-align:middle}
+  footer{font-size:12.5px;color:var(--sub);margin-top:30px;text-align:center}
+</style>
+</head>
+<body>
+<div class="top"><img src="logo-badge.png" alt="PeroXcity"><a href="https://app.peroxcity.com/">Back to the app</a></div>
+<div class="wrap">
+  <div class="k">PeroXcity Pro · Letters &amp; scripts</div>
+  <h1>Ready to send. Your name's already on it.</h1>
+  <p>Fill in your details once (saved on this phone). Every letter and text below fills itself in. Copy it, text it, email it, or edit it first.</p>
+
+  <details open id="profile">
+    <summary>Your details</summary>
+    <div class="body">
+      <div class="row">
+        <div><label>Company</label><input id="f_company" placeholder="Gulf Coast Soft Wash"></div>
+        <div><label>Your name</label><input id="f_name" placeholder="Mike Reynolds"></div>
+      </div>
+      <div class="row">
+        <div><label>Phone</label><input id="f_phone" placeholder="239-555-0100" inputmode="tel"></div>
+        <div><label>Email</label><input id="f_email" placeholder="mike@gulfcoastsoftwash.com" inputmode="email"></div>
+      </div>
+      <div class="row">
+        <div><label>Service area</label><input id="f_area" placeholder="Fort Myers, Cape Coral, Estero"></div>
+        <div><label>License / insurance line</label><input id="f_lic" placeholder="Licensed &amp; insured · Lee County"></div>
+      </div>
+      <div class="btns"><button class="pri" type="button" onclick="saveProfile()">Save on this phone</button><button type="button" onclick="clearProfile()">Clear</button></div>
+      <div class="saved" id="savedMsg">Saved. Every template below is updated.</div>
+    </div>
+  </details>
+
+  <div id="templates"></div>
+
+  <footer>Templates are starting points; read before you send. PeroXcity is a product of Sealer Life · 1-888-253-6962 · peroxcity.com</footer>
+</div>
+<script>
+var FIELDS=['company','name','phone','email','area','lic'];
+var T=[
+ {id:'review', title:'Review request text', kind:'text', tag:'After the job',
+  body:"Hi {{first}}, thanks for having {{company}} out today. If you're happy with how the {{job}} came out, a quick Google review would mean a lot to a small local company: {{reviewlink}}\n\nAnd if anything isn't right, text me first and I'll fix it. — {{name}}, {{phone}}",
+  vars:[['first','Customer first name'],['job','What you cleaned (roof, driveway…)'],['reviewlink','Your Google review link']]},
+ {id:'sprayed', title:'"What we sprayed on your home" note', kind:'text', tag:'Leave behind / text',
+  body:"Hi {{first}}, here's what {{company}} used on your {{job}} today:\n\nPeroXcity — a hydrogen peroxide cleaner, not bleach (sodium hypochlorite). It cleans with oxygen and breaks down into water and oxygen. No chlorine fumes, no rust on your gutters or screens, and far easier on your plants and pets than bleach. We still rinsed the landscaping as a precaution.\n\nPets and kids can be back on the surfaces once they're dry. If you ever want to see the facts behind it: peroxcity.com/why-not-bleach\n\nThanks again — {{name}}, {{company}}, {{phone}}",
+  vars:[['first','Customer first name'],['job','What you cleaned']]},
+ {id:'bleach', title:'"Is that bleach?" — what to say', kind:'script', tag:'Say it',
+  body:"No — and I'm glad you asked, because most companies won't tell you straight. Bleach and \"sodium hypochlorite\" are the same thing. We use PeroXcity, a hydrogen peroxide cleaner. It cleans with oxygen, then breaks down to water and oxygen. No chlorine smell in the house, nothing eating your gutters, screens or AC cage, and it's a lot easier on your plants and your dog. It costs us more than bleach does; we think it's worth it, and most of our customers do too.\n\nIf they want proof: \"Here, this page has the actual documents — poison centers, the roofing manufacturers, the county rules.\" Show peroxcity.com/why-not-bleach.",
+  vars:[]},
+ {id:'hoa', title:'HOA / property manager proposal letter', kind:'email', tag:'Email', subject:'Bleach-free roof and exterior cleaning — {{company}}',
+  body:"Dear {{mgr}},\n\n{{company}} provides soft-wash roof, building and paver cleaning in {{area}}. I'd like to propose a bleach-free program for {{community}}.\n\nMost exterior cleaning is done with sodium hypochlorite (bleach). It works, but it corrodes metal (gutters, railings, screen enclosures, AC cages), kills landscaping it reaches, produces chlorine fumes, and is labeled toxic to fish and aquatic life — which matters near canals and lakes. Lee County and the surrounding cities treat wash water in storm drains as an illicit discharge.\n\nWe use PeroXcity, a hydrogen peroxide cleaner that cleans with oxygen and breaks down into water and oxygen. It is far easier on landscaping, metal and residents, with no chlorine odor. Roofing manufacturers (ARMA, GAF, Owens Corning) specify low-pressure cleaning and prohibit pressure washing; we follow that on every roof.\n\nWhat's included:\n• Soft-wash cleaning of {{scope}}\n• Landscaping rinsed before and after\n• Wash water managed per county storm-water rules\n• Before/after photos for the board\n• {{lic}}\n\nPricing: {{price}}\n\nThe facts behind the product, with sources, are at peroxcity.com/why-not-bleach. I'd welcome a walk-through at your convenience.\n\nSincerely,\n{{name}}\n{{company}}\n{{phone}} · {{email}}",
+  vars:[['mgr','Manager / board name'],['community','Community name'],['scope','Scope (e.g., 42 tile roofs, pool deck, clubhouse)'],['price','Your price or \"see attached\"']]},
+ {id:'annual', title:'Annual reminder text', kind:'text', tag:'12 months later',
+  body:"Hi {{first}}, it's {{name}} with {{company}}. It's been about a year since we cleaned your {{job}} — this is the time of year the algae comes back in {{area}}. Want me to put you on the schedule? Same bleach-free process. Reply YES and I'll send dates. — {{phone}}",
+  vars:[['first','Customer first name'],['job','What you cleaned']]},
+ {id:'neighbor', title:'Neighbor letter / door hanger copy', kind:'print', tag:'Print or hand out',
+  body:"WE JUST CLEANED YOUR NEIGHBOR'S {{job}}\n\n…without bleach.\n\n{{company}} uses PeroXcity, a hydrogen peroxide cleaner that lifts mold, mildew and algae with oxygen, then breaks down into water and oxygen. No chlorine fumes. Nothing eating your gutters or screens. Easier on your plants and pets.\n\nRoofs · Driveways · Pavers · Pool cages · Siding · Docks\n\nFree quote: {{phone}}\n{{name}} · {{company}} · {{area}}\n{{lic}}\n\nSee the facts: peroxcity.com/why-not-bleach",
+  vars:[['job','What you cleaned (ROOF, DRIVEWAY…)']]},
+ {id:'quote', title:'Quote follow-up text', kind:'text', tag:'Two days after a quote',
+  body:"Hi {{first}}, {{name}} from {{company}}. Just checking you got the quote for the {{job}} — happy to answer anything. One thing I didn't mention: we're bleach-free (hydrogen peroxide instead), so no chlorine smell, no damage to your screens or gutters, and your plants are fine. If you'd like, I can hold a date this week. {{phone}}",
+  vars:[['first','Customer first name'],['job','What was quoted']]},
+ {id:'rain', title:'Rain-delay text', kind:'text', tag:'Weather',
+  body:"Hi {{first}}, it's {{name}} with {{company}}. Rain is moving in for {{day}}, and we don't apply ahead of a downpour — the product needs its dwell time to do the job right. Can we move you to {{newday}}? Sorry for the shuffle. {{phone}}",
+  vars:[['first','Customer first name'],['day','Original day'],['newday','New day']]},
+];
+function g(k){try{return localStorage.getItem('px_pro_'+k)||''}catch(e){return ''}}
+function s(k,v){try{localStorage.setItem('px_pro_'+k,v)}catch(e){}}
+function loadProfile(){FIELDS.forEach(function(f){document.getElementById('f_'+f).value=g(f)})}
+function saveProfile(){FIELDS.forEach(function(f){s(f,document.getElementById('f_'+f).value.trim())});render();var m=document.getElementById('savedMsg');m.style.display='block';setTimeout(function(){m.style.display='none'},2500);document.getElementById('profile').open=false}
+function clearProfile(){FIELDS.forEach(function(f){s(f,'');document.getElementById('f_'+f).value=''});render()}
+function fill(t){
+  var out=t.body, subj=t.subject||'';
+  var vals={}; FIELDS.forEach(function(f){vals[f]=g(f)||('['+f.toUpperCase()+']')});
+  t.vars.forEach(function(v){var el=document.getElementById('v_'+t.id+'_'+v[0]);var val=el&&el.value.trim();vals[v[0]]=val||('['+v[1].toUpperCase()+']')});
+  Object.keys(vals).forEach(function(k){out=out.split('{{'+k+'}}').join(vals[k]);subj=subj.split('{{'+k+'}}').join(vals[k])});
+  return {body:out,subject:subj};
+}
+function render(){
+  var box=document.getElementById('templates'); if(!box.children.length){
+    box.innerHTML=T.map(function(t){
+      var vars=t.vars.map(function(v){return '<div><label>'+v[1]+'</label><input id="v_'+t.id+'_'+v[0]+'" oninput="update(\''+t.id+'\')"></div>'}).join('');
+      return '<details id="d_'+t.id+'"><summary>'+t.title+'<span class="tag">'+t.tag+'</span></summary><div class="body">'+(vars?'<div class="row">'+vars+'</div>':'')+
+        '<label>'+(t.kind==='script'?'Script':'Message')+' (edit freely)</label><textarea id="ta_'+t.id+'"></textarea>'+
+        '<div class="btns"><button class="pri" type="button" onclick="copyT(\''+t.id+'\')">Copy</button>'+
+        (t.kind==='text'?'<a id="sms_'+t.id+'" href="#">Text it</a>':'')+
+        (t.kind==='email'?'<a id="mail_'+t.id+'" href="#">Email it</a>':'')+
+        '<button type="button" onclick="shareT(\''+t.id+'\')">Share</button></div>'+
+        '<div class="note" id="n_'+t.id+'"></div></div></details>';
+    }).join('');
+  }
+  T.forEach(function(t){update(t.id)});
+}
+function update(id){
+  var t=T.filter(function(x){return x.id===id})[0]; var f=fill(t);
+  document.getElementById('ta_'+id).value=f.body;
+  var sms=document.getElementById('sms_'+id); if(sms) sms.href='sms:?&body='+encodeURIComponent(f.body);
+  var mail=document.getElementById('mail_'+id); if(mail) mail.href='mailto:?subject='+encodeURIComponent(f.subject)+'&body='+encodeURIComponent(f.body);
+}
+function copyT(id){var ta=document.getElementById('ta_'+id);ta.select();try{navigator.clipboard.writeText(ta.value)}catch(e){document.execCommand('copy')}document.getElementById('n_'+id).textContent='Copied.';setTimeout(function(){document.getElementById('n_'+id).textContent=''},2000)}
+function shareT(id){var v=document.getElementById('ta_'+id).value;if(navigator.share){navigator.share({text:v})}else{copyT(id)}}
+loadProfile(); render();
+if(!g('company')) document.getElementById('profile').open=true;
+</script>
+</body>
+</html>

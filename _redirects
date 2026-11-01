@@ -2,5 +2,7 @@
 /label        /label.html          200
 /label/kit    /label.html#kit      302
 /label/rtu    /label.html#rtu      302
+/why-not-bleach  /why-not-bleach.html  200
+/evidence        /why-not-bleach.html  302
 /sds          /label.html          302
 /app          https://app.peroxcity.com/  302

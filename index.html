@@ -1209,6 +1209,7 @@
           <button class="demo-tab active" role="tab" data-clip="foam">Foam</button>
           <button class="demo-tab" role="tab" data-clip="onsite">On the Job</button>
           <button class="demo-tab" role="tab" data-clip="grill">Grill</button>
+          <button class="demo-tab" role="tab" data-clip="rv">RV Roof</button>
           <button class="demo-tab" role="tab" data-clip="cart">Golf Cart</button>
           <button class="demo-tab" role="tab" data-clip="pavers">Pavers</button>
           <button class="demo-tab" role="tab" data-clip="roof">Roofs</button>
@@ -1645,6 +1646,12 @@
           <source src="peroxcity-floor-vac.mp4" type="video/mp4">
         </video>
         <span class="gallery-cap"><span class="vid-badge">VIDEO</span>Wood floor &mdash; one pass with the squeegee vac</span>
+      </div>
+      <div class="gallery-item gallery-video">
+        <video controls muted loop playsinline preload="metadata" poster="gallery-rv.jpg" aria-label="RV roof before and after PeroXcity: chalky and mildewed, then bright white">
+          <source src="peroxcity-rv-v.mp4" type="video/mp4">
+        </video>
+        <span class="gallery-cap"><span class="vid-badge">VIDEO</span>RV roof &mdash; before and after</span>
       </div>
       <a class="gallery-item span-2" href="gallery-compare.jpg" target="_blank" rel="noopener">
         <img src="gallery-compare.jpg" alt="Driveway test: PeroXcity poured on the top patch, a leading competitor on the bottom, same strength, no rinsing" loading="lazy">
@@ -2137,7 +2144,7 @@
       <button class="fit-opt" data-v="kitchen" data-clip="grill">Kitchen Grease / Hoods</button>
       <button class="fit-opt" data-v="mold" data-clip="foam">Mold / Mildew</button>
       <button class="fit-opt" data-v="pets" data-clip="foam">Pet Odors</button>
-      <button class="fit-opt" data-v="boat" data-clip="cart">RV / Boat / Golf Cart</button>
+      <button class="fit-opt" data-v="boat" data-clip="rv">RV / Boat / Golf Cart</button>
       <button class="fit-opt" data-v="other" data-clip="foam">Something else</button>
     </div>
   </div>
@@ -2293,9 +2300,10 @@ document.addEventListener('DOMContentLoaded', function(){
     kit:    { src:"peroxcity-unboxing.mp4", poster:"gallery-unboxing.jpg", badge:"THE CONCENTRATE KIT",      cap:"What arrives: Part A, Part B, and a job's worth of cleaner" },
     cart:   { src:"peroxcity-golfcart.mp4",  poster:"gallery-golfcart.jpg", badge:"GOLF CART SEATS",          cap:"Mildew-stained vinyl seat: spray, wait, wipe &mdash; no scrubbing" },
     onsite: { src:"peroxcity-onsite.mp4",    poster:"gallery-onsite.jpg",   badge:"ON THE JOB",               cap:"Five gallons on the rig, roof and driveway next &mdash; a normal day with PeroXcity" },
-    grill:  { src:"peroxcity-grill.mp4",     poster:"gallery-grill.jpg",    badge:"GRILL GREASE",             cap:"Years of baked-on grease on a gas grill &mdash; 1:2 super strength, no wire brush" }
+    grill:  { src:"peroxcity-grill.mp4",     poster:"gallery-grill.jpg",    badge:"GRILL GREASE",             cap:"Years of baked-on grease on a gas grill &mdash; 1:2 super strength, no wire brush" },
+    rv:     { src:"peroxcity-rv.mp4",        poster:"gallery-rv.jpg",       badge:"RV ROOF",                  cap:"Chalky, mildewed RV roof before and after &mdash; 1:4, soft wash, no scrubbing" }
   };
-  var order = ["foam","onsite","grill","cart","pavers","roof","kit"];
+  var order = ["foam","onsite","rv","grill","cart","pavers","roof","kit"];
   var v = document.getElementById('heroVideo'); if(!v) return;
   var badge = document.getElementById('heroBadge'), cap = document.getElementById('heroCaption');
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.demo-tab'));

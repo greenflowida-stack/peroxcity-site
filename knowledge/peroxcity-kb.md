@@ -45,7 +45,7 @@
 - Homeowner Ready-To-Use is already at working strength (7%).
 
 ## Where it works
-- **Home & health:** pet odors and dumpster pads, restrooms, mold and mildew, biohazard and trauma cleanup, turf contaminants.
+- **Home & health:** pet odors and dumpster pads, restrooms, mold and mildew stains, trauma and bio-stain cleanup, turf.
 - **Exterior & structure:** roofs (shingle, clay or concrete barrel tile, flat tile, TPO, painted or coated metal), siding, pavers and sidewalks, pool cages and screen enclosures, fences and decks (wood and Trex/composite), wood and masonry, concrete.
 - **Commercial kitchens:** food grease, exhaust hoods, tile and grout floors, filters and vents, stainless steel.
 - **Marine & recreation:** RVs, boats, golf carts, docks and waterfront structures, wine and organic stains, fabric and sails; safe for use around water.
@@ -93,7 +93,7 @@ Friendly, direct, job-site practical. Short answers first, detail if asked. Neve
 - Pro: plant-friendly; breaks down to water and oxygen.
 - Pro: no chlorine fumes, low odor.
 - Pro: gentle on shingles, wood, paint and fabric; keeps working in the pores after rinsing.
-- Pro: destroys the source of odors.
+- Pro: removes the organic source of odors.
 - Pro: clean runoff — an easy answer for customers and HOAs.
 
 **One-line version:** "Bleach is cheaper on the shelf; PeroXcity is cheaper over the season once you count the pumps, the plants and the callbacks."
@@ -121,3 +121,10 @@ Friendly, direct, job-site practical. Short answers first, detail if asked. Neve
 ## Evidence rules (Nov 2026 research pass) — what to claim and what not to
 Citable facts: household cleaning substances are the #2 category of US poison-center calls (2022 NPDS: 7.2% of 2.06M exposures); bleach is the largest single cleaning product in children's exposure data (about a quarter). NIOSH chlorine ceiling 0.5 ppm/15 min; studies link regular bleach use to asthma in professional cleaners. Chlorine Institute: keep hypochlorite away from virtually all common metals including stainless. The hypochlorite label says "toxic to fish and aquatic organisms." Peroxide degrades to water and oxygen within days (EPA). Below 8% peroxide is not a regulated hazardous material; the 1:4 mix is about 7%; the 35% concentrate is a corrosive oxidizer. ARMA, GAF and Owens Corning recommend low-pressure cleaning, prohibit pressure washing, and call bleach cleaning temporary — but they still recommend a bleach/water solution and say to get the shingle maker's approval for other cleaners. Many cities prohibit any wash water in storm drains (fines up to $5,000–$10,000/day).
 Do NOT claim: that bleach voids roofing warranties; that manufacturers endorse peroxide cleaners; that PeroXcity results last longer as a proven fact (say "in our experience"); that bleach leaves a pH that causes regrowth (no evidence); that PeroXcity is "plant-safe" or "safe for aquatic life" (say "far easier on landscaping; rinse plants"; peroxide has real acute aquatic toxicity before it degrades); that runoff rules are "tightening" (they are long-standing and apply to peroxide wash water too); that the 35% concentrate is low-hazard.
+
+
+## THE CLAIMS LINE (federal pesticide law — follow exactly)
+PeroXcity is a CLEANER, not a registered pesticide. Under EPA rules, saying a product kills, removes, prevents, controls or inhibits mold, mildew, algae, bacteria, germs, fungus or odor-causing organisms makes it a pesticide that requires registration. We do not have that registration.
+- SAY: "removes mold and mildew STAINS," "lifts algae staining," "cleans organic stains and grime," "removes the organic source of odors," "deodorizes," "degreases," "brightens," "prepares the surface."
+- NEVER SAY: "kills mold/algae/bacteria," "removes mold" (without "stains"), "disinfects," "sanitizes," "antimicrobial," "fungicide," "prevents regrowth," "inhibits growth," "protects against mildew," "mold remediation product," "treats mold," "pathogens."
+- If asked whether it kills mold: "PeroXcity is a cleaner, not a registered disinfectant. It lifts the mold and mildew staining off the surface so it can be rinsed or vacuumed away. If a job requires a registered antimicrobial, that's a separate, EPA-registered product."

@@ -1245,7 +1245,7 @@
     if (localT < T_APPROACH_END){
       phaseName = 'APPROACH';
     } else if (localT < T_ATTACK_END){
-      phaseName = 'OXIDATIVE ATTACK';
+      phaseName = 'OXIDATION';
       reactionText = 'Hydrogen peroxide breaks down into Water + Oxygen';
       if (t - lastCrackSpawn > 170){
         lastCrackSpawn = t;
@@ -1277,7 +1277,7 @@
         }
       }
     } else if (localT < T_RUPTURE_END){
-      phaseName = 'MEMBRANE RUPTURE';
+      phaseName = 'STAIN BREAK-UP';
       if (!ruptureTriggered){
         ruptureTriggered = true;
         spawnDebrisBurst(t);

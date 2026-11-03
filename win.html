@@ -30,6 +30,15 @@
   .fine{font-size:12px;color:var(--sub);line-height:1.45;margin-top:14px}
   .thanks{display:none;text-align:center;padding:30px 0}
   .thanks h2{font-size:26px;margin-bottom:8px}
+  .scan{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:var(--ink);border:2px dashed var(--ink);font-weight:800;font-size:16px;padding:13px;border-radius:8px;cursor:pointer;margin-bottom:6px}
+  .scan.busy{opacity:.6}
+  .fld{position:relative}
+  .fld input{padding-right:48px}
+  .mic{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+  .mic.on{background:#B91C1C;border-color:#B91C1C;color:#fff;animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(185,28,28,.5)}50%{box-shadow:0 0 0 8px rgba(185,28,28,0)}}
+  .mic svg{width:18px;height:18px}
+  .note{font-size:13px;color:var(--sub);margin-top:6px;min-height:18px}
   .cta{display:block;text-align:center;background:var(--ink);color:#fff;font-weight:800;text-decoration:none;padding:13px;border-radius:8px;margin-top:14px}
 </style>
 </head>
@@ -48,10 +57,13 @@
     <div class="step">
       <h2><span>1</span>Your first entry</h2>
       <p>Name and phone are all we need. Email if you'd like the winner announcement and the show code.</p>
-      <label>Name</label><input name="name" required autocomplete="name">
-      <label>Mobile phone</label><input name="phone" type="tel" required autocomplete="tel" inputmode="tel">
-      <label>Email (optional)</label><input name="email" type="email" autocomplete="email" inputmode="email">
-      <label>Company (if you're a pro)</label><input name="company" autocomplete="organization">
+      <button type="button" class="scan" id="scanBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="8" width="10" height="8" rx="1"/></svg>Scan my business card instead</button>
+      <input type="file" id="scanFile" accept="image/*" capture="environment" style="display:none">
+      <div class="note" id="scanNote">Or tap the mic on any box and say it.</div>
+      <label>Name</label><div class="fld"><input name="name" id="f_name" required autocomplete="name"><button type="button" class="mic" data-for="f_name" aria-label="Speak your name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div>
+      <label>Mobile phone</label><div class="fld"><input name="phone" id="f_phone" type="tel" required autocomplete="tel" inputmode="tel"><button type="button" class="mic" data-for="f_phone" aria-label="Speak your phone number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div>
+      <label>Email (optional)</label><div class="fld"><input name="email" id="f_email" type="email" autocomplete="email" inputmode="email"><button type="button" class="mic" data-for="f_email" aria-label="Speak your email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div>
+      <label>Company (if you're a pro)</label><div class="fld"><input name="company" id="f_company" autocomplete="organization"><button type="button" class="mic" data-for="f_company" aria-label="Speak your company name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div>
       <div class="chk"><input type="checkbox" name="pro" id="pro" value="yes"><label for="pro" style="margin:0;font-weight:500">I clean roofs, driveways or buildings for a living (pros get the pro-kit pricing)</label></div>
     </div>
     <div class="step">
@@ -74,6 +86,44 @@
 <script>
   var CLOSE=new Date('2026-11-05T15:00:00-05:00');
   if(new Date()>CLOSE && !location.search.includes('thanks')){document.getElementById('winForm').innerHTML='<div class="step"><h2>This giveaway has ended.</h2><p>Thanks to everyone who entered at the show. Follow PeroXcity on Facebook for the next one.</p><a class="fb" href="https://www.facebook.com/profile.php?id=61596040175390" target="_blank" rel="noopener">PeroXcity on Facebook</a><a class="cta" href="https://app.peroxcity.com/">Try the free app</a></div>';}
+  /* ---- business-card scan: photo → fields ---- */
+  var scanBtn=document.getElementById('scanBtn'), scanFile=document.getElementById('scanFile'), scanNote=document.getElementById('scanNote');
+  scanBtn.addEventListener('click',function(){ scanFile.click(); });
+  scanFile.addEventListener('change',function(){
+    var f=this.files[0]; if(!f) return;
+    scanBtn.classList.add('busy'); scanNote.textContent='Reading the card…';
+    var fr=new FileReader(); fr.onload=function(){
+      var im=new Image(); im.onload=function(){
+        var sc=Math.min(1,1400/Math.max(im.width,im.height)); var c=document.createElement('canvas'); c.width=Math.round(im.width*sc); c.height=Math.round(im.height*sc); c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        var data=c.toDataURL('image/jpeg',0.85);
+        fetch('https://app.peroxcity.com/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({image:data})})
+          .then(function(r){return r.json()}).then(function(d){
+            scanBtn.classList.remove('busy');
+            if(d.error){ scanNote.textContent='Couldn\'t read that one — try again with the card flat and well lit, or type it.'; return; }
+            var got=0; [['name','f_name'],['phone','f_phone'],['email','f_email'],['company','f_company']].forEach(function(p){ if(d[p[0]]){ document.getElementById(p[1]).value=d[p[0]]; got++; } });
+            document.getElementById('pro').checked = !!(d.company);
+            scanNote.textContent = got ? 'Read it. Check the boxes, then enter.' : 'Couldn\'t find details on that card — type them in.';
+          }).catch(function(){ scanBtn.classList.remove('busy'); scanNote.textContent='No connection — type it in.'; });
+      }; im.src=fr.result;
+    }; fr.readAsDataURL(f); this.value='';
+  });
+  /* ---- voice: tap the mic, say it ---- */
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  document.querySelectorAll('.mic').forEach(function(btn){
+    if(!SR){ btn.style.display='none'; return; }
+    btn.addEventListener('click',function(){
+      var inp=document.getElementById(btn.getAttribute('data-for')); var r=new SR(); r.lang='en-US'; r.interimResults=false; r.maxAlternatives=1;
+      btn.classList.add('on'); inp.placeholder='Listening…';
+      r.onresult=function(e){ var t=e.results[0][0].transcript.trim();
+        if(inp.type==='tel'){ t=t.replace(/[^0-9]/g,''); if(t.length===10) t=t.replace(/(\d{3})(\d{3})(\d{4})/,'$1-$2-$3'); }
+        if(inp.type==='email'){ t=t.toLowerCase().replace(/\s+at\s+/g,'@').replace(/\s+dot\s+/g,'.').replace(/\s+/g,''); }
+        inp.value=t; };
+      r.onerror=function(){ inp.placeholder='Didn\'t catch that — tap again or type'; };
+      r.onend=function(){ btn.classList.remove('on'); inp.placeholder=''; };
+      r.start();
+    });
+  });
+  if(!SR){ scanNote.textContent='On iPhone, use the mic key on the keyboard to dictate.'; }
   var q=new URLSearchParams(location.search);
   document.getElementById('src').value=q.get('s')||'booth';
   if(q.get('thanks')){document.getElementById('winForm').style.display='none';document.getElementById('thanks').style.display='block';}

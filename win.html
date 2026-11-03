@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Win a PeroXcity Kit</title>
+<meta name="description" content="Enter to win a PeroXcity Concentrate Kit. Enter once here, enter twice by following PeroXcity on Facebook.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo-badge.png">
+<style>
+  :root{--ink:#0A0F1F;--sub:#2E3A58;--line:rgba(10,15,31,.18);--blue:#0369A1;--navy:#060A1C;--yellow:#FFD23F;--fb:#1877F2}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5}
+  .hero{background:var(--navy);color:#fff;text-align:center;padding:22px 18px 26px}
+  .hero img{width:min(300px,78%);filter:drop-shadow(0 0 18px rgba(47,198,255,.35))}
+  .k{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#7EE3FF;margin-top:12px}
+  h1{font-size:32px;line-height:1.05;margin:6px 0 8px}
+  .hero p{color:#C9D4F0;max-width:520px;margin:0 auto}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 18px 50px}
+  .step{border:2px solid var(--ink);border-radius:14px;padding:16px;margin:14px 0}
+  .step h2{font-size:19px;margin-bottom:4px}
+  .step h2 span{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:15px;margin-right:8px}
+  .step p{color:var(--sub);font-size:15px;margin-bottom:8px}
+  label{display:block;font-size:13px;font-weight:700;color:var(--sub);margin:10px 0 4px}
+  input{width:100%;font:inherit;font-size:17px;padding:12px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .chk{display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:15px;color:var(--sub)}
+  .chk input{width:22px;height:22px;flex:none;margin-top:2px}
+  .fb{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--fb);color:#fff;text-decoration:none;font-weight:800;padding:13px;border-radius:8px;font-size:17px}
+  .btn{width:100%;background:var(--yellow);color:var(--ink);border:2px solid var(--ink);font-weight:900;font-size:18px;padding:15px;border-radius:8px;cursor:pointer;margin-top:10px}
+  .fine{font-size:12px;color:var(--sub);line-height:1.45;margin-top:14px}
+  .thanks{display:none;text-align:center;padding:30px 0}
+  .thanks h2{font-size:26px;margin-bottom:8px}
+  .cta{display:block;text-align:center;background:var(--ink);color:#fff;font-weight:800;text-decoration:none;padding:13px;border-radius:8px;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <img src="logo-badge.png" alt="PeroXcity">
+  <div class="k">Booth giveaway</div>
+  <h1>Win a PeroXcity Concentrate Kit.</h1>
+  <p>One gallon makes five. Bleach-free. Enter in 20 seconds. Enter twice by following us on Facebook.</p>
+</div>
+<div class="wrap">
+  <form name="win" method="POST" data-netlify="true" netlify-honeypot="website" action="/win?thanks=1" id="winForm">
+    <input type="hidden" name="form-name" value="win">
+    <input type="hidden" name="source" id="src" value="">
+    <p style="display:none"><label>Leave blank <input name="website"></label></p>
+    <div class="step">
+      <h2><span>1</span>Your first entry</h2>
+      <p>Name and phone are all we need. Email if you'd like the winner announcement and the show code.</p>
+      <label>Name</label><input name="name" required autocomplete="name">
+      <label>Mobile phone</label><input name="phone" type="tel" required autocomplete="tel" inputmode="tel">
+      <label>Email (optional)</label><input name="email" type="email" autocomplete="email" inputmode="email">
+      <label>Company (if you're a pro)</label><input name="company" autocomplete="organization">
+      <div class="chk"><input type="checkbox" name="pro" id="pro" value="yes"><label for="pro" style="margin:0;font-weight:500">I clean roofs, driveways or buildings for a living (pros get the pro-kit pricing)</label></div>
+    </div>
+    <div class="step">
+      <h2><span>2</span>Your second entry</h2>
+      <p>Follow PeroXcity on Facebook, then check the box. That's two entries.</p>
+      <a class="fb" href="FACEBOOK_URL" target="_blank" rel="noopener" id="fbLink"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12z"/></svg>Follow PeroXcity on Facebook</a>
+      <div class="chk"><input type="checkbox" name="facebook" id="fbchk" value="followed"><label for="fbchk" style="margin:0;font-weight:500">I followed PeroXcity on Facebook (my Facebook name: <input name="fbname" placeholder="optional" style="display:inline-block;width:auto;padding:4px 8px;font-size:14px;margin-left:4px">)</label></div>
+    </div>
+    <div class="chk"><input type="checkbox" name="consent" id="consent" value="yes" required><label for="consent" style="margin:0;font-weight:500">PeroXcity may text or email me about this giveaway and PeroXcity offers. Msg rates may apply; reply STOP to opt out.</label></div>
+    <button class="btn" type="submit">Enter to win</button>
+    <p class="fine">NO PURCHASE NECESSARY. Open to U.S. residents 18+. One entry per person, plus one bonus entry for following PeroXcity on Facebook. Entries accepted DATES_PLACEHOLDER. One winner drawn at random on DRAW_DATE_PLACEHOLDER and notified by phone or email; prize: one PeroXcity Concentrate Kit (retail value $125), shipped free in the lower 48. Sponsor: Sealer Life, Fort Myers, FL. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook/Meta.</p>
+  </form>
+  <div class="thanks" id="thanks">
+    <h2>You're in.</h2>
+    <p>Good luck. We draw on DRAW_DATE_PLACEHOLDER and we'll text the winner.</p>
+    <a class="cta" href="https://app.peroxcity.com/">Try the free PeroXcity app</a>
+    <a class="cta" style="background:#fff;color:var(--ink);border:2px solid var(--ink)" href="/">See the lineup</a>
+  </div>
+</div>
+<script>
+  var q=new URLSearchParams(location.search);
+  document.getElementById('src').value=q.get('s')||'booth';
+  if(q.get('thanks')){document.getElementById('winForm').style.display='none';document.getElementById('thanks').style.display='block';}
+</script>
+</body>
+</html>

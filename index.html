@@ -2576,5 +2576,30 @@ window.PEROXCITY_SHOP = {
 })();
 </script>
 
+<!-- Show-week giveaway pop-up: shows every visit until they enter, then never again. Ends automatically Nov 6, 2026. -->
+<style>
+#pxWin{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(6,10,28,.72);font-family:system-ui,-apple-system,sans-serif}
+#pxWin .box{position:relative;width:min(420px,100%);background:#fff;color:#0A0F1F;border:2px solid #000;border-radius:16px;padding:22px 20px 18px;box-shadow:0 20px 60px rgba(0,0,0,.55);text-align:center}
+#pxWin b{display:block;font-size:22px;line-height:1.15;margin-bottom:6px}
+#pxWin span{display:block;font-size:14px;line-height:1.4;color:#2E3A58;margin-bottom:14px}
+#pxWin a{display:block;background:#0A0F1F;color:#fff;text-decoration:none;font-weight:800;font-size:17px;padding:14px 16px;border-radius:10px}
+#pxWin button{position:absolute;right:4px;top:4px;width:36px;height:36px;border:none;background:transparent;font-size:24px;line-height:1;color:#0A0F1F;cursor:pointer}
+#pxWin[hidden]{display:none}
+</style>
+<script>
+(function(){
+  var END=new Date('2026-11-06T23:59:59-05:00'); if(new Date()>END) return;
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}} function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  if(get('px_win_done')==='1') return;
+  function mount(){
+    var d=document.createElement('div'); d.id='pxWin'; d.setAttribute('role','dialog'); d.setAttribute('aria-modal','true');
+    d.innerHTML='<div class="box"><b>Win a PeroXcity Concentrate Kit</b><span>Enter in 20 seconds. Enter twice by following us on Facebook.</span><a href="/win?s=site">Enter to win</a><button type="button" aria-label="Not now">&times;</button></div>';
+    document.body.appendChild(d);
+    d.querySelector('a').addEventListener('click',function(){ set('px_win_done','1'); d.hidden=true; });
+    d.querySelector('button').addEventListener('click',function(){ d.hidden=true; });
+  }
+  if(document.body){ setTimeout(mount,600); } else { document.addEventListener('DOMContentLoaded',function(){ setTimeout(mount,600); }); }
+})();
+</script>
 </body>
 </html>

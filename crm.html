@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales CRM — PeroXcity</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/logo-badge.png">
+<style>
+  :root{--ink:#0A0F1F;--sub:#4A5675;--line:#E3E8F0;--bg:#F5F7FB;--navy:#060A1C;--cyan:#7EE3FF;--blue:#0369A1;--yellow:#FFD23F;--green:#16A34A;--red:#DC2626;--amber:#D97706}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45}
+  button,input,select,textarea{font:inherit;color:inherit}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
+  header{background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:58px;position:sticky;top:0;z-index:5}
+  header .l{display:flex;align-items:center;gap:12px}
+  header img{height:34px}
+  header .t{font-weight:800;letter-spacing:-.01em}
+  header .t small{display:block;font-weight:500;color:#9FB0D6;font-size:12px}
+  header .r{display:flex;align-items:center;gap:12px;font-size:13px;color:#C9D4F0}
+  header button{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:6px;padding:6px 10px;cursor:pointer}
+  .btn{border:1px solid var(--ink);background:#fff;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer}
+  .btn.pri{background:var(--ink);color:#fff}
+  .btn.y{background:var(--yellow);border-color:var(--ink)}
+  .btn.sm{padding:5px 9px;font-size:13px}
+  .btn:disabled{opacity:.5;cursor:default}
+
+  /* login */
+  #auth{max-width:380px;margin:9vh auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:0 10px 40px rgba(10,15,31,.08)}
+  #auth h1{font-size:22px;margin-bottom:4px}
+  #auth p{color:var(--sub);font-size:14px;margin-bottom:14px}
+  #auth label{display:block;font-size:12.5px;font-weight:700;color:var(--sub);margin:10px 0 4px}
+  #auth input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  #auth .btn{width:100%;margin-top:14px;padding:11px}
+  #auth .link{background:none;border:none;color:var(--blue);cursor:pointer;margin-top:12px;font-size:13.5px}
+  .err{color:var(--red);font-size:13.5px;margin-top:10px;min-height:18px}
+  .ok{color:var(--green)}
+
+  /* board */
+  #app{display:none}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 18px;background:#fff;border-bottom:1px solid var(--line)}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap}
+  .tab{border:1px solid transparent;background:none;padding:6px 10px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--sub);font-size:13.5px}
+  .tab b{display:inline-block;min-width:18px;text-align:center;font-size:12px;background:var(--bg);border-radius:999px;padding:0 6px;margin-left:4px;color:var(--ink)}
+  .tab.on{background:var(--ink);color:#fff}
+  .tab.on b{background:rgba(255,255,255,.2);color:#fff}
+  .bar .sp{flex:1}
+  .bar input,.bar select{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .bar input{width:220px}
+  .wrap{padding:16px 18px 60px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);text-align:left;padding:10px 12px;background:#FAFBFD;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr.row{cursor:pointer}
+  tr.row:hover td{background:#FAFCFF}
+  td .n{font-weight:700}
+  td .s{color:var(--sub);font-size:13px}
+  .pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;background:#EEF2F7;color:var(--sub)}
+  .st-new{background:#E0F2FE;color:#075985}
+  .st-ready_to_order{background:#FEF3C7;color:#92400E}
+  .st-qualified{background:#EDE9FE;color:#5B21B6}
+  .st-nurture{background:#F1F5F9;color:#475569}
+  .st-contacted{background:#DBEAFE;color:#1E40AF}
+  .st-won{background:#DCFCE7;color:#166534}
+  .st-lost{background:#FEE2E2;color:#991B1B}
+  .sc-hot{color:var(--red);font-weight:800}
+  .sc-warm{color:var(--amber);font-weight:800}
+  .sc-cold{color:#64748B;font-weight:800}
+  .due{color:var(--red);font-weight:700}
+  .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--blue)}
+  .empty{padding:50px;text-align:center;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:12px}
+  @media(max-width:900px){.hide-m{display:none}.bar input{width:100%}}
+
+  /* drawer */
+  #shade{position:fixed;inset:0;background:rgba(6,10,28,.35);display:none;z-index:9}
+  #drawer{position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);background:#fff;z-index:10;transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,.15)}
+  #drawer.open{transform:none}
+  .dh{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .dh h2{font-size:20px;letter-spacing:-.01em}
+  .dh .s{color:var(--sub);font-size:13.5px}
+  .db{overflow-y:auto;padding:18px 20px 40px;flex:1}
+  .sec{margin-bottom:22px}
+  .sec h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);margin-bottom:8px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+  .grid .full{grid-column:1/-1}
+  .f label{display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:3px}
+  .f input,.f select,.f textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:#fff}
+  .f textarea{min-height:64px;resize:vertical}
+  .ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:end}
+  .ctrls .f{flex:1;min-width:140px}
+  .order{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+  .order .top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px}
+  .order ul{margin-left:18px;color:var(--sub);font-size:14px}
+  .act{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .act .who{font-size:12px;font-weight:700;white-space:nowrap;min-width:110px;color:var(--sub)}
+  .act .who.ai{color:var(--blue)}
+  .act .body{font-size:14px;white-space:pre-wrap;flex:1}
+  .act .when{font-size:12px;color:var(--sub);white-space:nowrap}
+  details.call{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  details.call summary{cursor:pointer;font-weight:600;font-size:14px}
+  .tr{margin-top:8px;font-size:14px}
+  .tr div{padding:3px 0}
+  .tr .caller b{color:var(--ink)}
+  .tr .agent b{color:var(--blue)}
+  .tr .action{color:var(--sub);font-family:ui-monospace,Menlo,monospace;font-size:12px}
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:8px;font-size:14px;z-index:20;display:none}
+  dialog{border:none;border-radius:14px;padding:22px;width:min(520px,94vw)}
+  dialog::backdrop{background:rgba(6,10,28,.4)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="l"><img src="/logo-badge-header.png" alt=""><div class="t">Sales CRM<small>Shared by the team and the AI voice agent</small></div></div>
+  <div class="r"><span id="who"></span><button id="logout" style="display:none">Log out</button></div>
+</header>
+
+<div id="auth">
+  <h1 id="authTitle">Team login</h1>
+  <p id="authSub">For PeroXcity sales team members. Ask an admin for an invite.</p>
+  <form id="loginForm">
+    <div id="emailRow"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+    <label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required>
+    <button class="btn pri" id="loginBtn">Log in</button>
+  </form>
+  <button class="link" id="forgot" type="button">Forgot password?</button>
+  <div class="err" id="authErr"></div>
+</div>
+
+<div id="app">
+  <div class="bar">
+    <div class="tabs" id="tabs"></div>
+    <div class="sp"></div>
+    <select id="ownerF" aria-label="Owner"><option value="">Everyone</option><option value="me">Mine</option><option value="unassigned">Unassigned</option></select>
+    <input id="q" type="search" placeholder="Search name, company, phone…" aria-label="Search">
+    <button class="btn y sm" id="addBtn">+ Add lead</button>
+  </div>
+  <div class="wrap"><div id="list"></div></div>
+</div>
+
+<div id="shade"></div>
+<aside id="drawer" aria-label="Lead details"><div class="dh"><div><h2 id="dTitle"></h2><div class="s" id="dSub"></div></div><button class="btn sm" id="closeD">Close</button></div><div class="db" id="dBody"></div></aside>
+
+<dialog id="addDlg">
+  <form method="dialog" id="addForm">
+    <h3 style="margin-bottom:10px">Add a lead</h3>
+    <div class="grid">
+      <div class="f"><label>Name</label><input name="name"></div>
+      <div class="f"><label>Company</label><input name="company"></div>
+      <div class="f"><label>Phone</label><input name="phone" type="tel"></div>
+      <div class="f"><label>Email</label><input name="email" type="email"></div>
+      <div class="f"><label>City</label><input name="city"></div>
+      <div class="f"><label>State</label><input name="state" maxlength="2"></div>
+      <div class="f full"><label>Notes / interest</label><textarea name="interest"></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn pri" value="ok">Add lead</button></div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { login, logout, getUser, handleAuthCallback, acceptInvite, requestPasswordRecovery, updateUser, refreshSession, AuthError, MissingIdentityError } from '/vendor/netlify-identity.js'
+
+const $ = (id) => document.getElementById(id)
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+const STATUSES = [['', 'All'], ['new', 'New'], ['ready_to_order', 'Ready to order'], ['qualified', 'Qualified'], ['nurture', 'Nurture'], ['contacted', 'Contacted'], ['won', 'Won'], ['lost', 'Lost']]
+const LABEL = Object.fromEntries(STATUSES.filter((s) => s[0]))
+const ORDER_ST = [['pending', 'Pending — send checkout link'], ['checkout_sent', 'Checkout link sent'], ['paid', 'Paid'], ['shipped', 'Shipped'], ['cancelled', 'Cancelled']]
+const FIELDS = [['name', 'Name'], ['company', 'Company'], ['phone', 'Phone'], ['email', 'Email'], ['city', 'City'], ['state', 'State'], ['businessType', 'Business type'], ['crewSize', 'Crews / rigs'], ['monthlyVolume', 'Monthly chemical volume'], ['currentChemical', 'Current chemical'], ['surfaces', 'Main surfaces / jobs'], ['decisionMaker', 'Decision maker'], ['timeline', 'Timeline']]
+const money = (c) => '$' + (c / 100).toLocaleString('en-US', { maximumFractionDigits: 2 })
+const fmtPhone = (p) => { const d = String(p || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, ''); return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : p || '' }
+const ago = (t) => { const s = (Date.now() - new Date(t)) / 1000; if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + 'm ago'; if (s < 86400) return Math.floor(s / 3600) + 'h ago'; return new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }
+const when = (t) => new Date(t).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+const toast = (m) => { const t = $('toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(() => (t.style.display = 'none'), 2200) }
+
+let state = { status: '', owner: '', q: '', me: null, openId: null }
+
+async function api(path, opts = {}, retry = true) {
+  const r = await fetch('/api/crm' + path, { ...opts, credentials: 'same-origin', headers: { 'content-type': 'application/json', ...(opts.headers || {}) } })
+  if (r.status === 401 && retry) { try { await refreshSession() } catch {} ; return api(path, opts, false) }
+  const j = await r.json().catch(() => ({}))
+  if (r.status === 401) { showAuth('Your session expired. Log in again.'); throw new Error(j.error) }
+  if (!r.ok) throw new Error(j.error || 'Request failed')
+  return j
+}
+
+// ---------- auth ----------
+let authMode = 'login', inviteToken = null
+function showAuth(msg = '') { $('app').style.display = 'none'; $('auth').style.display = 'block'; $('logout').style.display = 'none'; $('who').textContent = ''; $('authErr').textContent = msg }
+function setMode(mode) {
+  authMode = mode
+  const t = { login: ['Team login', 'For PeroXcity sales team members. Ask an admin for an invite.', 'Log in'], invite: ['Accept your invite', 'Choose a password for your CRM account.', 'Set password'], recovery: ['Set a new password', 'Choose a new password.', 'Save password'] }[mode]
+  $('authTitle').textContent = t[0]; $('authSub').textContent = t[1]; $('loginBtn').textContent = t[2]
+  $('emailRow').style.display = mode === 'login' ? '' : 'none'; $('email').required = mode === 'login'
+  $('forgot').style.display = mode === 'login' ? '' : 'none'
+  $('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password'
+}
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); $('authErr').textContent = ''; $('loginBtn').disabled = true
+  try {
+    if (authMode === 'login') await login($('email').value.trim(), $('password').value)
+    else if (authMode === 'invite') await acceptInvite(inviteToken, $('password').value)
+    else await updateUser({ password: $('password').value })
+    setMode('login'); await boot()
+  } catch (err) {
+    if (err instanceof MissingIdentityError) $('authErr').textContent = 'Team login is not set up on this site yet.'
+    else if (err instanceof AuthError) $('authErr').textContent = err.status === 401 ? 'Invalid email or password.' : err.status === 422 ? 'Check your email and password (passwords need at least 8 characters).' : err.message
+    else $('authErr').textContent = err.message || 'Login failed'
+  } finally { $('loginBtn').disabled = false }
+})
+$('forgot').addEventListener('click', async () => {
+  const email = $('email').value.trim()
+  if (!email) { $('authErr').textContent = 'Enter your email first.'; return }
+  try { await requestPasswordRecovery(email); $('authErr').innerHTML = '<span class="ok">Check your email for a reset link.</span>' } catch (err) { $('authErr').textContent = err.message }
+})
+$('logout').addEventListener('click', async () => { try { await logout() } catch {} ; showAuth() })
+
+async function boot() {
+  const user = await getUser()
+  if (!user) return showAuth()
+  try { state.me = await api('/me') } catch (err) { return showAuth(err.message) }
+  $('auth').style.display = 'none'; $('app').style.display = 'block'; $('logout').style.display = ''
+  $('who').textContent = state.me.email
+  await loadList()
+}
+
+// ---------- list ----------
+async function loadList() {
+  const p = new URLSearchParams()
+  if (state.status) p.set('status', state.status)
+  if (state.owner) p.set('owner', state.owner)
+  if (state.q) p.set('q', state.q)
+  let data
+  try { data = await api('/leads?' + p) } catch (err) { $('list').innerHTML = `<div class="empty">${esc(err.message)}</div>`; return }
+  const total = Object.values(data.counts).reduce((a, b) => a + b, 0)
+  $('tabs').innerHTML = STATUSES.map(([k, l]) => `<button class="tab${state.status === k ? ' on' : ''}" data-s="${k}">${l}<b>${k ? data.counts[k] || 0 : total}</b></button>`).join('')
+  if (!data.leads.length) { $('list').innerHTML = '<div class="empty">No leads here yet. Calls to the voice agent and callback requests show up automatically.</div>'; return }
+  const now = Date.now()
+  $('list').innerHTML = `<table><thead><tr><th>Contact</th><th>Status</th><th class="hide-m">Business</th><th>Next step</th><th class="hide-m">Open orders</th><th class="hide-m">Owner</th><th class="hide-m">Updated</th></tr></thead><tbody>${data.leads.map((l) => `
+    <tr class="row" data-id="${l.id}">
+      <td><div class="n">${esc(l.name || 'Unknown caller')}${l.score ? ` <span class="sc-${l.score}" title="${l.score}">●</span>` : ''}</div><div class="s">${esc(l.company || '')}${l.company && (l.city || l.state) ? ' · ' : ''}${esc([l.city, l.state].filter(Boolean).join(', '))}</div><div class="s">${esc(fmtPhone(l.phone))}</div></td>
+      <td><span class="pill st-${l.status}">${LABEL[l.status] || l.status}</span><div class="src" style="margin-top:4px">${esc(l.source)}</div></td>
+      <td class="hide-m"><div>${esc(l.businessType || '—')}</div><div class="s">${esc(l.currentChemical || '')}</div></td>
+      <td><div>${esc(l.nextStep || '—')}</div>${l.followUpAt ? `<div class="s ${new Date(l.followUpAt) < now ? 'due' : ''}">Follow up ${new Date(l.followUpAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>` : ''}</td>
+      <td class="hide-m">${l.openOrders ? `<b>${money(l.openOrderCents)}</b><div class="s">${l.openOrders} open</div>` : '<span class="s">—</span>'}</td>
+      <td class="hide-m s">${esc(l.owner ? (l.owner === state.me.email ? 'Me' : l.owner) : 'Unassigned')}</td>
+      <td class="hide-m s">${ago(l.updatedAt)}</td>
+    </tr>`).join('')}</tbody></table>`
+}
+$('tabs').addEventListener('click', (e) => { const b = e.target.closest('.tab'); if (!b) return; state.status = b.dataset.s; loadList() })
+$('ownerF').addEventListener('change', (e) => { state.owner = e.target.value; loadList() })
+let qT; $('q').addEventListener('input', (e) => { clearTimeout(qT); qT = setTimeout(() => { state.q = e.target.value.trim(); loadList() }, 250) })
+$('list').addEventListener('click', (e) => { const r = e.target.closest('tr.row'); if (r) openLead(Number(r.dataset.id)) })
+
+// ---------- detail ----------
+function closeDrawer() { $('drawer').classList.remove('open'); $('shade').style.display = 'none'; state.openId = null }
+$('closeD').addEventListener('click', closeDrawer); $('shade').addEventListener('click', closeDrawer)
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.openId) closeDrawer() })
+
+async function openLead(id) {
+  state.openId = id
+  $('drawer').classList.add('open'); $('shade').style.display = 'block'
+  let d
+  try { d = await api('/leads/' + id) } catch (err) { $('dBody').innerHTML = `<p>${esc(err.message)}</p>`; return }
+  const l = d.lead
+  $('dTitle').textContent = l.name || 'Unknown caller'
+  $('dSub').innerHTML = `${esc(l.company || '')} · <span class="pill st-${l.status}">${LABEL[l.status]}</span> · from ${esc(l.source)} · added ${when(l.createdAt)}`
+  const fu = l.followUpAt ? new Date(l.followUpAt).toISOString().slice(0, 10) : ''
+  $('dBody').innerHTML = `
+    <div class="sec"><div class="ctrls">
+      <div class="f"><label>Status</label><select id="xStatus">${STATUSES.filter((s) => s[0]).map(([k, v]) => `<option value="${k}"${k === l.status ? ' selected' : ''}>${v}</option>`).join('')}</select></div>
+      <div class="f"><label>Score</label><select id="xScore"><option value="">—</option>${['hot', 'warm', 'cold'].map((s) => `<option${s === l.score ? ' selected' : ''}>${s}</option>`).join('')}</select></div>
+      <div class="f"><label>Owner</label><input id="xOwner" value="${esc(l.owner || '')}" placeholder="Unassigned"></div>
+      <button class="btn sm" id="mine">Assign to me</button>
+    </div>
+    <div class="ctrls" style="margin-top:8px">
+      <div class="f" style="flex:3"><label>Next step</label><input id="xNext" value="${esc(l.nextStep || '')}"></div>
+      <div class="f"><label>Follow up on</label><input id="xFu" type="date" value="${fu}"></div>
+    </div></div>
+
+    ${l.summary ? `<div class="sec"><h3>Latest summary</h3><p>${esc(l.summary)}</p></div>` : ''}
+
+    <div class="sec"><h3>Orders</h3>${d.orders.length ? d.orders.map((o) => `
+      <div class="order"><div class="top"><b>Order #${o.id} · ${money(o.subtotalCents)}${o.freeShipping ? ' · free shipping' : ' + shipping'}</b>
+        <select data-order="${o.id}">${ORDER_ST.map(([k, v]) => `<option value="${k}"${k === o.status ? ' selected' : ''}>${v}</option>`).join('')}</select></div>
+        <ul>${(o.items || []).map((i) => `<li>${i.quantity} × ${esc(i.label)} @ ${money(i.unit_cents)}</li>`).join('')}</ul>
+        ${o.shipTo ? `<div class="s" style="margin-top:6px;color:var(--sub);font-size:13.5px">Ship to ${esc(o.shipTo.name)}, ${esc(o.shipTo.street)}, ${esc(o.shipTo.city)} ${esc(o.shipTo.state)} ${esc(o.shipTo.zip)}</div>` : ''}
+        ${o.notes ? `<div style="font-size:13.5px;margin-top:4px">${esc(o.notes)}</div>` : ''}
+        <div style="font-size:12px;color:var(--sub);margin-top:4px">Taken by ${esc(o.createdBy)} · ${when(o.createdAt)}</div></div>`).join('') : '<p class="s" style="color:var(--sub)">No orders yet.</p>'}</div>
+
+    <div class="sec"><h3>Notes</h3>
+      <div class="f"><textarea id="note" placeholder="Log a call, a text, what they said…"></textarea></div>
+      <div style="margin-top:6px"><button class="btn pri sm" id="addNote">Add note</button></div>
+      <div style="margin-top:10px">${d.activities.map((a) => `<div class="act"><div class="who${a.author === 'AI agent' ? ' ai' : ''}">${esc(a.author)}</div><div class="body">${esc(a.body)}</div><div class="when">${when(a.createdAt)}</div></div>`).join('') || '<p style="color:var(--sub)">No activity yet.</p>'}</div>
+    </div>
+
+    <div class="sec"><h3>Prospect details</h3><div class="grid">
+      ${FIELDS.map(([k, v]) => `<div class="f"><label>${v}</label><input data-f="${k}" value="${esc(k === 'phone' ? fmtPhone(l[k]) : l[k] || '')}"${k === 'state' ? ' maxlength="2"' : ''}></div>`).join('')}
+      <div class="f full"><label>Interest, objections, questions</label><textarea data-f="interest">${esc(l.interest || '')}</textarea></div>
+    </div><div style="margin-top:8px"><button class="btn sm pri" id="saveF">Save details</button></div></div>
+
+    <div class="sec"><h3>Voice calls</h3>${d.calls.length ? d.calls.map((c) => `
+      <details class="call"><summary>${when(c.createdAt)} · ${esc((c.outcome || 'in progress').replace(/_/g, ' '))}</summary>
+        ${c.summary ? `<p style="margin-top:6px">${esc(c.summary)}</p>` : ''}
+        <div class="tr">${(c.transcript || []).map((t) => t.role === 'action' ? `<div class="action">⚙ ${esc(t.text)}</div>` : `<div class="${t.role}"><b>${t.role === 'agent' ? 'Agent' : 'Caller'}:</b> ${esc(t.text)}</div>`).join('')}</div>
+      </details>`).join('') : '<p style="color:var(--sub)">No voice calls.</p>'}</div>`
+
+  const patch = async (body, msg = 'Saved') => { try { await api('/leads/' + id, { method: 'PATCH', body: JSON.stringify(body) }); toast(msg); openLead(id); loadList() } catch (err) { toast(err.message) } }
+  $('xStatus').onchange = (e) => patch({ status: e.target.value }, 'Status updated')
+  $('xScore').onchange = (e) => patch({ score: e.target.value || null })
+  $('xOwner').onchange = (e) => patch({ owner: e.target.value.trim() || null })
+  $('mine').onclick = () => patch({ owner: 'me' }, 'Assigned to you')
+  $('xNext').onchange = (e) => patch({ nextStep: e.target.value })
+  $('xFu').onchange = (e) => patch({ followUpAt: e.target.value ? e.target.value + 'T13:00:00Z' : null })
+  $('saveF').onclick = () => { const b = {}; document.querySelectorAll('[data-f]').forEach((el) => (b[el.dataset.f] = el.value)); patch(b, 'Details saved') }
+  $('addNote').onclick = async () => {
+    const v = $('note').value.trim(); if (!v) return
+    try { await api(`/leads/${id}/notes`, { method: 'POST', body: JSON.stringify({ body: v }) }); toast('Note added'); openLead(id); loadList() } catch (err) { toast(err.message) }
+  }
+  document.querySelectorAll('[data-order]').forEach((s) => (s.onchange = async (e) => {
+    try { await api('/orders/' + s.dataset.order, { method: 'PATCH', body: JSON.stringify({ status: e.target.value }) }); toast('Order updated'); openLead(id); loadList() } catch (err) { toast(err.message) }
+  }))
+}
+
+// ---------- add lead ----------
+$('addBtn').addEventListener('click', () => { $('addForm').reset(); $('addDlg').showModal() })
+$('addDlg').addEventListener('close', async () => {
+  if ($('addDlg').returnValue !== 'ok') return
+  const body = Object.fromEntries(new FormData($('addForm')))
+  try { const r = await api('/leads', { method: 'POST', body: JSON.stringify(body) }); toast('Lead added'); await loadList(); openLead(r.id) } catch (err) { toast(err.message) }
+})
+
+// Refresh the board while the tab is open so agent-created leads appear.
+setInterval(() => { if (document.visibilityState === 'visible' && state.me && !state.openId) loadList() }, 30000)
+
+// ---------- start ----------
+try {
+  const cb = await handleAuthCallback()
+  if (cb?.type === 'invite') { inviteToken = cb.token; setMode('invite'); showAuth() }
+  else if (cb?.type === 'recovery') { setMode('recovery'); showAuth() }
+  else await boot()
+} catch (err) {
+  showAuth(err instanceof MissingIdentityError ? 'Team login is not set up on this site yet.' : err.message)
+}
+</script>
+</body>
+</html>

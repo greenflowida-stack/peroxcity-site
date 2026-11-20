@@ -10,3 +10,6 @@
 /win-backup   /win.html          200
 /sds          /label.html          302
 /app          https://app.peroxcity.com/  302
+/pro/voice    /pro-voice.html      200
+/voice        /pro/voice           302
+/crm          /crm.html            200

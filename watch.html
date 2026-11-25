@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch PeroXcity Clean the Street — PeroXcity</title>
+<meta name="description" content="25 seconds of PeroXcity super boosted hydrogen peroxide cleaner at work. Questions? Talk to our voice technician right from this page.">
+<link rel="icon" href="logo-badge.png">
+<meta property="og:title" content="Watch PeroXcity Clean the Street">
+<meta property="og:description" content="Cleaner. Safer. Stronger. See it work in 25 seconds.">
+<meta property="og:image" content="https://peroxcity.com/social-preview.jpg">
+<meta property="og:type" content="video.other">
+<style>
+  :root{--ink:#0A0F1F;--sub:#C9D4F0;--navy:#060A1C;--navy2:#0D1533;--cyan:#7EE3FF;--yellow:#FFD23F;--line:rgba(126,227,255,.22)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--navy);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5}
+  body{background:radial-gradient(1200px 600px at 50% -10%,rgba(47,198,255,.18),transparent 60%),var(--navy);min-height:100vh}
+  a{color:inherit}
+  header{display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:0 auto;padding:18px 22px}
+  header img{height:44px;width:auto;display:block}
+  header a.tel{font-weight:800;text-decoration:none;font-size:15px;color:var(--cyan)}
+  main{max-width:1180px;margin:0 auto;padding:10px 22px 60px}
+  .k{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--cyan);text-align:center}
+  h1{font-size:clamp(30px,5vw,56px);line-height:1.02;text-align:center;margin:8px auto 10px;max-width:900px;letter-spacing:-.01em}
+  .lede{color:var(--sub);text-align:center;max-width:620px;margin:0 auto 26px}
+
+  /* 16:9 player */
+  .player{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;
+    border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(47,198,255,.06)}
+  .player video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .unmute{position:absolute;left:16px;bottom:16px;display:flex;align-items:center;gap:8px;background:rgba(6,10,28,.78);
+    color:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 15px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;backdrop-filter:blur(6px)}
+  .unmute[hidden]{display:none}
+  .unmute svg{width:18px;height:18px}
+
+  /* CTA */
+  .cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:30px 0 8px}
+  .btn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:900;font-size:19px;padding:17px 28px;border-radius:12px;cursor:pointer;text-decoration:none;border:2px solid transparent}
+  .btn-voice{background:var(--yellow);color:var(--ink);border-color:var(--yellow);box-shadow:0 0 0 0 rgba(255,210,63,.55);animation:pulse 2.4s infinite}
+  .btn-voice svg{width:22px;height:22px}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.35);font-size:17px}
+  .btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,210,63,.5)}70%{box-shadow:0 0 0 16px rgba(255,210,63,0)}100%{box-shadow:0 0 0 0 rgba(255,210,63,0)}}
+  @media (prefers-reduced-motion:reduce){.btn-voice{animation:none}}
+  .cta-note{text-align:center;color:var(--sub);font-size:14px}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+  .fact{background:var(--navy2);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .fact b{display:block;font-size:18px;margin-bottom:4px}
+  .fact span{color:var(--sub);font-size:15px}
+  @media (max-width:760px){.facts{grid-template-columns:1fr}.btn{width:100%;justify-content:center}header img{height:36px}}
+  footer{text-align:center;color:var(--sub);font-size:13px;padding:0 22px 34px}
+  footer a{color:var(--cyan)}
+</style>
+</head>
+<body>
+<header>
+  <a href="/" aria-label="PeroXcity home"><img src="logo-header.png" alt="PeroXcity"></a>
+  <a class="tel" href="tel:18882536962">1-888-253-6962</a>
+</header>
+
+<main>
+  <p class="k">Cleaner. Safer. Stronger.</p>
+  <h1>Watch PeroXcity clean the street</h1>
+  <p class="lede">Super boosted hydrogen peroxide. No chlorine, no rusted gear, no dead hedges &mdash; it breaks down to water and oxygen.</p>
+
+  <div class="player">
+    <!-- Main video: upload "peroxcity-street.mp4" to the site root. Until it exists, the unboxing video plays instead. -->
+    <video id="vid" autoplay muted loop playsinline controls preload="metadata" poster="gallery-unboxing.jpg"
+           aria-label="PeroXcity product video">
+      <source src="peroxcity-street.mp4" type="video/mp4">
+      <source src="peroxcity-unboxing.mp4" type="video/mp4">
+    </video>
+    <button class="unmute" id="unmute" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+      Tap for sound
+    </button>
+  </div>
+
+  <div class="cta">
+    <a class="btn btn-voice" id="voiceBtn" href="tel:18882536962">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v5"/></svg>
+      Talk to a PeroXcity technician
+    </a>
+    <a class="btn btn-ghost" href="/#order">See the products</a>
+  </div>
+  <p class="cta-note">Ask about ratios, surfaces, pricing or shipping &mdash; our voice agent answers instantly.</p>
+
+  <section class="facts" aria-label="Why PeroXcity">
+    <div class="fact"><b>No rust</b><span>Safe on pumps, fittings, wands and stainless. Bleach corrodes them.</span></div>
+    <div class="fact"><b>Plant-friendly</b><span>Overspray is a rinse, not a replacement bill.</span></div>
+    <div class="fact"><b>Up to 5 gallons per kit</b><span>One 1-gallon Concentrate Kit makes up to 5 gallons of finished cleaner.</span></div>
+  </section>
+</main>
+
+<footer>
+  Made and shipped by Sealer Life, Fort Myers, Florida &middot; <a href="/">peroxcity.com</a>
+</footer>
+
+<script>
+  // ---- Voice agent ----
+  // Paste your voice agent link here (e.g. an ElevenLabs / Vapi / Retell share URL).
+  // While it's empty, the button calls 1-888-253-6962 instead.
+  var VOICE_AGENT_URL = '';
+
+  var voiceBtn = document.getElementById('voiceBtn');
+  if (VOICE_AGENT_URL) {
+    voiceBtn.href = VOICE_AGENT_URL;
+    voiceBtn.target = '_blank';
+    voiceBtn.rel = 'noopener';
+  }
+
+  // ---- Sound toggle ----
+  var vid = document.getElementById('vid');
+  var unmute = document.getElementById('unmute');
+  unmute.addEventListener('click', function () {
+    vid.muted = false;
+    vid.currentTime = 0;
+    vid.play();
+    unmute.hidden = true;
+  });
+  vid.addEventListener('volumechange', function () { unmute.hidden = !vid.muted; });
+</script>
+</body>
+</html>
